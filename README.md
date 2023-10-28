@@ -6,6 +6,11 @@ Here are some notes that might be helpful during the development stage. The real
 ```bash
 yarn install
 cp .env.example .env
+# tested in macOS
+createdb "slime_saga"
+# OR in psql, run sql to create database
+psql
+CREATE DATABASE "slime_saga"
 ```
 
 &nbsp;
