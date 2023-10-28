@@ -1,0 +1,223 @@
+# Visualize on https://erd.surge.sh
+# or https://quick-erd.surge.sh
+#
+# Relationship Types
+#  -    - one to one
+#  -<   - one to many
+#  >-   - many to one
+#  >-<  - many to many
+#  -0   - one to zero or one
+#  0-   - zero or one to one
+#  0-0  - zero or one to zero or one
+#  -0<  - one to zero or many
+#  >0-  - zero or many to one
+#
+////////////////////////////////////
+
+
+user
+----
+id integer PK
+username varchar(255) unique
+hash_password char(60)
+money integer
+created_at timestamp
+updated_at timestamp
+
+
+attribute
+---------
+id integer PK
+name varchar(255) unique
+base_max_value integer
+base_rate_of_change decimal
+created_at timestamp
+updated_at timestamp
+
+
+personality
+-----------
+id integer PK
+name varchar(255) unique
+created_at timestamp
+updated_at timestamp
+
+
+skill
+-----
+id integer PK
+name varchar(255) unique
+description text
+level integer
+upgrade_exp integer
+created_at timestamp
+updated_at timestamp
+
+
+evolve
+------
+id integer PK
+name varchar(255) unique
+age_requirement integer
+requirement1 integer FK >- attribute.id
+requirement1_value integer
+requirement2 integer NULL FK >- attribute.id
+requirement2_value integer
+base_class integer FK >- evolve.id
+created_at timestamp
+updated_at timestamp
+
+
+item
+----
+id integer PK
+name varchar(255) unique
+cost integer
+created_at timestamp
+updated_at timestamp
+
+
+event
+-----
+id integer PK
+name varchar(255) unique
+description text
+created_at timestamp
+updated_at timestamp
+
+
+slime
+-----
+id integer PK
+owner_id integer FK >- user.id
+name varchar(255)
+date_of_birth timestamp
+generation integer
+exp integer
+personality_id integer FK >- personality.id
+evolve_id integer FK >- evolve.id
+is_dead boolean
+created_at timestamp
+updated_at timestamp
+
+
+slime_attributes
+----------------
+id integer PK
+slime_id integer FK >- slime.id
+attribute_id integer FK >- attribute.id
+max_value integer
+current_value integer
+rate_of_change decimal
+created_at timestamp
+updated_at timestamp
+
+
+slime_skills
+------------
+id integer PK
+slime_id integer FK >- slime.id
+skill_id integer FK >- skill.id
+exp integer
+created_at timestamp
+updated_at timestamp
+
+
+slime_items
+-----------
+id integer PK
+slime_id integer FK >- slime.id
+item_id integer FK >- item.id
+created_at timestamp
+updated_at timestamp
+
+
+slime_events
+------------
+id integer PK
+slime_id integer FK >- slime.id
+event_id integer FK >- event.id
+created_at timestamp
+updated_at timestamp
+
+
+skill_attributes
+----------------
+id integer PK
+skill_id integer FK >- skill.id
+attribute_id integer FK >- attribute.id
+max_value_mod integer
+rate_of_change_mod decimal
+created_at timestamp
+updated_at timestamp
+
+
+personality_attributes
+----------------------
+id integer PK
+personality_id integer FK >- personality.id
+attribute_id integer FK >- attribute.id
+max_value_mod integer
+rate_of_change_mod decimal
+created_at timestamp
+updated_at timestamp
+
+
+event_attributes
+----------------
+id integer PK
+event_id integer FK >- event.id
+attribute_id integer FK >- attribute.id
+current_value_mod integer
+max_value_mod integer
+rate_of_change_mod decimal
+timeout decimal
+money_mod integer
+created_at timestamp
+updated_at timestamp
+
+
+item_attributes
+---------------
+id integer PK
+item_id integer FK >- item.id
+attribute_id integer FK >- attribute.id
+current_value_mod integer
+max_value_mod integer
+rate_of_change_mod decimal
+timeout decimal
+money_mod integer
+created_at timestamp
+updated_at timestamp
+
+
+evolve_attributes
+-----------------
+id integer PK
+evolve_id integer FK >- evolve.id
+attribute_id integer FK >- attribute_id.id
+max_value_mod integer
+rate_of_change_mod decimal
+created_at timestamp
+updated_at timestamp
+
+
+# skill (1389, -23)
+# zoom: 0.814
+# view: (-1, 31)
+# skill_attributes (1318, 244)
+# evolve_attributes (1317, 460)
+# personality_attributes (1317, 676)
+# item_attributes (1007, 532)
+# event_attributes (1006, 249)
+# event (1147, -23)
+# user (879, -19)
+# item (639, -21)
+# personality (392, -21)
+# evolve (36, -23)
+# slime_items (41, 260)
+# slime_skills (42, 423)
+# slime_events (38, 613)
+# slime_attributes (681, 470)
+# slime (350, 319)
+# attribute (645, 251)
