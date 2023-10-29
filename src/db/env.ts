@@ -3,6 +3,7 @@ import populateEnv from "populate-env";
 config();
 
 export const env = {
+  NODE_ENV: "",
   DB_HOST: "",
   DB_PORT: +process.env.PORT,
   DB_NAME: "",
