@@ -154,4 +154,34 @@ It's okay to have a long but clear variable name than short but ambiguous one. G
 
 ### Useful Links
 - [Winston Logger in Nest js](https://timothy.hashnode.dev/advance-your-nestjs-application-with-winston-logger-a-step-by-step-guide)
+- [CalorieNinjas](https://calorieninjas.com/)
 &nbsp;
+
+
+
+### CalorieNinjas API
+
+request example
+GET `https://api.calorieninjas.com/v1/nutrition?query=oranges`
+
+response example
+```json
+{
+    "items": [
+        {
+            "name": "oranges",
+            "calories": 49.8,
+            "serving_size_g": 100.0,
+            "fat_total_g": 0.1,
+            "fat_saturated_g": 0.0,
+            "protein_g": 0.9,
+            "sodium_mg": 1,
+            "potassium_mg": 23,
+            "cholesterol_mg": 0,
+            "carbohydrates_total_g": 12.5,
+            "fiber_g": 2.2,
+            "sugar_g": 8.6
+        }
+    ]
+}
+```

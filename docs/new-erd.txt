@@ -1,0 +1,110 @@
+# Visualize on https://erd.surge.sh
+# or https://quick-erd.surge.sh
+#
+# Relationship Types
+#  -    - one to one
+#  -<   - one to many
+#  >-   - many to one
+#  >-<  - many to many
+#  -0   - one to zero or one
+#  0-   - zero or one to one
+#  0-0  - zero or one to zero or one
+#  -0<  - one to zero or many
+#  >0-  - zero or many to one
+#
+////////////////////////////////////
+
+
+user
+----
+id integer PK
+username varchar(255) unique
+password char(60)
+money integer
+total_money integer
+created_at integer
+updated_at integer
+
+
+slime_type
+----------
+id integer PK
+name varchar(255)
+food_id integer FK >- food.id
+food_count integer
+created_at timestamp
+updated_at timestamp
+
+
+slime
+-----
+id integer PK
+owner_id integer FK >- user.id
+calories decimal
+evolution_id integer FK >- evolution.id
+is_archived boolean
+created_at timestamp
+updated_at timestamp
+
+
+food
+----
+id integer PK
+name varchar(255)
+cost integer
+calories decimal
+protein decimal
+fat decimal
+cholesterol decimal
+carb decimal
+fibre decimal
+sugar decimal
+sodium decimal
+potassium decimal
+created_at timestamp
+updated_at timestamp
+
+
+slime_food
+----------
+id integer PK
+slime_id integer FK >- slime.id
+food_id integer FK >- food.id
+created_at timestamp
+
+
+health_check
+------------
+id integer PK
+is_healthy boolean
+calorie_threshold decimal
+created_at timestamp
+updated_at timestamp
+
+
+user_unlocked_food
+------------------
+id integer PK
+user_id integer FK >- user.id
+food_id integer FK >- food.id
+created_at timestamp
+
+
+user_unlocked_slime_type
+------------------------
+id integer PK
+user_id integer FK >- user.id
+slime_type_id integer FK >- slime_type.id
+created_at timestamp
+
+
+# zoom: 1.062
+# view: (129, 85)
+# user (767, 124)
+# slime_type (12, 70)
+# slime (959, 647)
+# food (252, 391)
+# slime_food (632, 679)
+# health_check (11, 844)
+# user_unlocked_food (405, 5)
+# user_unlocked_slime_type (338, 193)
