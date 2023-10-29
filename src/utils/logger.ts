@@ -1,4 +1,4 @@
-import { env } from "src/db/env";
+import { env } from "src/env";
 import { createLogger, format, transports } from "winston";
 
 // custom log display format

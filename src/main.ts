@@ -3,7 +3,7 @@ import { print } from "listening-on";
 import { WinstonModule } from "nest-winston";
 import { logger } from "src/utils/logger";
 import { AppModule } from "./app/app.module";
-import { env } from "./db/env";
+import { env } from "./env";
 import { AllExceptionsFilter } from "./utils/allExceptions.filter";
 
 async function bootstrap() {
