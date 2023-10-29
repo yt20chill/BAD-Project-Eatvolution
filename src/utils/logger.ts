@@ -8,7 +8,7 @@ const customFormat = format.printf(({ timestamp, level, stack, message }) => {
 
 const options = {
   file: {
-    filename: "error.log",
+    filename: "log/error.log",
     level: "error",
   },
   console: {
@@ -28,7 +28,7 @@ const prodLogger = {
   transports: [
     new transports.File(options.file),
     new transports.File({
-      filename: "combine.log",
+      filename: "log/combine.log",
       level: "info",
     }),
   ],
