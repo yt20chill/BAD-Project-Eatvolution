@@ -62,7 +62,7 @@ age_requirement integer
 requirement1 integer FK >- attribute.id
 requirement1_value integer
 requirement2 integer NULL FK >- attribute.id
-requirement2_value integer
+requirement2_value integer NULL
 base_class integer FK >- evolve.id
 created_at timestamp
 updated_at timestamp
@@ -95,7 +95,7 @@ date_of_birth timestamp
 generation integer
 exp integer
 personality_id integer FK >- personality.id
-evolve_id integer FK >- evolve.id
+evolve_id integer NULL FK >- evolve.id
 is_dead boolean
 created_at timestamp
 updated_at timestamp
@@ -201,23 +201,40 @@ rate_of_change_mod decimal
 created_at timestamp
 updated_at timestamp
 
+level
+-----
+id
+min_exp
+created_at timestamp
+updated_at timestamp
 
-# skill (1389, -23)
-# zoom: 0.814
-# view: (-1, 31)
-# skill_attributes (1318, 244)
-# evolve_attributes (1317, 460)
-# personality_attributes (1317, 676)
-# item_attributes (1007, 532)
-# event_attributes (1006, 249)
-# event (1147, -23)
+level_attributes
+----------------
+id
+level_id Fk >- level.id
+attribute_id FK >- attribute.id
+max_value_mod
+created_at timestamp
+updated_at timestamp
+
+# skill (1135, -18)
+# zoom: 0.798
+# view: (-7, 39)
+# skill_attributes (1108, 241)
+# evolve_attributes (37, 1030, #b0b0b0)
+# personality_attributes (1113, 713)
+# item_attributes (1107, 441)
+# event_attributes (40, 771, #b0b0b0)
+# event (308, 584, #b0b0b0)
 # user (879, -19)
 # item (639, -21)
 # personality (392, -21)
-# evolve (36, -23)
-# slime_items (41, 260)
-# slime_skills (42, 423)
-# slime_events (38, 613)
-# slime_attributes (681, 470)
-# slime (350, 319)
-# attribute (645, 251)
+# evolve (305, 773, #b0b0b0)
+# slime_items (185, 191)
+# slime_skills (184, 377)
+# slime_events (96, 583, #b0b0b0)
+# slime_attributes (777, 429)
+# slime (443, 211)
+# attribute (750, 241)
+# level (189, -21)
+# level_attributes (776, 664)
