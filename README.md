@@ -44,11 +44,15 @@ git commit -m "ci: merged with latest main"
 git push
 ```
 
-if you see a **U** in `src/db/migrations`, it means there are new migration files. Run this to update to the latest db schema
+if you see a **U** in `src/db/migrations`, it means there are new migration files. Run this line to update to the latest db schema
 ```bash
 npx knex migrate:latest
 ```
 
+if you see a **M** in `package.json`, it means there are new packages installed. Run this line to update the node_modules
+```bash
+npm i
+```
 
 ## Adding features
 
@@ -80,7 +84,9 @@ _NOTES_: Still studying how to use nest js. Seems like it has its own MVC struct
 
 ## Update database schema
 
-//TODO: what if the migrations are not in sync because of modification in branch other than main?
+We are using Beeno's quick-erd package to manage the database schema
+Here is the documentation FYR
+https://github.com/beenotung/quick-erd/tree/master
 
 **Always** update the erd together with the db
 **Never** amend the migration files after it was pushed to github
@@ -105,9 +111,9 @@ npx auto-migrate pg < erd.txt
 ```
 _NOTES_: You have to make sure that the erd.txt is correct and up-to-date. Don't run this line when in doubt.
 **IMPORTANT**: always check the correctness of the generated script. Change when deem fit.
+From my understanding, quick-erd doesn't support `default` values and `check` constraints. Those need to be added manually to the knex migration files
 
-Here is Beeno's quick-erd documentation FYR
-https://github.com/beenotung/quick-erd/tree/master
+
 
 &nbsp;
 
@@ -138,11 +144,14 @@ It's okay to have a long but clear variable name than short but ambiguous one. G
 
 #### Case format when naming different things 
 
-`python`: snake_case
-`js/ts`: camelCase
-`db`: snake_case
-`class` (both js and python): PascalCase
-`type/interface`: PascalCase
-`constants`: SCREAMING_SNAKE_CASE
+- `python`: snake_case
+- `js/ts`: camelCase
+- `db`: snake_case
+- `class` (both js and python): PascalCase
+- `type/interface`: PascalCase
+- `constants`: SCREAMING_SNAKE_CASE
 
+
+### Useful Links
+- [Winston Logger in Nest js](https://timothy.hashnode.dev/advance-your-nestjs-application-with-winston-logger-a-step-by-step-guide)
 &nbsp;
