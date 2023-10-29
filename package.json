@@ -24,6 +24,7 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/schedule": "^4.0.0",
+    "@nestjs/serve-static": "^4.0.0",
     "populate-env": "^2.0.0",
     "quick-erd": "^4.17.7",
     "reflect-metadata": "^0.1.13",
