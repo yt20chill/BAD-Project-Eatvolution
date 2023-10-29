@@ -1,16 +1,13 @@
 import { config } from "dotenv";
-import populateEnv from "populate-env";
 config();
 
 export const env = {
-  NODE_ENV: "",
-  DB_HOST: "",
-  DB_PORT: +process.env.PORT,
-  DB_NAME: "",
-  TEST_DB_NAME: "",
-  DB_USERNAME: "",
-  DB_PASSWORD: "",
-  WEB_PORT: +process.env.WEB_PORT,
+  NODE_ENV: process.env.NODE_ENV ?? "development",
+  DB_HOST: process.env.DB_HOST ?? "localhost",
+  DB_PORT: +(process.env.PORT ?? 5432),
+  DB_NAME: process.env.DB_NAME,
+  TEST_DB_NAME: process.env.TEST_DB_NAME,
+  DB_USERNAME: process.env.DB_USERNAME,
+  DB_PASSWORD: process.env.DB_PASSWORD,
+  WEB_PORT: +(process.env.WEB_PORT ?? 8080),
 };
-
-populateEnv(env, { mode: "halt" });
