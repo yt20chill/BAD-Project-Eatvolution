@@ -96,9 +96,9 @@ https://github.com/beenotung/quick-erd/tree/master
 For the sake of practice, I recommend doing manual updates
 ```bash
 # to make a new migration file
-npx knex migrate:make {action}-{table affected}.ts
+npm run knex migrate:make {action}-{table affected}.ts
 # to run the new migration file
-npx knex migrate:latest
+npm run knex migrate:latest
 # to update the erd.txt
 npx pg-to-erd > erd.txt
 ```
@@ -122,7 +122,7 @@ From my understanding, quick-erd doesn't support `default` values and `check` co
 Unlike migrations, seed file can be modified however you like. It is recommended to have only **1** seed file to avoid ordering issues.
 ```bash
 # to create new seed file
-npx knex seed:make {order number}-{description}.ts
+npm run knex seed:make {order number}-{description}.ts
 ```
 
 ## Appendix
