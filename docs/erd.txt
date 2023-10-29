@@ -48,22 +48,29 @@ skill
 id integer PK
 name varchar(255) unique
 description text
-level integer
-upgrade_exp integer
+upgrade_exp integer NULL
 created_at timestamp
 updated_at timestamp
 
 
-evolve
-------
+level
+-----
+id integer PK
+min_exp integer unique
+created_at timestamp
+updated_at timestamp
+
+
+evolution
+---------
 id integer PK
 name varchar(255) unique
 age_requirement integer
+level_requirement integer
 requirement1 integer FK >- attribute.id
 requirement1_value integer
 requirement2 integer NULL FK >- attribute.id
 requirement2_value integer NULL
-base_class integer FK >- evolve.id
 created_at timestamp
 updated_at timestamp
 
@@ -95,8 +102,9 @@ date_of_birth timestamp
 generation integer
 exp integer
 personality_id integer FK >- personality.id
-evolve_id integer NULL FK >- evolve.id
+evolution_id integer NULL FK >- evolution.id
 is_dead boolean
+is_busy boolean
 created_at timestamp
 updated_at timestamp
 
@@ -171,8 +179,7 @@ attribute_id integer FK >- attribute.id
 current_value_mod integer
 max_value_mod integer
 rate_of_change_mod decimal
-timeout decimal
-money_mod integer
+timeout integer
 created_at timestamp
 updated_at timestamp
 
@@ -185,56 +192,50 @@ attribute_id integer FK >- attribute.id
 current_value_mod integer
 max_value_mod integer
 rate_of_change_mod decimal
-timeout decimal
-money_mod integer
+timeout integer
 created_at timestamp
 updated_at timestamp
 
 
-evolve_attributes
------------------
+evolution_attributes
+--------------------
 id integer PK
-evolve_id integer FK >- evolve.id
-attribute_id integer FK >- attribute_id.id
+evolution_id integer FK >- evolution.id
+attribute_id integer FK >- attribute.id
 max_value_mod integer
 rate_of_change_mod decimal
 created_at timestamp
 updated_at timestamp
 
-level
------
-id
-min_exp
-created_at timestamp
-updated_at timestamp
 
 level_attributes
 ----------------
-id
-level_id Fk >- level.id
-attribute_id FK >- attribute.id
-max_value_mod
+id integer PK
+level_id integer FK >- level.id
+attribute_id integer FK >- attribute.id
+max_value_mod integer
 created_at timestamp
 updated_at timestamp
 
-# skill (1135, -18)
+
 # zoom: 0.798
 # view: (-7, 39)
-# skill_attributes (1108, 241)
-# evolve_attributes (37, 1030, #b0b0b0)
-# personality_attributes (1113, 713)
-# item_attributes (1107, 441)
-# event_attributes (40, 771, #b0b0b0)
-# event (308, 584, #b0b0b0)
 # user (879, -19)
-# item (639, -21)
-# personality (392, -21)
-# evolve (305, 773, #b0b0b0)
-# slime_items (185, 191)
-# slime_skills (184, 377)
-# slime_events (96, 583, #b0b0b0)
-# slime_attributes (777, 429)
-# slime (443, 211)
 # attribute (750, 241)
+# personality (392, -21)
+# skill (1135, -18)
 # level (189, -21)
+# evolution (305, 773, #b0b0b0)
+# item (639, -21)
+# event (308, 584, #b0b0b0)
+# slime (443, 211)
+# slime_attributes (777, 429)
+# slime_skills (184, 377)
+# slime_items (185, 191)
+# slime_events (96, 583, #b0b0b0)
+# skill_attributes (1108, 241)
+# personality_attributes (1113, 713)
+# event_attributes (40, 771, #b0b0b0)
+# item_attributes (1107, 441)
+# evolution_attributes (37, 1030, #b0b0b0)
 # level_attributes (776, 664)
