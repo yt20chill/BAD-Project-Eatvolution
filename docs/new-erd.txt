@@ -40,8 +40,9 @@ slime
 -----
 id integer PK
 owner_id integer FK >- user.id
+slime_type_id integer FK >- slime_type.id
 calories decimal
-evolution_id integer FK >- evolution.id
+extra_calories decimal
 is_archived boolean
 created_at timestamp
 updated_at timestamp
@@ -73,15 +74,6 @@ food_id integer FK >- food.id
 created_at timestamp
 
 
-health_check
-------------
-id integer PK
-is_healthy boolean
-calorie_threshold decimal
-created_at timestamp
-updated_at timestamp
-
-
 user_unlocked_food
 ------------------
 id integer PK
@@ -99,12 +91,11 @@ created_at timestamp
 
 
 # zoom: 1.062
-# view: (129, 85)
-# user (767, 124)
-# slime_type (12, 70)
-# slime (959, 647)
-# food (252, 391)
-# slime_food (632, 679)
-# health_check (11, 844)
-# user_unlocked_food (405, 5)
-# user_unlocked_slime_type (338, 193)
+# view: (129, 86)
+# user (764, 145)
+# slime_type (771, 445)
+# slime (357, 201)
+# food (18, 64)
+# slime_food (28, 579)
+# user_unlocked_food (1125, 5)
+# user_unlocked_slime_type (1123, 214)

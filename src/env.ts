@@ -12,6 +12,7 @@ export const env = {
   DB_USERNAME: "",
   DB_PASSWORD: "",
   WEB_PORT: +process.env.WEB_PORT,
+  CN_API_KEY: "",
 };
 
 populateEnv(env, { mode: "halt" });
