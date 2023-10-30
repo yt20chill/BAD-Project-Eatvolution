@@ -19,76 +19,19 @@ user
 ----
 id integer PK
 username varchar(255) unique
-hash_password char(60)
+password char(60)
 money integer
-created_at timestamp
-updated_at timestamp
+total_money integer
+created_at integer
+updated_at integer
 
 
-attribute
----------
+slime_type
+----------
 id integer PK
-name varchar(255) unique
-base_max_value integer
-base_rate_of_change decimal
-created_at timestamp
-updated_at timestamp
-
-
-personality
------------
-id integer PK
-name varchar(255) unique
-created_at timestamp
-updated_at timestamp
-
-
-skill
------
-id integer PK
-name varchar(255) unique
-description text
-upgrade_exp integer NULL
-created_at timestamp
-updated_at timestamp
-
-
-level
------
-id integer PK
-min_exp integer unique
-created_at timestamp
-updated_at timestamp
-
-
-evolution
----------
-id integer PK
-name varchar(255) unique
-age_requirement integer
-level_requirement integer
-requirement1 integer FK >- attribute.id
-requirement1_value integer
-requirement2 integer NULL FK >- attribute.id
-requirement2_value integer NULL
-created_at timestamp
-updated_at timestamp
-
-
-item
-----
-id integer PK
-name varchar(255) unique
-cost integer
-created_at timestamp
-updated_at timestamp
-
-
-event
------
-id integer PK
-name varchar(255) unique
-description text
+name varchar(255)
+food_id integer FK >- food.id
+food_count integer
 created_at timestamp
 updated_at timestamp
 
@@ -97,145 +40,62 @@ slime
 -----
 id integer PK
 owner_id integer FK >- user.id
+slime_type_id integer FK >- slime_type.id
+calories decimal
+extra_calories decimal
+is_archived boolean
+created_at timestamp
+updated_at timestamp
+
+
+food
+----
+id integer PK
 name varchar(255)
-date_of_birth timestamp
-generation integer
-exp integer
-personality_id integer FK >- personality.id
-evolution_id integer NULL FK >- evolution.id
-is_dead boolean
-is_busy boolean
+cost integer
+calories decimal
+protein decimal
+fat decimal
+cholesterol decimal
+carb decimal
+fibre decimal
+sugar decimal
+sodium decimal
+potassium decimal
 created_at timestamp
 updated_at timestamp
 
 
-slime_attributes
-----------------
+slime_food
+----------
 id integer PK
 slime_id integer FK >- slime.id
-attribute_id integer FK >- attribute.id
-max_value integer
-current_value integer
-rate_of_change decimal
+food_id integer FK >- food.id
 created_at timestamp
-updated_at timestamp
 
 
-slime_skills
-------------
+user_unlocked_food
+------------------
 id integer PK
-slime_id integer FK >- slime.id
-skill_id integer FK >- skill.id
-exp integer
+user_id integer FK >- user.id
+food_id integer FK >- food.id
 created_at timestamp
-updated_at timestamp
 
 
-slime_items
------------
+user_unlocked_slime_type
+------------------------
 id integer PK
-slime_id integer FK >- slime.id
-item_id integer FK >- item.id
+user_id integer FK >- user.id
+slime_type_id integer FK >- slime_type.id
 created_at timestamp
-updated_at timestamp
 
 
-slime_events
-------------
-id integer PK
-slime_id integer FK >- slime.id
-event_id integer FK >- event.id
-created_at timestamp
-updated_at timestamp
-
-
-skill_attributes
-----------------
-id integer PK
-skill_id integer FK >- skill.id
-attribute_id integer FK >- attribute.id
-max_value_mod integer
-rate_of_change_mod decimal
-created_at timestamp
-updated_at timestamp
-
-
-personality_attributes
-----------------------
-id integer PK
-personality_id integer FK >- personality.id
-attribute_id integer FK >- attribute.id
-max_value_mod integer
-rate_of_change_mod decimal
-created_at timestamp
-updated_at timestamp
-
-
-event_attributes
-----------------
-id integer PK
-event_id integer FK >- event.id
-attribute_id integer FK >- attribute.id
-current_value_mod integer
-max_value_mod integer
-rate_of_change_mod decimal
-timeout integer
-created_at timestamp
-updated_at timestamp
-
-
-item_attributes
----------------
-id integer PK
-item_id integer FK >- item.id
-attribute_id integer FK >- attribute.id
-current_value_mod integer
-max_value_mod integer
-rate_of_change_mod decimal
-timeout integer
-created_at timestamp
-updated_at timestamp
-
-
-evolution_attributes
---------------------
-id integer PK
-evolution_id integer FK >- evolution.id
-attribute_id integer FK >- attribute.id
-max_value_mod integer
-rate_of_change_mod decimal
-created_at timestamp
-updated_at timestamp
-
-
-level_attributes
-----------------
-id integer PK
-level_id integer FK >- level.id
-attribute_id integer FK >- attribute.id
-max_value_mod integer
-created_at timestamp
-updated_at timestamp
-
-
-# zoom: 0.798
-# view: (-7, 39)
-# user (879, -19)
-# attribute (750, 241)
-# personality (392, -21)
-# skill (1135, -18)
-# level (189, -21)
-# evolution (305, 773, #b0b0b0)
-# item (639, -21)
-# event (308, 584, #b0b0b0)
-# slime (443, 211)
-# slime_attributes (777, 429)
-# slime_skills (184, 377)
-# slime_items (185, 191)
-# slime_events (96, 583, #b0b0b0)
-# skill_attributes (1108, 241)
-# personality_attributes (1113, 713)
-# event_attributes (40, 771, #b0b0b0)
-# item_attributes (1107, 441)
-# evolution_attributes (37, 1030, #b0b0b0)
-# level_attributes (776, 664)
+# zoom: 1.062
+# view: (129, 86)
+# user (764, 145)
+# slime_type (771, 445)
+# slime (357, 201)
+# food (18, 64)
+# slime_food (28, 579)
+# user_unlocked_food (1125, 5)
+# user_unlocked_slime_type (1123, 214)
