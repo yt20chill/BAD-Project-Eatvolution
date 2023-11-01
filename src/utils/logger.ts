@@ -1,5 +1,5 @@
-import { env } from "src/env";
 import { createLogger, format, transports } from "winston";
+import { env } from "../env";
 
 // custom log display format
 const customFormat = format.printf(({ timestamp, level, stack, message }) => {
