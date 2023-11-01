@@ -28,10 +28,10 @@ updated_at integer
 
 slime_type
 ----------
-id integer PK
+id uuid PK
 name varchar(255)
-food_id integer FK >- food.id
-food_count integer
+category_id integer FK >- category.id
+count integer
 created_at timestamp
 updated_at timestamp
 
@@ -65,6 +65,20 @@ potassium decimal
 created_at timestamp
 updated_at timestamp
 
+category
+--------
+id
+name varchar(255) unique
+created_at timestamp
+updated_at timestamp
+
+food_category
+-------------
+id
+food_id FK >- food.id
+category_id FK >- category.id
+created_at timestamp
+updated_at timestamp
 
 slime_food
 ----------
@@ -86,16 +100,19 @@ user_unlocked_slime_type
 ------------------------
 id integer PK
 user_id integer FK >- user.id
-slime_type_id integer FK >- slime_type.id
+slime_type_id uuid FK >- slime_type.id
 created_at timestamp
+     
 
 
-# zoom: 1.062
-# view: (129, 86)
-# user (764, 145)
-# slime_type (771, 445)
-# slime (357, 201)
+# zoom: 1.052
+# view: (135, -17)
+# user (705, 143)
+# slime_type (286, 549)
+# slime (443, 264)
 # food (18, 64)
-# slime_food (28, 579)
-# user_unlocked_food (1125, 5)
-# user_unlocked_slime_type (1123, 214)
+# slime_food (263, 134)
+# user_unlocked_food (467, 32)
+# user_unlocked_slime_type (666, 428)
+# category (18, 592)
+# food_category (18, 405)
