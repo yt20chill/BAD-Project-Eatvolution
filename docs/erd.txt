@@ -19,7 +19,7 @@ user
 ----
 id integer PK
 username varchar(255) unique
-password char(60)
+hash_password char(60)
 money integer
 total_money integer
 created_at integer
@@ -29,9 +29,17 @@ updated_at integer
 slime_type
 ----------
 id uuid PK
-name varchar(255)
+name varchar(255) unique
 category_id integer FK >- category.id
-count integer
+required_count integer
+created_at timestamp
+updated_at timestamp
+
+
+category
+--------
+id integer PK
+name varchar(255) unique
 created_at timestamp
 updated_at timestamp
 
@@ -40,7 +48,7 @@ slime
 -----
 id integer PK
 owner_id integer FK >- user.id
-slime_type_id integer FK >- slime_type.id
+slime_type_id uuid FK >- slime_type.id
 calories decimal
 extra_calories decimal
 is_archived boolean
@@ -65,20 +73,15 @@ potassium decimal
 created_at timestamp
 updated_at timestamp
 
-category
---------
-id
-name varchar(255) unique
-created_at timestamp
-updated_at timestamp
 
 food_category
 -------------
-id
-food_id FK >- food.id
-category_id FK >- category.id
+id integer PK
+food_id integer FK >- food.id
+category_id integer FK >- category.id
 created_at timestamp
 updated_at timestamp
+
 
 slime_food
 ----------
@@ -102,17 +105,14 @@ id integer PK
 user_id integer FK >- user.id
 slime_type_id uuid FK >- slime_type.id
 created_at timestamp
-     
 
 
-# zoom: 1.052
-# view: (135, -17)
-# user (705, 143)
-# slime_type (286, 549)
-# slime (443, 264)
+# zoom: 1.062
+# view: (129, 86)
+# user (764, 145)
+# slime_type (771, 445)
+# slime (357, 201)
 # food (18, 64)
-# slime_food (263, 134)
-# user_unlocked_food (467, 32)
-# user_unlocked_slime_type (666, 428)
-# category (18, 592)
-# food_category (18, 405)
+# slime_food (28, 579)
+# user_unlocked_food (1125, 5)
+# user_unlocked_slime_type (1123, 214)
