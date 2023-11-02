@@ -10,7 +10,7 @@ cp .env.example .env
 createdb "eatvolution"
 # OR in psql, run sql to create database
 psql
-CREATE DATABASE "slime_saga"
+CREATE DATABASE "eatvolution"
 ```
 
 &nbsp;
