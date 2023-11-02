@@ -1,13 +1,13 @@
-# Slime Saga
-Here are some notes that might be helpful during the development stage. The real documentation of this game is temporarily put inside the docs folder. (despite 404)
+# Eatvolution
+Here are some notes that might be helpful during the development stage. The real documentation of this game is temporarily put inside the docs folder.
 
 ## Project init
 
 ```bash
 yarn install
 cp .env.example .env
-# tested in macOS
-createdb "slime_saga"
+# tested in macOS and Linux
+createdb "eatvolution"
 # OR in psql, run sql to create database
 psql
 CREATE DATABASE "slime_saga"
