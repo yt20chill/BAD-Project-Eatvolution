@@ -1,3 +1,4 @@
+import { Request } from "express";
 declare module "express-session" {
   interface SessionData {
     userId?: string;
@@ -44,3 +45,10 @@ export type OAuthRes = {
   picture: string;
   locale: string;
 };
+
+export interface ControllerResult<ResultType> {
+  success: boolean;
+  result: ResultType;
+}
+
+export type Controller<ResultType = null> = (req: Request) => Promise<ControllerResult<ResultType>>;
