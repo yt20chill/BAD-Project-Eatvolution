@@ -1,10 +1,10 @@
 import express from "express";
 import path from "path";
+import { env } from "./env";
 import { app, io, server, socketSession } from "./socket";
 import { ApplicationError } from "./utils/error";
 import { logger } from "./utils/logger";
 import { AppUtils } from "./utils/utils";
-const PORT = 8080;
 
 app.use(express.json());
 app.use(socketSession);
@@ -47,6 +47,6 @@ app.use(
   }
 );
 
-server.listen(PORT, () => {
-  logger.info(`Listening on port ${PORT}`);
+server.listen(+env.WEB_PORT, () => {
+  logger.info(`Listening on port ${+env.WEB_PORT}`);
 });

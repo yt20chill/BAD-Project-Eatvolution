@@ -6,13 +6,14 @@ config({ path: join(__dirname, "..", ".env") });
 export const env = {
   NODE_ENV: "",
   DB_HOST: "",
-  DB_PORT: +process.env.PORT,
+  DB_PORT: "",
   DB_NAME: "",
   TEST_DB_NAME: "",
   DB_USERNAME: "",
   DB_PASSWORD: "",
-  WEB_PORT: +process.env.WEB_PORT,
-  PY_PORT: +process.env.PY_PORT,
+  WEB_PORT: "",
+  PY_PORT: "",
+  REDIS_PORT: "",
   CN_API_KEY: "",
   SESSION_SECRET: "",
 };
