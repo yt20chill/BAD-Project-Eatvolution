@@ -1,0 +1,31 @@
+name: Eatvolution CICD
+on:
+  push:
+    branches:
+      - "main"
+      - "production"
+  workflow_dispatch:
+env:
+  POSTGRES_DB: test
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_HOST: postgres
+
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    container: node:latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_DB: ${{env.POSTGRES_DB}}
+          POSTGRES_PASSWORD: ${{env.POSTGRES_PASSWORD}}
+        ports:
+          - 5432:5432
+    steps:
+          - uses: actions/checkout@v3
+          - run: |
+              npm i
+              npm run knex migrate:latest --env test
+              npm run test
