@@ -79,8 +79,8 @@ export async function up(knex: Knex): Promise<void> {
     });
   }
 
-  if (!(await knex.schema.hasTable("user_unlocked_food"))) {
-    await knex.schema.createTable("user_unlocked_food", (table) => {
+  if (!(await knex.schema.hasTable("user_food_collection"))) {
+    await knex.schema.createTable("user_food_collection", (table) => {
       table.increments("id");
       table.integer("user_id").unsigned().notNullable().references("user.id");
       table.integer("food_id").unsigned().notNullable().references("food.id");
@@ -88,8 +88,8 @@ export async function up(knex: Knex): Promise<void> {
     });
   }
 
-  if (!(await knex.schema.hasTable("user_unlocked_slime_type"))) {
-    await knex.schema.createTable("user_unlocked_slime_type", (table) => {
+  if (!(await knex.schema.hasTable("user_slime_type_collection"))) {
+    await knex.schema.createTable("user_slime_type_collection", (table) => {
       table.increments("id");
       table.integer("user_id").unsigned().notNullable().references("user.id");
       table.uuid("slime_type_id").notNullable().references("slime_type.id");
@@ -99,8 +99,8 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-  await knex.schema.dropTableIfExists("user_unlocked_slime_type");
-  await knex.schema.dropTableIfExists("user_unlocked_food");
+  await knex.schema.dropTableIfExists("user_slime_type_collection");
+  await knex.schema.dropTableIfExists("user_food_collection");
   await knex.schema.dropTableIfExists("slime_food");
   await knex.schema.dropTableIfExists("slime");
   await knex.schema.dropTableIfExists("slime_type");

@@ -13,6 +13,7 @@ export const env = {
   DB_PASSWORD: "",
   WEB_PORT: +process.env.WEB_PORT,
   CN_API_KEY: "",
+  SESSION_SECRET: "",
 };
 
 populateEnv(env, { mode: "halt" });

@@ -91,7 +91,7 @@ food_id integer FK >- food.id
 created_at timestamp
 
 
-user_unlocked_food
+user_food_collection
 ------------------
 id integer PK
 user_id integer FK >- user.id
@@ -99,7 +99,7 @@ food_id integer FK >- food.id
 created_at timestamp
 
 
-user_unlocked_slime_type
+user_slime_type_collection
 ------------------------
 id integer PK
 user_id integer FK >- user.id
@@ -114,5 +114,5 @@ created_at timestamp
 # slime (357, 201)
 # food (18, 64)
 # slime_food (28, 579)
-# user_unlocked_food (1125, 5)
-# user_unlocked_slime_type (1123, 214)
+# user_food_collection (1125, 5)
+# user_slime_type_collection (1123, 214)

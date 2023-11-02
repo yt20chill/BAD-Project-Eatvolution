@@ -2,6 +2,7 @@ import express from "express";
 import expressSession from "express-session";
 import http from "http";
 import SocketIO from "socket.io";
+import { env } from "./env";
 export const app = express();
 export const server = new http.Server(app);
 export const io = new SocketIO.Server(server);
@@ -9,7 +10,7 @@ export const io = new SocketIO.Server(server);
 const socketLog: Map<string, SocketIO.Socket> = new Map();
 
 export const socketSession = expressSession({
-  secret: "_public",
+  secret: env.SESSION_SECRET,
   resave: true,
   saveUninitialized: true,
   cookie: { secure: false },
