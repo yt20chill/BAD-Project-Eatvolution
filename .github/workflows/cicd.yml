@@ -28,5 +28,6 @@ jobs:
           - run: |
               cd ./node_server
               npm i
+              npm run env:dummy
               npm run knex migrate:latest --env test
               npm run test
