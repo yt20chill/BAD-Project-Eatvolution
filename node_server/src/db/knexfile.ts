@@ -1,6 +1,8 @@
+import { config as dotenvConfig } from "dotenv";
 import type { Knex } from "knex";
 import { env } from "../env";
 
+dotenvConfig();
 // Update with your config settings.
 
 const config: { [key: string]: Knex.Config } = {
@@ -22,6 +24,7 @@ const config: { [key: string]: Knex.Config } = {
     },
   },
 
+  // for local testing
   staging: {
     client: "postgresql",
     connection: {
@@ -30,6 +33,24 @@ const config: { [key: string]: Knex.Config } = {
       password: env.DB_PASSWORD,
       host: env.DB_HOST,
       port: +env.DB_PORT!,
+    },
+    pool: {
+      min: 2,
+      max: 10,
+    },
+    migrations: {
+      tableName: "knex_migrations",
+    },
+  },
+
+  // for github auto-testing
+  test: {
+    client: "postgresql",
+    connection: {
+      host: process.env.POSTGRES_HOST,
+      database: process.env.POSTGRES_DB,
+      user: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
     },
     pool: {
       min: 2,
