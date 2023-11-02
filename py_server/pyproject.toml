@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "py-server"
+version = "0.1.0"
+description = ""
+authors = ["yt20chill <ytelainechiu@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "~3.11"
+tensorflow = "^2.14.0"
+sanic = "^23.6.0"
+pandas = "1.5.3"
+
+[tool.poetry.group.dev.dependencies]
+matplotlib = "3.7.1"
+numpy = "1.23.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
