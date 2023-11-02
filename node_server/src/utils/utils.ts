@@ -15,6 +15,7 @@ export class AppUtils {
           return;
         }
         next(new InternalServerError());
+        return;
       }
     };
   static setServerResponse = <ResultType = null>(
