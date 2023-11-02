@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import { app, io, server, socketSession } from "./socket";
+import { ApplicationError } from "./utils/error";
 import { logger } from "./utils/logger";
 const PORT = 8080;
 
@@ -33,6 +34,18 @@ app.use((_, res) => {
 //   userId ? assignSocket(userId, socket) : null;
 // });
 
+app.use(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  (error: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    if (error instanceof ApplicationError) {
+      res.status(error.httpStatus).json(error.message);
+      return;
+    }
+    res.status(500).json("internal server error");
+    return;
+  }
+);
+
 server.listen(PORT, () => {
-  logger.info(`Listening on ${PORT}`);
+  logger.info(`Listening on port ${PORT}`);
 });

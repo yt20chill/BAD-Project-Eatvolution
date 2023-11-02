@@ -18,7 +18,12 @@ const options = {
 
 // for development environment
 const devLogger = {
-  format: format.combine(format.timestamp(), format.errors({ stack: true }), customFormat),
+  format: format.combine(
+    format.timestamp(),
+    format.errors({ stack: true }),
+    customFormat,
+    format.colorize()
+  ),
   transports: [new transports.Console(options.console)],
 };
 
