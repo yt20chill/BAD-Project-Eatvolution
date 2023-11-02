@@ -1,5 +1,10 @@
 # nodejs server
 
+- Step 0: **IMPORTANT** make sure your current directory is in `node_server` first
+```bash
+pwd	# the last part should be */node_server
+```
+
 init or if you see a **M** in `package.json`, run this line to update the node_modules
 
 ```bash
