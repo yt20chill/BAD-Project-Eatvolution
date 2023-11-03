@@ -1,8 +1,8 @@
 # URL design
 
-/
-/game
-/collections
+- /
+- /game
+- /collections
 
 # route design
 
@@ -41,3 +41,7 @@
 - GET: return slime collections for that user
 	- return `{ success: boolean, result: SlimeType[] }`
 
+## user
+
+/api/user
+- `GET`: return `{ success: boolean, result: User }`

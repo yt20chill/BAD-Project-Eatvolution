@@ -1,9 +1,10 @@
 import * as bcrypt from "bcryptjs";
 import { Knex } from "knex";
 import { User } from "models/dbModels";
+import { AuthServiceHelper } from "models/models";
 import { NotFoundError } from "src/utils/error";
 
-export default class AuthService {
+export default class AuthService implements AuthServiceHelper {
   private SALT_ROUNDS = 10;
   constructor(private readonly knex: Knex) {}
 
