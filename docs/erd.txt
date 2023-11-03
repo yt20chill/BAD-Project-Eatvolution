@@ -22,8 +22,8 @@ username varchar(255) unique
 hash_password char(60)
 money integer
 total_money integer
-created_at integer
-updated_at integer
+created_at timestamp
+updated_at timestamp
 
 
 slime_type
