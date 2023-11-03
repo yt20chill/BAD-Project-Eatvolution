@@ -60,6 +60,7 @@ food
 ----
 id integer PK
 name varchar(255)
+created_by integer null FK >- user.id
 cost integer
 calories decimal
 protein decimal
@@ -72,6 +73,7 @@ sodium decimal
 potassium decimal
 created_at timestamp
 updated_at timestamp
+
 
 
 food_category

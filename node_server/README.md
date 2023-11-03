@@ -67,7 +67,7 @@ return AppUtils.setServerResponse<string>("error", false)	// {success: false, re
 
 ## Error handling
 
-`Services` and `controllers` can just throw an error when anything goes wrong. All errors will be handled by the final exception handler which will return the result to the frontend in the format of `{ success: false, result: error.message }` and an http error status.
+`Services` and `controllers` can just throw an error when anything goes wrong. All errors will be handled by the final exception handler which will return the result to the frontend in the format of `{ success: false, result: error.message }` with an http error status.
 
 To achieve this, `AppUtils.exceptionWrapper` should be applied to controllers' methods in the `*.routes.ts` file
 ```ts

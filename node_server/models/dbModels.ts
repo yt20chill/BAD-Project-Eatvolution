@@ -41,6 +41,8 @@ export type Slime = {
 export type Food = {
   id?: null | number;
   name: string;
+  created_by: null | number;
+  user: User;
   cost: number;
   calories: number;
   protein: number;

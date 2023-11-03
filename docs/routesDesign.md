@@ -8,9 +8,14 @@
 
 ## auth
 
-/auth/login
-/auth/signup
-/oauth/google
+- /auth/login
+	- `POST` req.body: { username: string, password: string }
+	- return boolean
+- /auth/signup
+	- `POST` req.body: { username: string, password: string, confirmPassword: string }
+	- return boolean
+- /oauth/google
+	- `GET` return boolean
 
 ## food
 
