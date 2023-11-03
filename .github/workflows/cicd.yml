@@ -32,10 +32,11 @@ jobs:
               npm run test
 
   deploy:
+    if: github.ref_name == 'production'
     runs-on: ubuntu-latest
     needs: testing
     steps:
-      - name: git pull
+      - name: accessing server
         uses: appleboy/ssh-action@master
         with:
           script: |
