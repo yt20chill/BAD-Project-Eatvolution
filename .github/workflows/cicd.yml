@@ -2,8 +2,7 @@ name: Eatvolution CICD
 on:
   push:
     branches:
-      - "main"
-      - "production"
+      - "*"
   workflow_dispatch:
 env:
   POSTGRES_DB: test
@@ -31,3 +30,26 @@ jobs:
               npm run env:dummy
               npm run knex migrate:latest --env test
               npm run test
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: testing
+    steps:
+      - name: git pull
+        uses: appleboy/ssh-action@master
+        with:
+          script: |
+            cd ~/BAD-Project-Eatvolution
+            git pull origin main
+            cd ./node_server
+            npm i
+            npm run knex migrate:latest --env production
+            cd ../py_server
+            source ./.venv/bin/activate
+            poetry install
+            pm2 restart 0
+            pm2 restart 1
+          host: eatvolution.yt20chill.me
+          username: ubuntu
+          port: 22
+          key: ${{secrets.AWS_PRIVATE_KEY}}
