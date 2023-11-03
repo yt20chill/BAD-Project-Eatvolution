@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import { app, io, server, socketSession } from "./socket";
 import { logger } from "./utils/logger";
@@ -6,6 +6,42 @@ const PORT = 8080;
 
 app.use(express.json());
 app.use(socketSession);
+
+app.use(
+  expressSession({
+    secret: "BAD Project Slime Gaga",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+
+
+app.use((req, _res, next) => {
+  console.log(`Request Path: ${req.path}  Method: ${req.method}`)
+  next();
+});
+
+
+
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body
+  const result = await Client.query('Select * from user where username = $1 and password = $2', [req.body.username])
+  const [user]: User[] = result.rows
+  const matched = await checkPassword(req.body.password, user.password)
+
+
+  if (matched) {
+    console.log('login success');
+    req.session.userId = req.body.username
+    res.redirect('../private/user.html')
+  }
+  res.status(401).json({ success: false, message: "Failed to find matching username/password!" });
+})
+
+
+
+
+
 // app.use(grantExpress);
 io.use((socket, next) => {
   const req = socket.request as express.Request;
@@ -17,6 +53,10 @@ io.use((socket, next) => {
 // app.use("/api", isLoggedInForApi, apiRoutes);
 // app.use("/auth", authRoutes);
 // app.use("/oauth", oauthRoutes);
+
+
+
+
 
 app.use(express.static(path.join(__dirname, "..", "public")));
 // Example for serving guarded folder

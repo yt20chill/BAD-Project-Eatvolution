@@ -7,6 +7,10 @@
   "files.autoSave": "onFocusChange", // optional but recommended
   "vs-code-prettier-eslint.prettierLast": false,
   "cSpell.words": [
-    "varchar"
-  ] // set as "true" to run prettier last not first
+    "appleboy",
+    "eatvolution",
+    "knex",
+    "varchar",
+    "venv"
+  ] 
 }
