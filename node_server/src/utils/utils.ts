@@ -4,7 +4,8 @@ import { ApplicationError, InternalServerError } from "./error";
 
 export class AppUtils {
   static exceptionWrapper =
-    (controller: Controller) => async (req: Request, res: Response, next: NextFunction) => {
+    <ResultType = null>(controller: Controller<ResultType>) =>
+    async (req: Request, res: Response, next: NextFunction) => {
       try {
         const result = await controller(req);
         res.json(this.setServerResponse(result.result, result.success));
