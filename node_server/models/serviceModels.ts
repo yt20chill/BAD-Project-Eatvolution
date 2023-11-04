@@ -1,4 +1,5 @@
 export interface AuthServiceHelper {
-  login(username: string, password: string): Promise<boolean>;
+  login(username: string, password: string): Promise<number>;
   signUp(username: string, password: string): Promise<number>;
+  isExisting(username: string): Promise<number>;
 }
