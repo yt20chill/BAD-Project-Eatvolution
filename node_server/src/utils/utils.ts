@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { Controller } from "models/models";
+import { Controller } from "models/controllerModels";
 import { ApplicationError, InternalServerError } from "./error";
 
 export class AppUtils {
