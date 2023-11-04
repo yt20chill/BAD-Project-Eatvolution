@@ -47,12 +47,12 @@ export type Food = {
   calories: number;
   protein: number;
   fat: number;
+  saturated_fat: number;
   cholesterol: number;
   carbohydrates: number;
   fibre: number;
   sugar: number;
   sodium: number;
-  potassium: number;
   created_at: string;
   updated_at: string;
 };
@@ -93,3 +93,5 @@ export type UserSlimeTypeCollection = {
   slime_type?: SlimeType;
   created_at: string;
 };
+
+export type GeneralOmitField = "id" | "created_at" | "updated_at";

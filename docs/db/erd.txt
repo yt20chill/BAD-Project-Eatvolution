@@ -65,12 +65,12 @@ cost integer
 calories decimal
 protein decimal
 fat decimal
+saturated_fat decimal
 cholesterol decimal
 carbohydrates decimal
 fibre decimal
 sugar decimal
 sodium decimal
-potassium decimal
 created_at timestamp
 updated_at timestamp
 
