@@ -42,13 +42,13 @@ export type Food = {
   id?: null | number;
   name: string;
   created_by: null | number;
-  user: User;
+  user?: User;
   cost: number;
   calories: number;
   protein: number;
   fat: number;
   cholesterol: number;
-  carb: number;
+  carbohydrates: number;
   fibre: number;
   sugar: number;
   sodium: number;
