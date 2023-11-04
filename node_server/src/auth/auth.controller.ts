@@ -14,6 +14,11 @@ export default class AuthController {
     const { username, password } = req.body;
     if (!username || !password) throw new BadRequestError();
     const result = await this.authService.login(username, password);
-    return AppUtils.setServerResponse(result); // return {success: true, result: is_password_correct}
+    // res.json() == AppUtils.setServerResponse()
+    return AppUtils.setServerResponse(result); // return {success: true, result: is_password_correct} 
   };
+
+  googleLogin =  async (req: Request) => {
+    
+  }
 }

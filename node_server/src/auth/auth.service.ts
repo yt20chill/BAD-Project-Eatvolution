@@ -7,6 +7,9 @@ import { NotFoundError } from "src/utils/error";
 export default class AuthService implements AuthServiceHelper {
   private SALT_ROUNDS = 10;
   constructor(private readonly knex: Knex) {}
+  signUp(username: string, password: string): Promise<number> {
+    throw new Error("Method not implemented.");
+  }
 
   login = async (username: string, password: string): Promise<boolean> => {
     const db_password = await this.knex<User>("user")
