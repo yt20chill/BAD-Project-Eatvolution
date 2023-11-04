@@ -45,15 +45,3 @@ export type OAuthRes = {
   picture: string;
   locale: string;
 };
-
-export interface ControllerResult<ResultType> {
-  success: boolean;
-  result: ResultType;
-}
-
-export type Controller<ResultType = null> = (req: Request) => Promise<ControllerResult<ResultType>>;
-
-export interface AuthServiceHelper {
-  login(username: string, password: string): Promise<boolean>;
-  signUp(username: string, password: string): Promise<number>;
-}
