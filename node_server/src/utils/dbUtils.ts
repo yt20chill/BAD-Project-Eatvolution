@@ -1,6 +1,6 @@
 import csvParser from "csv-parser";
 import fs from "fs";
-import { Food, GeneralOmitField } from "models/dbModels";
+import { Food, GeneralOmitFields } from "models/dbModels";
 
 export default class DbUtils {
   /**
@@ -20,7 +20,7 @@ export default class DbUtils {
   }
 }
 
-type T = Omit<Food, GeneralOmitField | "created_by">;
+type T = Omit<Food, GeneralOmitFields>;
 export const nutritionToNumber = (food: T[]) => {
   return food.reduce(
     (result, f) => {
@@ -32,6 +32,6 @@ export const nutritionToNumber = (food: T[]) => {
       result.push(f);
       return result;
     },
-    [] as Omit<Food, GeneralOmitField | "created_by">[]
+    [] as Omit<Food, GeneralOmitFields>[]
   );
 };

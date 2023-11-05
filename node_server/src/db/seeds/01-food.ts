@@ -1,5 +1,5 @@
 import { Knex } from "knex";
-import { Food, GeneralOmitField } from "models/dbModels";
+import { Food, GeneralOmitFields } from "models/dbModels";
 import path from "path";
 import DbUtils, { nutritionToNumber } from "../../utils/dbUtils";
 import { logger } from "../../utils/logger";
@@ -13,7 +13,7 @@ export async function seed(knex: Knex): Promise<void> {
 
     // Inserts seed entries
     const food = nutritionToNumber(
-      await DbUtils.csvToTable<Omit<Food, GeneralOmitField>>(
+      await DbUtils.csvToTable<Omit<Food, GeneralOmitFields>>(
         path.join(__dirname, "..", "/food.csv")
       )
     );
@@ -24,7 +24,7 @@ export async function seed(knex: Knex): Promise<void> {
       50
     );
     trx.commit();
-    logger.info("food successfully inserted");
+    logger.debug("food successfully inserted");
   } catch (error) {
     logger.error(error.message);
     trx.rollback();
