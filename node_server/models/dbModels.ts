@@ -41,7 +41,6 @@ export type Slime = {
 export type Food = {
   id?: null | number;
   name: string;
-  user?: User;
   cost?: null | number;
   calories: number;
   protein: number;
@@ -103,4 +102,10 @@ export type UserSlimeTypeCollection = {
   created_at: string;
 };
 
-export type GeneralOmitField = "id" | "created_at" | "updated_at";
+export type GeneralOmitFields = "id" | "created_at" | "updated_at";
+export type BriefFood = "id" | "name" | "calories" | "cost";
+
+export interface FoodDetails extends Omit<Food, "cost" | "name" | "created_at" | "updated_at"> {
+  food_name: string;
+  category_name: string[];
+}
