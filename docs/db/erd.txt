@@ -60,7 +60,7 @@ food
 ----
 id integer PK
 name varchar(255)
-cost integer
+cost integer null
 calories decimal
 protein decimal
 fat decimal

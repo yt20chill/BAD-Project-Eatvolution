@@ -42,7 +42,7 @@ export type Food = {
   id?: null | number;
   name: string;
   user?: User;
-  cost: number;
+  cost?: null | number;
   calories: number;
   protein: number;
   fat: number;

@@ -13,7 +13,7 @@ export async function seed(knex: Knex): Promise<void> {
 
     // Inserts seed entries
     const food = nutritionToNumber(
-      await DbUtils.csvToTable<Omit<Food, GeneralOmitField | "created_by">>(
+      await DbUtils.csvToTable<Omit<Food, GeneralOmitField>>(
         path.join(__dirname, "..", "/food.csv")
       )
     );
