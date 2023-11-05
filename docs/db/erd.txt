@@ -59,7 +59,7 @@ updated_at timestamp
 food
 ----
 id integer PK
-name varchar(255)
+name varchar(255) unique
 cost integer null
 calories decimal
 protein decimal
