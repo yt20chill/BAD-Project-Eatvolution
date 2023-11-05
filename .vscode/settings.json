@@ -12,5 +12,9 @@
     "knex",
     "varchar",
     "venv"
-  ] 
+  ],
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8"
+  },
+  "python.analysis.autoImportCompletions": true
 }
