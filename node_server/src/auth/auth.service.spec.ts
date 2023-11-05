@@ -15,7 +15,7 @@ describe("AuthService", () => {
       await knex("user")
         .insert({
           username: "test",
-          password: "$2a$10$8nXBNisolSX6wdRW1xRKw.r/4QK4qgoRnaTHlNHTqcRr1bjV65VR6",
+          hash_password: "$2a$10$8nXBNisolSX6wdRW1xRKw.r/4QK4qgoRnaTHlNHTqcRr1bjV65VR6",
         })
         .returning("id")
     )[0]["id"];
