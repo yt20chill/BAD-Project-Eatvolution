@@ -10,16 +10,10 @@ export type User = {
 
 export type Category = {
   id?: null | number;
-  name: CategoryName;
+  name: string;
   created_at: string;
   updated_at: string;
 };
-enum CategoryName {
-  "healthy",
-  "salty",
-  "empty",
-  "starchy",
-}
 
 export type SlimeType = {
   id?: null | string; // uuid
@@ -104,5 +98,5 @@ export type BriefFood = "id" | "name" | "calories" | "cost";
 
 export interface FoodDetails extends Omit<Food, "cost" | "name" | "created_at" | "updated_at"> {
   food_name: string;
-  category_name: string[];
+  category_name: string;
 }
