@@ -6,6 +6,7 @@ import { AppUtils } from "../utils/utils";
 import AuthService from "./auth.service";
 import {} from "../../models/models"
 import { fetch } from "cross-fetch";
+import { json } from "stream/consumers";
 // import grant from "grant"
 
 
@@ -19,7 +20,12 @@ export default class AuthController implements AuthControllerHelper {
   // isExisting = 
 
   signUp = async (req: Request) => {
-    
+    const { username, password, confirmPassword} = req.body;
+
+    if(password !== confirmPassword) return AppUtils.setServerResponse("duplicated username", false);
+
+    const result = await this.authService.signUp(username, password,);
+
   }
 
   login = async (req: Request) => {

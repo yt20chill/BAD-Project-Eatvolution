@@ -20,9 +20,20 @@ export default class AuthService implements AuthServiceHelper {
   // isExisting(username: string): Promise<number> {
   //   throw new Error("Method not implemented.");
   // }
-  // signUp(username: string, password: string): Promise<number> {
-  //   throw new Error("Method not implemented.");
-  // }
+
+  signUp = async(username: string, password: string): Promise<number> => {
+   
+    const db_user = this.knex<User>("user")
+    .select("username", "id")
+    .where("username", username)[0];
+
+      let newUser = {
+        username: username,
+        password: password
+      } 
+      await this.knex("user").insert({ username: username, hash_password: await this.hashPassword(newUser.password) })
+      return db_user.id
+  }
 
   login = async (username: string, password: string): Promise<number> => {
     const db_password = await this.knex<User>("user")
