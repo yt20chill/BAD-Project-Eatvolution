@@ -1,15 +1,15 @@
 import Knex from "knex";
-import { Food, GeneralOmitFields } from "models/dbModels";
-import { seed } from "../../src/db/seeds/01-food";
+import { Category, Food, GeneralOmitFields } from "models/dbModels";
+import { env } from "../../src/env";
 import { BadRequestError } from "../../src/utils/error";
+//import { logger } from "../../src/utils/logger";
 import knexConfig from "../db/knexfile";
+import { seed } from "../db/seeds/01-init";
 import FoodService from "./food.service";
 
-//TODO: how to config knex based on github testing or local testing?
-const knex = Knex(knexConfig["staging"]);
+const knex = Knex(knexConfig[env.NODE_ENV]);
 
 describe("FoodService", () => {
-  let foodService: FoodService;
   const testFood = {
     name: "test",
     calories: 0.1,
@@ -21,6 +21,7 @@ describe("FoodService", () => {
     fibre: 0.1,
     sugar: 0.1,
     sodium: 0.1,
+    category_id: 1,
   };
   const expectTestFood = {
     food_name: "test",
@@ -58,13 +59,20 @@ describe("FoodService", () => {
     sugar: "0.10",
     sodium: "0.10",
   };
-  let testUserId: number;
-  let foodCountBefore: number;
   const countFood = async () => +(await knex("food").count("id as count"))[0]["count"];
   const getFoodIdsFromTestFood = async (...food: Array<Omit<Food, GeneralOmitFields>>) => {
     return (await knex("food").insert(food).returning("id")).map((e) => +e.id);
   };
+  let foodService: FoodService;
+  let testUserId: number;
+  let foodCountBefore: number;
+  let categories: Map<number, string>;
   beforeAll(async () => {
+    await knex("user_custom_food").del();
+    await knex.raw(`ALTER SEQUENCE user_custom_food_id_seq RESTART WITH 1`);
+    await knex("user").del();
+    await knex.raw(`ALTER SEQUENCE user_id_seq RESTART WITH 1`);
+    await seed(knex);
     testUserId = +(
       await knex("user")
         .insert({
@@ -73,20 +81,22 @@ describe("FoodService", () => {
         })
         .returning("id")
     )[0]["id"];
+    categories = (await knex<Category>("category").select("id", "name")).reduce(
+      (acc, { id, name }) => {
+        acc.set(id, name);
+        return acc;
+      },
+      new Map<number, string>()
+    );
   });
   beforeEach(async () => {
-    // Let them stay here or else the seed file cannot run properly
     await knex("user_custom_food").del();
     await knex.raw(`ALTER SEQUENCE user_custom_food_id_seq RESTART WITH 1`);
-    await knex("food_category").del();
-    await knex.raw(`ALTER SEQUENCE food_category_id_seq RESTART WITH 1`);
-    await knex("category").del();
-    await knex.raw(`ALTER SEQUENCE category_id_seq RESTART WITH 1`);
     await seed(knex);
+    foodCountBefore = await countFood();
     jest.clearAllMocks();
     foodService = new FoodService(knex);
     jest.spyOn(foodService, "isExisting");
-    foodCountBefore = await countFood();
   });
 
   describe("isExisting", () => {
@@ -188,7 +198,6 @@ describe("FoodService", () => {
       const result = await foodService.getDetails(insertedId);
       expect(result.length).toBe(1);
       expect(result[0]).toMatchObject(expectTestFood);
-      expect(result[0].category_name).toEqual([]);
     });
     it("should return nutrition of > 1 food", async () => {
       const foodIds = await getFoodIdsFromTestFood(testFood, testFood2);
@@ -198,24 +207,12 @@ describe("FoodService", () => {
       expect(result[1]).toMatchObject(expectTestFood2);
     });
     it("should get category name", async () => {
-      const catIds = (
-        await knex("category")
-          .insert([{ name: "cat1" }, { name: "cat2" }])
-          .returning("id")
-      ).map((e) => e.id);
-      const foodIds = await getFoodIdsFromTestFood(testFood, testFood2);
-      await knex("food_category").insert({ food_id: foodIds[0], category_id: catIds[0] });
-      expect((await foodService.getDetails(foodIds[0]))[0].category_name).toEqual(["cat1"]);
-      expect((await foodService.getDetails(foodIds[1]))[0].category_name).toEqual([]);
-      await knex("food_category").insert({ food_id: foodIds[1], category_id: catIds[0] });
-      expect((await foodService.getDetails(foodIds[0]))[0].category_name).toEqual(["cat1"]);
-      expect((await foodService.getDetails(foodIds[1]))[0].category_name).toEqual(["cat1"]);
-      await knex("food_category").insert({ food_id: foodIds[0], category_id: catIds[1] });
-      expect((await foodService.getDetails(foodIds[0]))[0].category_name).toEqual(["cat1", "cat2"]);
-      const results = await foodService.getDetails(...foodIds);
-      expect(results.length).toBe(2);
-      expect(results[0].category_name).toEqual(["cat1", "cat2"]);
-      expect(results[1].category_name).toEqual(["cat1"]);
+      const foodId = (await getFoodIdsFromTestFood(testFood))[0];
+      expect((await foodService.getDetails(foodId))[0].category_name).toEqual(categories.get(1));
+    });
+    it("should get null if no category", async () => {
+      const foodId = (await getFoodIdsFromTestFood(testFood2))[0];
+      expect((await foodService.getDetails(foodId))[0].category_name).toBeNull();
     });
     it("should resolve if at least 1 foodId is valid", async () => {
       const id = (await getFoodIdsFromTestFood(testFood))[0];
