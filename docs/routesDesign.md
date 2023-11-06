@@ -1,16 +1,21 @@
 # URL design
 
-/
-/game
-/collections
+- /
+- /game
+- /collections
 
 # route design
 
 ## auth
 
-/auth/login
-/auth/signup
-/oauth/google
+- /auth/login
+	- `POST` req.body: { username: string, password: string }
+	- return boolean
+- /auth/signup
+	- `POST` req.body: { username: string, password: string, confirmPassword: string }
+	- return boolean
+- /oauth/google
+	- `GET` return boolean
 
 ## food
 
@@ -36,3 +41,7 @@
 - GET: return slime collections for that user
 	- return `{ success: boolean, result: SlimeType[] }`
 
+## user
+
+/api/user
+- `GET`: return `{ success: boolean, result: User }`

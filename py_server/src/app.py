@@ -23,7 +23,11 @@ def call_model(request):
     #     )
     # )
     # return json({"data": result})
-	pass
+    # load model
+    # filepath = os.path.join("..", "/AI_model/food_model.sav")
+    # food_model = pickle.load(open(filepath, 'rb'))
+    pass
+
 
 debug = True
 

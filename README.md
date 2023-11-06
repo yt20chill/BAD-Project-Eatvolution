@@ -28,7 +28,7 @@ Still not confident? You can work on your own branch 😌. After making sure not
 
 ## Pull from git
 
-normally, all completed features will be merged to `main`
+normally, all completed features will be merged to `main`.
 it's important to keep your code updated with the latest main
 
 ```bash
@@ -66,6 +66,31 @@ git checkout {branch_name}
 # to integrate with the latest main branch
 git fetch origin main
 git merge origin/main
+```
+
+## Update `main` with your latest code
+
+You now have your wonderful code in your own branch, how to push it to the `main` branch and share it to all your teammates?
+
+1. make sure it has no conflicts with the current main
+```bash
+# merge with latest main
+git fetch origin main
+git merge origin/main
+```
+2. manually solve any conflicts and then push the latest branch to repo
+```bash
+git add .
+git commit -m "{meaningful commit message}"
+git push
+```
+
+3. checkout to the `main` branch and merge it with your latest branch
+```bash
+git checkout main
+git fetch origin {your_branch}
+git merge origin/{your_branch}
+git push
 ```
 
 ## Appendix
