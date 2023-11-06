@@ -7,6 +7,7 @@ import { logger } from "./utils/logger";
 import { AppUtils } from "./utils/utils";
 import {grantExpress} from "./auth/oauth"
 import { authRoutes } from "./auth/auth.routes";
+import { isLoggedIn } from "./auth/guard";
 
 
 app.use(express.json());
@@ -23,7 +24,7 @@ io.use((socket, next) => {
 // app.use("/api", isLoggedInForApi, apiRoutes);
 app.use("/auth", authRoutes);
 // app.use("/oauth", oauthRoutes);
-
+app.use(isLoggedIn)
 
 
 
