@@ -9,6 +9,7 @@ import { fetch } from "cross-fetch";
 // import grant from "grant"
 
 
+
 export default class AuthController implements AuthControllerHelper {
   constructor(
     private readonly authService: AuthService,
@@ -17,7 +18,9 @@ export default class AuthController implements AuthControllerHelper {
 
   // isExisting = 
 
-  // signUp = 
+  signUp = async (req: Request) => {
+    
+  }
 
   login = async (req: Request) => {
     const { username, password } = req.body;
@@ -46,7 +49,6 @@ export default class AuthController implements AuthControllerHelper {
     req.session.userId = result[0].id
 
     return AppUtils.setServerResponse();
-     
   }
 }
  

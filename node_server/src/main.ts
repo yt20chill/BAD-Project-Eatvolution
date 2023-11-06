@@ -30,7 +30,7 @@ app.use(isLoggedIn)
 
 app.use(express.static(path.join(__dirname, "..", "public")));
 // Example for serving guarded folder
-// app.use("/user", isLoggedInForFrontEnd, express.static(path.join(__dirname, "protected")));
+app.use("/user", isLoggedIn, express.static(path.join(__dirname, "..", "private")));
 
 // app.use((_, res) => {
 //   res.sendFile(path.join(__dirname, "..", "public", "404.html"));

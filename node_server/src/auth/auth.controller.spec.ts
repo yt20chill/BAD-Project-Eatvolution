@@ -25,7 +25,7 @@ describe("AuthController", () => {
     authService.isExisting = jest.fn(async (_username: string) => -1);
     authController = new AuthController(authService);
   });
-  it.only("login should validate login", () => {
+  it("login should validate login", () => {
     req.body = { username: "test", password: "test" };
     expect(authService.login).toBeCalledWith("test", "test");
     expect(authController.login(req)).resolves.toEqual({ success: true, result: null });
@@ -113,7 +113,7 @@ describe("AuthController", () => {
     expect(authService.signUp).toBeCalledTimes(0);
     expect(req.session.userId).toBeUndefined();
   });
-  it("oauth should validate login for existing user and assign userId", async () => {
+  it.only("oauth should validate login for existing user and assign userId", async () => {
     req.session.grant.response.access_token = "foo";
     fetchMock.mockResponseOnce(JSON.stringify({ email: "foo@example.com" }));
     authService.isExisting = jest.fn((_username: string) => true);
@@ -122,7 +122,7 @@ describe("AuthController", () => {
     expect(authService.login).toBeCalledTimes(0);
     expect(req.session.userId).toBe(1);
   });
-  it("oauth should create new user for non-existing user and assign userId", async () => {
+  it.only("oauth should create new user for non-existing user and assign userId", async () => {
     req.session.grant.response.access_token = "foo";
     fetchMock.mockResponseOnce(JSON.stringify({ email: "foo@example.com" }));
     expect(authController.oauthLogin(req)).resolves.toEqual({ success: true, result: null });
@@ -130,7 +130,7 @@ describe("AuthController", () => {
     expect(authService.signUp).toBeCalledTimes(1);
     expect(req.session.userId).toBe(1);
   });
-  it("oauth should return success: false if oauth is failed", () => {
+  it.only("oauth should return success: false if oauth is failed", () => {
     expect(authController.oauthLogin(req)).resolves.toEqual({ success: false, result: null });
   });
 });
