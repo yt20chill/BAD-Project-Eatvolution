@@ -59,22 +59,27 @@ updated_at timestamp
 food
 ----
 id integer PK
-name varchar(255)
-created_by integer null FK >- user.id
-cost integer
+name varchar(255) unique
+cost integer null
 calories decimal
 protein decimal
 fat decimal
+saturated_fat decimal
 cholesterol decimal
-carb decimal
+carbohydrates decimal
 fibre decimal
 sugar decimal
 sodium decimal
-potassium decimal
 created_at timestamp
 updated_at timestamp
 
-
+user_custom_food
+-
+id
+food_id FK >- food.id
+user_id FK >- user.id
+created_at timestamp
+updated_at timestamp
 
 food_category
 -------------

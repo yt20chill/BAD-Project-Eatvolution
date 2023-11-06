@@ -1,7 +1,7 @@
 import * as bcrypt from "bcryptjs";
 import { Knex } from "knex";
 import { User } from "models/dbModels";
-import { AuthServiceHelper } from "models/models";
+import { AuthServiceHelper } from "models/serviceModels";
 import { NotFoundError } from "src/utils/error";
 
 export default class AuthService implements AuthServiceHelper {
@@ -11,7 +11,7 @@ export default class AuthService implements AuthServiceHelper {
     throw new Error("Method not implemented.");
   }
 
-  login = async (username: string, password: string): Promise<boolean> => {
+  login = async (username: string, password: string): Promise<number> => {
     const db_password = await this.knex<User>("user")
       .select("hash_password")
       .where("username", username)[0];
