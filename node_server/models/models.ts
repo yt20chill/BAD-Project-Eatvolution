@@ -1,6 +1,6 @@
 declare module "express-session" {
   interface SessionData {
-    userId?: string;
+    userId?: number;
     grant: Grant;
   }
 }

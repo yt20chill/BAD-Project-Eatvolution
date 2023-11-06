@@ -17,7 +17,7 @@ const options = {
 };
 
 // for development environment
-const devLogger = {
+const devLogger = () => ({
   format: format.combine(
     format.timestamp(),
     format.errors({ stack: true }),
@@ -25,10 +25,10 @@ const devLogger = {
     format.colorize()
   ),
   transports: [new transports.Console(options.console)],
-};
+});
 
 // for production environment
-const prodLogger = {
+const prodLogger = () => ({
   format: format.combine(format.timestamp(), format.errors({ stack: true }), format.json()),
   transports: [
     new transports.File(options.file),
@@ -37,9 +37,10 @@ const prodLogger = {
       level: "info",
     }),
   ],
-};
+});
 
 // export log instance based on the current environment
-const instanceLogger = env.NODE_ENV === "production" ? prodLogger : devLogger;
+const instanceLogger = env.NODE_ENV === "production" ? prodLogger() : devLogger();
+console.log(instanceLogger);
 
 export const logger = createLogger(instanceLogger);
