@@ -9,8 +9,8 @@ export async function seed(knex: Knex): Promise<void> {
   const trx = await knex.transaction();
   try {
     // Deletes ALL existing entries
-    await trx("category").del();
     await trx("food").del();
+    await trx("category").del();
     await trx.raw("ALTER SEQUENCE food_id_seq RESTART WITH 1");
     await trx.raw("ALTER SEQUENCE category_id_seq RESTART WITH 1");
 
@@ -20,7 +20,6 @@ export async function seed(knex: Knex): Promise<void> {
       return acc;
     }, []);
     await trx("category").insert(insertCategories);
-    console.dir(await trx("category").select("id", "name"));
     const food = DbUtils.prepareFoodForSeeding(
       await DbUtils.csvToObjectPromise<Omit<Food, GeneralOmitFields>>(
         path.join(__dirname, "..", "/labeled_food.csv")
@@ -32,10 +31,10 @@ export async function seed(knex: Knex): Promise<void> {
       food.sort((a, b) => a.cost - b.cost),
       50
     );
-    trx.commit();
+    await trx.commit();
     logger.debug("food successfully inserted");
   } catch (error) {
     logger.error(error.message);
-    trx.rollback();
+    await trx.rollback();
   }
 }
