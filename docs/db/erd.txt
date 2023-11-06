@@ -71,6 +71,7 @@ fibre decimal
 sugar decimal
 sodium decimal
 category_id integer FK >- category.id
+emoji varchar(255)
 created_at timestamp
 updated_at timestamp
 

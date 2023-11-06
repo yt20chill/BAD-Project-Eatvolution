@@ -52,6 +52,7 @@ export type Food = {
   fibre: number;
   sugar: number;
   sodium: number;
+  emoji: string;
   created_at: string;
   updated_at: string;
 };
