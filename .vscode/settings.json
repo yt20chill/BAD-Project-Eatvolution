@@ -12,5 +12,15 @@
     "knex",
     "varchar",
     "venv"
-  ] 
+  ],
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "livePreview.defaultPreviewPath": "/node_server/public/index.html",
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }
