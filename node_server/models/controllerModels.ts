@@ -9,6 +9,6 @@ export interface ControllerResult<ResultType> {
 
 export interface AuthControllerHelper {
   login: Controller;
-  signUp: Controller<number | string>;
+  // signUp: Controller<number | string>;
   oauthLogin: Controller;
 }

@@ -2,8 +2,9 @@ import { BriefFood, Food, FoodDetails, GeneralOmitFields } from "./dbModels";
 
 export interface AuthServiceHelper {
   login(username: string, password: string): Promise<number>;
-  signUp(username: string, password: string): Promise<number>;
-  isExisting(username: string): Promise<number>;
+  // signUp(username: string, password: string): Promise<number>;
+  // isExisting(username: string): Promise<number>;
+  oauthLogin(email:string): Promise<number>
 }
 
 export interface FoodServiceHelper {

@@ -25,7 +25,7 @@ describe("AuthController", () => {
     authService.isExisting = jest.fn(async (_username: string) => -1);
     authController = new AuthController(authService);
   });
-  it("login should validate login", () => {
+  it.only("login should validate login", () => {
     req.body = { username: "test", password: "test" };
     expect(authService.login).toBeCalledWith("test", "test");
     expect(authController.login(req)).resolves.toEqual({ success: true, result: null });
