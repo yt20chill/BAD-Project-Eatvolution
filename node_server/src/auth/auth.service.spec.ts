@@ -1,9 +1,10 @@
 import Knex from "knex";
 import { User } from "models/dbModels";
+import { env } from "src/env";
 import { BadRequestError } from "src/utils/error";
 import knexConfig from "../db/knexfile";
 import AuthService from "./auth.service";
-const knex = Knex(knexConfig["test"]);
+const knex = Knex(knexConfig[env.NODE_ENV]);
 describe("AuthService", () => {
   let authService: AuthService;
   let userCountBefore: number;
