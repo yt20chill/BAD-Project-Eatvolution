@@ -48,6 +48,7 @@ export type Food = {
   id?: null | number;
   name: string;
   cost?: null | number;
+  category_id?: null | number;
   calories: number;
   protein: number;
   fat: number;
@@ -67,16 +68,6 @@ export type CustomFood = {
   food?: Food;
   user_id: number;
   user?: User;
-  created_at: string;
-  updated_at: string;
-};
-
-export type FoodCategory = {
-  id?: null | number;
-  food_id: number;
-  food?: Food;
-  category_id: number;
-  category?: Category;
   created_at: string;
   updated_at: string;
 };

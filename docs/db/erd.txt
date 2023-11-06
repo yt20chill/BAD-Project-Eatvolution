@@ -70,6 +70,7 @@ carbohydrates decimal
 fibre decimal
 sugar decimal
 sodium decimal
+category_id integer FK >- category.id
 created_at timestamp
 updated_at timestamp
 
@@ -78,14 +79,6 @@ user_custom_food
 id
 food_id FK >- food.id
 user_id FK >- user.id
-created_at timestamp
-updated_at timestamp
-
-food_category
--------------
-id integer PK
-food_id integer FK >- food.id
-category_id integer FK >- category.id
 created_at timestamp
 updated_at timestamp
 
@@ -112,14 +105,3 @@ id integer PK
 user_id integer FK >- user.id
 slime_type_id uuid FK >- slime_type.id
 created_at timestamp
-
-
-# zoom: 1.062
-# view: (129, 86)
-# user (764, 145)
-# slime_type (771, 445)
-# slime (357, 201)
-# food (18, 64)
-# slime_food (28, 579)
-# user_food_collection (1125, 5)
-# user_slime_type_collection (1123, 214)
