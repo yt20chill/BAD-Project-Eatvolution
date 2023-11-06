@@ -24,26 +24,6 @@ const config: { [key: string]: Knex.Config } = {
     },
   },
 
-  // for local testing
-  staging: {
-    client: "postgresql",
-    connection: {
-      database: env.TEST_DB_NAME,
-      user: env.DB_USERNAME,
-      password: env.DB_PASSWORD,
-      host: env.DB_HOST,
-      port: +env.DB_PORT!,
-    },
-    pool: {
-      min: 2,
-      max: 10,
-    },
-    migrations: {
-      tableName: "knex_migrations",
-    },
-  },
-
-  // for github auto-testing
   test: {
     client: "postgresql",
     connection: {

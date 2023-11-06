@@ -17,7 +17,6 @@ export default class FoodService implements FoodServiceHelper {
     try {
       //insert to food table only if foodId is not -1
       foodId = foodId === -1 ? (await trx("food").insert(food).returning("id"))[0]["id"] : foodId;
-      logger.debug(`foodId: ${foodId}`);
       await trx("user_custom_food").insert({ food_id: foodId, user_id: userId });
       trx.commit();
     } catch (error) {
@@ -47,29 +46,24 @@ export default class FoodService implements FoodServiceHelper {
       )
     ).filter((id) => id !== null);
     if (validIds.length === 0) throw new BadRequestError();
-    const result = await this.knex("food")
-      .select<Omit<FoodDetails, "category_name">[]>(
-        "id",
-        "name as food_name",
-        "calories",
-        "protein",
-        "fat",
-        "saturated_fat",
-        "cholesterol",
-        "carbohydrates",
-        "fibre",
-        "sugar",
-        "sodium"
+    return await this.knex("food")
+      .select<FoodDetails[]>(
+        "food.id",
+        "food.name as food_name",
+        "food.calories",
+        "food.protein",
+        "food.fat",
+        "food.saturated_fat",
+        "food.cholesterol",
+        "food.carbohydrates",
+        "food.fibre",
+        "food.sugar",
+        "food.sodium",
+        "category.name as category_name"
       )
-      .whereIn("id", validIds);
-    return (
-      await Promise.all(
-        result.map(async (food: FoodDetails) => {
-          food.category_name = await this.getFoodCategory(food.id);
-          return food as FoodDetails;
-        })
-      )
-    ).sort((a, b) => a.id - b.id);
+      .leftJoin("category", "category.id", "food.category_id")
+      .whereIn("food.id", validIds)
+      .orderBy("food.id");
   };
 
   isExisting = async (options: { id?: number; name?: string }): Promise<number> => {
@@ -91,17 +85,6 @@ export default class FoodService implements FoodServiceHelper {
     return result.length !== 0 ? result[0]["id"] : -1;
   };
 
-  private getFoodCategory = async (foodId: number): Promise<Array<string>> => {
-    return (
-      await this.knex("category")
-        .select("category.name as category_name")
-        .join("food_category", "food_category.category_id", "category.id")
-        .where("food_category.food_id", foodId)
-    ).reduce((acc, elem) => {
-      acc.push(elem["category_name"]);
-      return acc;
-    }, [] as Array<string>);
-  };
   private isCustomFoodDuplicated = async (userId: number, foodId: number): Promise<boolean> => {
     return !(
       foodId === -1 ||
