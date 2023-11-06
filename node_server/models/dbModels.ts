@@ -10,10 +10,16 @@ export type User = {
 
 export type Category = {
   id?: null | number;
-  name: string;
+  name: CategoryName;
   created_at: string;
   updated_at: string;
 };
+enum CategoryName {
+  "healthy",
+  "salty",
+  "empty",
+  "starchy",
+}
 
 export type SlimeType = {
   id?: null | string; // uuid
