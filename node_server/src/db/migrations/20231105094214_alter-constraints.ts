@@ -29,7 +29,7 @@ export async function down(knex: Knex): Promise<void> {
     table.dropUnique(["food_id", "category_id"]);
   });
   await knex.schema.alterTable("user_custom_food", (table) => {
-    table.dropUnique(["food_id", "user_id"]);
+    table.dropUnique(["user_id", "food_id"]);
   });
   await knex.schema.alterTable("food", (table) => {
     table.dropUnique(["name"]);
