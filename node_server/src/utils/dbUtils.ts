@@ -1,7 +1,6 @@
 import csvParser from "csv-parser";
 import fs from "fs";
 import { Food, GeneralOmitFields } from "models/dbModels";
-import { CNItem } from "models/models";
 
 export default class DbUtils {
   /**
@@ -22,32 +21,39 @@ export default class DbUtils {
   static prepareFoodForSeeding = (food: T[]) => {
     return food.reduce(
       (result, f) => {
+        const temp = {} as Omit<Food, GeneralOmitFields>;
         for (const key of Object.keys(f)) {
-          if (key === "name") continue;
-          f[key] = parseFloat(f[key]);
-          if (key === "cost") f[key] = Math.floor(f[key]);
-          if (key === "category_id") ++f[key];
+          if (key === "name" || key == "emoji") {
+            temp[key] = f[key];
+            continue;
+          }
+          if (key === "class") {
+            temp.category_id = ++f[key];
+            continue;
+          }
+          temp[key] = parseFloat(f[key]);
+          if (key === "cost") temp[key] = Math.floor(f[key]);
         }
-        result.push(f);
+        result.push(temp);
         return result;
       },
       [] as Omit<Food, GeneralOmitFields>[]
     );
   };
-  static cnItemsToDbFood = (items: Array<CNItem>): Omit<Food, GeneralOmitFields>[] => {
-    const unitRegex = /(_g$|_mg$)/;
-    return items.reduce(
-      (acc, item) => {
-        const food = {} as Omit<Food, GeneralOmitFields>;
-        for (const key of Object.keys(item)) {
-          acc.push((food[key.replace(unitRegex, "")] = item[key]));
-        }
-        acc.push(food);
-        return acc;
-      },
-      [] as Omit<Food, GeneralOmitFields>[]
-    );
-  };
+  // static cnItemsToDbFood = (items: Array<CNItem>): Omit<Food, GeneralOmitFields>[] => {
+  //   const unitRegex = /(_g$|_mg$)/;
+  //   return items.reduce(
+  //     (acc, item) => {
+  //       const food = {} as Omit<Food, GeneralOmitFields>;
+  //       for (const key of Object.keys(item)) {
+  //         acc.push((food[key.replace(unitRegex, "")] = item[key]));
+  //       }
+  //       acc.push(food);
+  //       return acc;
+  //     },
+  //     [] as Omit<Food, GeneralOmitFields>[]
+  //   );
+  // };
 }
 
-type T = Omit<Food, GeneralOmitFields>;
+type T = Omit<Food, GeneralOmitFields> | "class";
