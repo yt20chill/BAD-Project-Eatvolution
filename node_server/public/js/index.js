@@ -40,11 +40,15 @@ const containerHeight = document.querySelector('.slime-container').offsetHeight;
 gsap.fromTo(leftSlime,
     { y: -leftSlime.offsetHeight },
     { y: containerHeight - 100, duration: 5, ease: 'power4.out' }
+    // { x: -800, y: containerHeight - 300 },
+    // { x: 300, duration: 5, ease: 'power4.out' }
 );
 
 gsap.delayedCall(1, () => {
     gsap.fromTo(rightSlime,
         { y: 0 },
         { y: containerHeight / 2, duration: 5, ease: 'power4.out' }
+        // { x: 500, y: containerHeight - 600 },
+        // { x: -300, duration: 5, ease: 'power4.out' }
     );
 });

@@ -1,6 +1,6 @@
 *,
 *::after,
-*::before {
+main-c *::before {
 	box-sizing: border-box;
 }
 
@@ -546,6 +546,7 @@ li.fb a::before {
 	font-weight: bold;
 }
 
+.the-form [type="text"],
 .the-form [type="email"],
 .the-form [type="password"] {
 	padding: 15px;
@@ -560,18 +561,21 @@ li.fb a::before {
 		#e6e6e6;
 }
 
+.the-form [type="text"]::placeholder,
 .the-form [type="email"]::placeholder,
 .the-form [type="password"]::placeholder {
 	color:
 		rgba(255, 255, 255, 0.3);
 }
 
+.the-form [type="text"]:hover,
 .the-form [type="email"]:hover,
 .the-form [type="password"]:hover {
 	background:
 		rgba(0, 0, 0, 0.1);
 }
 
+.the-form [type="text"]:focus,
 .the-form [type="email"]:focus,
 .the-form [type="password"]:focus {
 	background:
@@ -583,6 +587,7 @@ li.fb a::before {
 		#222222;
 }
 
+.the-form [type="text"]:focus::placeholder,
 .the-form [type="email"]:focus::placeholder,
 .the-form [type="password"]:focus::placeholder {
 	color:
@@ -667,9 +672,44 @@ li.fb a::before {
 	height: 100%;
 }
 
+.slime-wrapper-A {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 50%;
+	height: 100%;
+}
+
+.slime-wrapper-B {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 50%;
+	height: 100%;
+}
+
 .slime {
 	position: absolute;
 	top: -200px;
 	left: 50%;
+	transform: translateX(-50%);
+}
+
+.slime-jump-A {
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	top: 30%;
+	left: -200px;
+	transform: translateX(-50%);
+}
+
+.slime-jump-B {
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	top: 70%;
+	right: -500px;
+	;
 	transform: translateX(-50%);
 }
