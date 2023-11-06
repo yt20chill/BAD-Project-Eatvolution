@@ -3,6 +3,7 @@ import { RedisClientType } from "redis";
 import { BadRequestError } from "src/utils/error";
 import { AppUtils } from "src/utils/utils";
 import AuthService from "./auth.service";
+import grant from "grant"
 
 export default class AuthController {
   constructor(
@@ -19,6 +20,19 @@ export default class AuthController {
   };
 
   googleLogin =  async (req: Request) => {
-    
+    const grantExpress = grant.express({
+      defaults: {
+        origin: "http://loclhost:8080",
+        transport: "session",
+        state: true,
+      },
+      google: {
+        key: process.env.GOOGLE_CLIENT_ID || "",
+        secret: process.env.GOOGLE_CLIENT_SECRET || "",
+        scope: ["profile", "email"],
+        callback: "/login/google",
+      },
+    });
+     
   }
 }

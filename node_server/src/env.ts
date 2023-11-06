@@ -16,6 +16,8 @@ export const env = {
   REDIS_PORT: "",
   CN_API_KEY: "",
   SESSION_SECRET: "",
+  GOOGLE_CLIENT_ID: "",
+  GOOGLE_CLIENT_SECRET: ""
 };
 
 populateEnv(env, { mode: "halt" });
