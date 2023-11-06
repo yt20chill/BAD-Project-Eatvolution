@@ -1,6 +1,7 @@
 import csvParser from "csv-parser";
 import fs from "fs";
 import { Food, GeneralOmitFields } from "models/dbModels";
+import { CnItem, InsertFood } from "models/models";
 
 export default class DbUtils {
   /**
@@ -40,20 +41,19 @@ export default class DbUtils {
       [] as Omit<Food, GeneralOmitFields>[]
     );
   };
-  // static cnItemsToDbFood = (items: Array<CNItem>): Omit<Food, GeneralOmitFields>[] => {
-  //   const unitRegex = /(_g$|_mg$)/;
-  //   return items.reduce(
-  //     (acc, item) => {
-  //       const food = {} as Omit<Food, GeneralOmitFields>;
-  //       for (const key of Object.keys(item)) {
-  //         acc.push((food[key.replace(unitRegex, "")] = item[key]));
-  //       }
-  //       acc.push(food);
-  //       return acc;
-  //     },
-  //     [] as Omit<Food, GeneralOmitFields>[]
-  //   );
-  // };
+  static cnItemToInsertFood = (item: CnItem): InsertFood => {
+    const unitRegex = /(_g$|_mg$)/;
+    const food = {} as InsertFood;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { name, potassium_mg, serving_size_g, fat_saturated_g, ...rest } = item;
+    const normalizeFactor = serving_size_g / 100;
+    food.name = name;
+    food.saturated_fat = fat_saturated_g / normalizeFactor;
+    for (const key of Object.keys(rest)) {
+      food[key.replace(unitRegex, "")] = item[key] / normalizeFactor;
+    }
+    return food;
+  };
 }
 
 type T = Omit<Food, GeneralOmitFields> | "class";

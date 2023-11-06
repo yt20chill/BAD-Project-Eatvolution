@@ -44,3 +44,45 @@ export type OAuthRes = {
   picture: string;
   locale: string;
 };
+
+export type CnItem = {
+  name: string;
+  calories: number;
+  serving_size_g: number;
+  fat_total_g: number;
+  fat_saturated_g: number;
+  protein_g: number;
+  sodium_mg: number;
+  potassium_mg: number;
+  cholesterol_mg: number;
+  carbohydrates_total_g: number;
+  fiber_g: number;
+  sugar_g: number;
+};
+
+export type ClassifyFood = {
+  calories: number;
+  fat: number;
+  saturated_fat: number;
+  protein: number;
+  sodium: number;
+  cholesterol: number;
+  carbohydrates: number;
+  fibre: number;
+  sugar: number;
+};
+
+export type InsertFood = {
+  name: string;
+  cost?: null | number;
+  category_id?: null | number;
+  calories: number;
+  protein: number;
+  fat: number;
+  saturated_fat: number;
+  cholesterol: number;
+  carbohydrates: number;
+  fibre: number;
+  sugar: number;
+  sodium: number;
+};

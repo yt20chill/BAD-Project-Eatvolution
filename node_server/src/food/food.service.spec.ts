@@ -60,7 +60,9 @@ describe("FoodService", () => {
     sodium: "0.10",
   };
   const countFood = async () => +(await knex("food").count("id as count"))[0]["count"];
-  const getFoodIdsFromTestFood = async (...food: Array<Omit<Food, GeneralOmitFields>>) => {
+  const getFoodIdsFromTestFood = async (
+    ...food: Array<Omit<Food, GeneralOmitFields | "emoji">>
+  ) => {
     return (await knex("food").insert(food).returning("id")).map((e) => +e.id);
   };
   let foodService: FoodService;

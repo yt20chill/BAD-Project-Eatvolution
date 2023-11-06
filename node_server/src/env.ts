@@ -15,6 +15,7 @@ export const env = {
   REDIS_PORT: "",
   CN_API_KEY: "",
   SESSION_SECRET: "",
+  PY_URL: process.env.PY_URL ?? "127.0.0.1",
 };
 
 populateEnv(env, { mode: "halt" });
