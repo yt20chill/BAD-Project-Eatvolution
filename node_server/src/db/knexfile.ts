@@ -26,7 +26,7 @@ const config: { [key: string]: Knex.Config } = {
 
   test: {
     client: "postgresql",
-    debug:true,
+    debug: true,
     connection: {
       host: env.POSTGRES_HOST,
       database: env.POSTGRES_DB,

@@ -10,7 +10,7 @@ describe("AuthService", () => {
   let userCountBefore: number;
   let testId: number;
   const countUser = async () => +(await knex("user").count("id as count"))[0]["count"];
-  
+
   beforeEach(async () => {
     await knex("user").del();
     await knex.raw("ALTER SEQUENCE user_id_seq RESTART WITH 1");
@@ -36,8 +36,8 @@ describe("AuthService", () => {
     expect(await authService.login("test", "1234")).toBe(-1);
   });
 
-  it("login should invalidate login for wrong username", async() => {
-     expect(await authService.login("foo", "123")).toBe(-1);
+  it("login should invalidate login for wrong username", async () => {
+    expect(await authService.login("foo", "123")).toBe(-1);
   });
 
   it("should throw bad request if missing info", () => {
@@ -64,10 +64,8 @@ describe("AuthService", () => {
     expect(user).toHaveLength(1);
     expect(result).toBe(user[0].id);
     expect(user[0]).toMatchObject({ username: "test1" });
-    expect(user[0]["hash_password"].length).toEqual(60); 
-    expect(+(await knex("user").count("id as count"))[0]["count"]).toBe(
-      userCountBefore + 1
-    );
+    expect(user[0]["hash_password"].length).toEqual(60);
+    expect(+(await knex("user").count("id as count"))[0]["count"]).toBe(userCountBefore + 1);
   });
   it("sign up should return -1 if duplicate username", async () => {
     expect(await authService.signUp("test", "12")).toBe(-1);
@@ -85,9 +83,7 @@ describe("AuthService", () => {
     expect(authService.isExisting).toHaveBeenCalledTimes(0);
   });
 
-  afterEach(async () => {
-   
-  });
+  afterEach(async () => {});
 
   afterAll(async () => {
     await knex.destroy();
