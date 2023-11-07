@@ -16,6 +16,10 @@ export const env = {
   CN_API_KEY: "",
   SESSION_SECRET: "",
   PY_URL: process.env.PY_URL ?? "127.0.0.1",
+  POSTGRES_DB: "",
+  POSTGRES_USER: "",
+  POSTGRES_PASSWORD: "",
+  POSTGRES_HOST: "",
 };
 
 populateEnv(env, { mode: "halt" });
