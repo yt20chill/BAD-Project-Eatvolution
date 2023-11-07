@@ -8,7 +8,10 @@ import { logger } from "../../src/utils/logger";
 
 export default class FoodService implements FoodServiceHelper {
   constructor(private readonly knex: Knex) {}
-  insert = async (userId: number, food: InsertFood): Promise<boolean> => {
+  insert = async (userId: number, food: InsertFood | number): Promise<boolean> => {
+    if (typeof food === "number") {
+      return await this.insertExistingFood(userId, food);
+    }
     const foodCopy = { ...food };
     foodCopy.cost = null;
     foodCopy.name = foodCopy.name.trim().toLowerCase();
@@ -33,6 +36,11 @@ export default class FoodService implements FoodServiceHelper {
       trx.rollback();
       return false;
     }
+  };
+  private insertExistingFood = async (userId: number, foodId: number) => {
+    if (await this.isCustomFoodDuplicated(userId, foodId)) return false;
+    await this.knex("user_custom_food").insert({ food_id: foodId, user_id: userId });
+    return true;
   };
 
   getFoodForShop = async () => {
