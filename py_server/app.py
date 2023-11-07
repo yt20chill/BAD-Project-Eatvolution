@@ -22,14 +22,17 @@ def hello(request):
 
 @app.post("/foodClassifier")
 def classify(request):
-    content = request.json
-    food = content.get("food")
-    if (food == None): return json({"success": False});
-    predict_dataset = pd.json_normalize(food)
-    # re-order df columns based on the order used in training
-    predict_dataset = predict_dataset[food_train_columns]
-    result = loaded_model.predict(predict_dataset).tolist()
-    return json({"success": True, "result": result})
+    try:
+        content = request.json
+        food = content.get("food")
+        if (food == None): return json({"success": False});
+        predict_dataset = pd.json_normalize(food)
+        # re-order df columns based on the order used in training
+        predict_dataset = predict_dataset[food_train_columns]
+        result = loaded_model.predict(predict_dataset).tolist()
+        return json({"success": True, "result": result})
+    except: 
+        return json(body={"success": False}, status=500)
 
 @app.put("/foodClassifier")
 def updateModel(request):
