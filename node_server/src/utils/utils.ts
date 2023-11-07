@@ -8,7 +8,7 @@ export class AppUtils {
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const result = await controller(req);
-        res.json(this.setServerResponse(result.result, result.success));
+        res.json(this.setServerResponse(result.result));
         return;
       } catch (error) {
         if (error instanceof ApplicationError) {

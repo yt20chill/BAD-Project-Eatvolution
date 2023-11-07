@@ -9,7 +9,7 @@ import { fetch } from "cross-fetch";
 import { json } from "stream/consumers";
 // import grant from "grant"
 
-
+const a: boolean = null
 
 export default class AuthController implements AuthControllerHelper {
   constructor(
@@ -17,14 +17,21 @@ export default class AuthController implements AuthControllerHelper {
     private readonly redis?: RedisClientType
   ) {}
 
-  // isExisting = 
+  // isExisting = async (req: Request)=>{
+  
+  // }
 
   signUp = async (req: Request) => {
     const { username, password, confirmPassword} = req.body;
 
     if(password !== confirmPassword) return AppUtils.setServerResponse("duplicated username", false);
+    //package ZOD for type checking
+    if(!username || !password || !confirmPassword || typeof username !== "string" || typeof password !== "string" || typeof confirmPassword !== "string") throw new BadRequestError()
+  
+    const result = await this.authService.signUp(username, password);
 
-    const result = await this.authService.signUp(username, password,);
+    req.session.userId = result[0].id
+    return AppUtils.setServerResponse();
 
   }
 

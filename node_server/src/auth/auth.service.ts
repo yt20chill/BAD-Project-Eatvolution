@@ -28,6 +28,9 @@ export default class AuthService implements AuthServiceHelper {
   signUp = async (username: string, password: string): Promise<number> => {
     const isUserExist = await this.isExisting(username)
     if (isUserExist !== -1) return isUserExist
+    const db_user = this.knex<User>("user")
+    .select("id", "username", "hash_password")
+    .where("username", username)[0];
    
     if (username.length || password.length === 0 || password.length > 60 || typeof username && typeof password === "undefined") throw new BadRequestError()
 
@@ -39,9 +42,6 @@ export default class AuthService implements AuthServiceHelper {
       }
       await this.knex("user").insert({ username: username, hash_password: await this.hashPassword(newUser.password) })
       }
-      const db_user = this.knex<User>("user")
-      .select("id", "username", "hash_password")
-      .where("username", username)[0];
 
     return db_user.id
   }
