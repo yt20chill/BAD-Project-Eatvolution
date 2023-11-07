@@ -45,13 +45,7 @@ export type OAuthRes = {
   locale: string;
 };
 
-export type CN_Response = {
-  error?: string;
-  response: Response;
-  body: { items: CNItem[] };
-};
-
-export type CNItem = {
+export type CnItem = {
   sugar_g: number;
   fiber_g: number;
   serving_size_g: number;
