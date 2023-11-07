@@ -48,12 +48,12 @@ export default class AuthService implements AuthServiceHelper {
 
   login = async (username: string, password: string): Promise<number> => {
     const db_password = (await this.knex<User>("user")
-      .select("hash_password", "id")
+      .select("username","hash_password", "id")
       .where("username", username))[0];
-    if (!db_password) throw new NotFoundError();// username checking
+    if (!db_password) return -1;// username checking
     const isPasswordValid = await this.checkPassword(password, db_password.hash_password);
-    if (!isPasswordValid) throw new BadRequestError();// password checking
-    if(!db_password || !isPasswordValid) return -1
+    // if (!isPasswordValid) throw new BadRequestError();// password checking
+    if(!db_password || !isPasswordValid) throw new BadRequestError()
     return db_password.id;
   };
 
