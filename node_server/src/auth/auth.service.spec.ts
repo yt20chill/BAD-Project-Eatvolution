@@ -41,9 +41,9 @@ describe("AuthService", () => {
   });
 
   it("should throw bad request if missing info", () => {
-    expect(async () => await authService.login("", "")).toThrow(BadRequestError);
-    expect(async () => await authService.login("", "1234")).toThrow(BadRequestError);
-    expect(async () => await authService.login("test", "")).toThrow(BadRequestError);
+    expect(() => authService.login("", "")).rejects.toThrow(BadRequestError);
+    expect(() => authService.login("", "1234")).rejects.toThrow(BadRequestError);
+    expect(() => authService.login("test", "")).rejects.toThrow(BadRequestError);
   });
   it("isExisting should return userId if user exists", async () => {
     expect(await authService.isExisting("test")).toBe(testId);
@@ -73,14 +73,14 @@ describe("AuthService", () => {
     expect(await authService.signUp("test", "12")).toBe(-1);
     expect(authService.isExisting).toHaveBeenCalledTimes(1);
     expect(authService.isExisting).toHaveBeenCalledWith("test");
-    expect(countUser()).toBe(userCountBefore);
+    expect(await countUser()).toBe(userCountBefore);
   });
   it("sign up should throw bad request if missing info", async () => {
-    expect(async () => await authService.signUp("", "")).toThrow(BadRequestError);
+    await expect(authService.signUp("", "")).rejects.toThrow(BadRequestError);
     expect(await countUser()).toBe(userCountBefore);
-    expect(async () => await authService.signUp("test", "")).toThrow(BadRequestError);
+    await expect(authService.signUp("test", "")).rejects.toThrow(BadRequestError);
     expect(await countUser()).toBe(userCountBefore);
-    expect(async () => await authService.signUp("", "test")).toThrow(BadRequestError);
+    await expect(authService.signUp("", "test")).rejects.toThrow(BadRequestError);
     expect(await countUser()).toBe(userCountBefore);
     expect(authService.isExisting).toHaveBeenCalledTimes(0);
   });
