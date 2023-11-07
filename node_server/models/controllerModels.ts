@@ -12,3 +12,7 @@ export interface AuthControllerHelper {
   signUp: Controller<number | string>;
   oauthLogin: Controller;
 }
+
+export interface FoodControllerHelper {
+  insertFood: Controller<boolean>;
+}
