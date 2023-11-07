@@ -103,6 +103,7 @@ export default class FoodService implements FoodServiceHelper {
       ).length === 0
     );
   };
+  //TODO: test case for this
   private getCategory = async (food: InsertFood): Promise<number> => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { name, cost, category_id, ...rest } = food;
