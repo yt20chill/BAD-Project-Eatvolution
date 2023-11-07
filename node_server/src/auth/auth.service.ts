@@ -28,36 +28,40 @@ export default class AuthService implements AuthServiceHelper {
 
   signUp = async (username: string, password: string): Promise<number> => {
     const isUserExist = await this.isExisting(username)
-    if (isUserExist !== -1) return isUserExist
-    const db_user = this.knex<User>("user")
-    .select("id", "username", "hash_password")
-    .where("username", username)[0];
-   
-    if (username.length || password.length === 0 || password.length > 60 || typeof username && typeof password === "undefined") throw new BadRequestError()
-
-    if (isUserExist === -1) {
+    if (isUserExist !== -1) {
+      return isUserExist
+    } else {
       await isUserExist
+
+      // const db_user = (await this.knex<User>("user")
+      //   .select("id", "username", "hash_password")
+      //   .where("username", username))[0];
+        
       let newUser = {
         username: username,
         password: password
       }
-      await this.knex("user").insert({ username: username, hash_password: await this.hashPassword(newUser.password) })
-      }
+      const createUser = await this.knex("user").insert({ username: username, hash_password: await this.hashPassword(newUser.password) }).returning('id')
+      return createUser[0].id
+    }
 
-    return db_user.id
+
+    //  if(username.length || password.length === 0) throw new BadRequestError()
+
+    // if (username.length || password.length === 0 || password.length > 60 || typeof username && typeof password === "undefined") throw new BadRequestError()  
   }
 
   login = async (username: string, password: string): Promise<number> => {
-    if(!username || !password) throw new BadRequestError()
+    if (!username || !password) throw new BadRequestError()
     const db_password = (await this.knex<User>("user")
       .select("hash_password", "id")
       .where("username", username))[0];
-      if(db_password){
-        const isPasswordValid = await this.checkPassword(password, db_password.hash_password);
-        if(!isPasswordValid)  return -1
-      } else{
-        return -1
-      }
+    if (db_password) {
+      const isPasswordValid = await this.checkPassword(password, db_password.hash_password);
+      if (!isPasswordValid) return -1
+    } else {
+      return -1
+    }
     return db_password.id;
   };
 
