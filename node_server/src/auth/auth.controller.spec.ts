@@ -2,7 +2,7 @@
 import { Request } from "express";
 import fetchMock from "jest-fetch-mock";
 import { Knex } from "knex";
-import { BadRequestError } from "src/utils/error";
+import { BadRequestError } from "../../src/utils/error";
 import { mockRequest } from "../utils/testUtils";
 import AuthController from "./auth.controller";
 import AuthService from "./auth.service";
@@ -56,7 +56,7 @@ describe("AuthController", () => {
     });
     it("should throw bad request error when input type is invalid", () => {
       req.body = { username: 1, password: 2 };
-      expect(authController.login(req)).rejects.toThrow(BadRequestError);
+      expect(() => authController.login(req)).rejects.toThrow(BadRequestError);
       expect(authService.login).toHaveBeenCalledTimes(0);
       expect(req.session.userId).toBeUndefined();
     });

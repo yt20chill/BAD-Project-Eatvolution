@@ -40,7 +40,7 @@ export default class AuthController implements AuthControllerHelper {
     if (!username || !password) throw new BadRequestError();
     const result = await this.authService.login(username, password);
     if(result === 0) throw new BadRequestError()
-    req.session.userId = result[0].id
+    req.session.userId = result
     // res.json() == AppUtils.setServerResponse()
     return AppUtils.setServerResponse(); // return {success: true, result: is_password_correct} 
   };
