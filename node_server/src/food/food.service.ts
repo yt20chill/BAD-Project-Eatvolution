@@ -1,27 +1,37 @@
 import { Knex } from "knex";
-import { Food, FoodDetails, GeneralOmitFields } from "models/dbModels";
+import { Food, FoodDetails } from "models/dbModels";
+import { InsertFood } from "models/models";
 import { FoodServiceHelper } from "models/serviceModels";
+import { env } from "../../src/env";
 import { BadRequestError } from "../../src/utils/error";
 import { logger } from "../../src/utils/logger";
 
 export default class FoodService implements FoodServiceHelper {
   constructor(private readonly knex: Knex) {}
-  insert = async (userId: number, food: Omit<Food, GeneralOmitFields>): Promise<void> => {
-    food.cost = null;
-    food.name = food.name.trim().toLowerCase();
-    // if food.name is empty after conversion
-    if (!food.name) throw new BadRequestError();
-    let foodId = await this.isExisting(food);
-    if (foodId !== -1 && (await this.isCustomFoodDuplicated(userId, foodId))) return;
+  insert = async (userId: number, food: InsertFood): Promise<boolean> => {
+    const foodCopy = { ...food };
+    foodCopy.cost = null;
+    foodCopy.name = foodCopy.name.trim().toLowerCase();
+    // if foodCopy.name is empty after conversion
+    if (!foodCopy.name) throw new BadRequestError();
+    let foodId = await this.isExisting(foodCopy);
+    if (foodId !== -1 && (await this.isCustomFoodDuplicated(userId, foodId))) return false;
     const trx = await this.knex.transaction();
     try {
+      if (foodId === -1) {
+        foodCopy.category_id = (await this.getCategory(foodCopy))[0] ?? null;
+        // logger.debug(food.category_id);
+      }
       //insert to food table only if foodId is not -1
-      foodId = foodId === -1 ? (await trx("food").insert(food).returning("id"))[0]["id"] : foodId;
+      foodId =
+        foodId === -1 ? (await trx("food").insert(foodCopy).returning("id"))[0]["id"] : foodId;
       await trx("user_custom_food").insert({ food_id: foodId, user_id: userId });
       trx.commit();
+      return true;
     } catch (error) {
       logger.error(error.message);
       trx.rollback();
+      return false;
     }
   };
 
@@ -96,4 +106,27 @@ export default class FoodService implements FoodServiceHelper {
       ).length === 0
     );
   };
+
+  private getCategory = async (food: InsertFood): Promise<Array<number>> => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { name, cost, category_id, ...rest } = food;
+    try {
+      const res = await fetch(`${env.PY_URL}:${env.PY_PORT}/foodClassifier`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(rest),
+      });
+      if (!res.ok) return [];
+      const result = await res.json();
+      if (!result.success) return [];
+      return result.result.map((r: string | number) => +r + 1);
+    } catch (error) {
+      logger.error(error.message);
+      return [];
+    }
+  };
+  // this is to retrain model based on inserted food
+  private scheduleUpdateModel = async () => {};
+  // this is to re-categorize food based on updated model
+  private scheduleUpdateCategory = async () => {};
 }

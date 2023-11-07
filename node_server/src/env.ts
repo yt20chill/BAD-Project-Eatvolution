@@ -16,7 +16,8 @@ export const env = {
   CN_API_KEY: "",
   SESSION_SECRET: "",
   GOOGLE_CLIENT_ID: "",
-  GOOGLE_CLIENT_SECRET: ""
+  GOOGLE_CLIENT_SECRET: "",
+  PY_URL: process.env.PY_URL ?? "127.0.0.1",
 };
 
 populateEnv(env, { mode: "halt" });

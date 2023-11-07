@@ -3,6 +3,8 @@ import { Category, Food, GeneralOmitFields } from "models/dbModels";
 import { env } from "../../src/env";
 import { BadRequestError } from "../../src/utils/error";
 //import { logger } from "../../src/utils/logger";
+import fetchMock from "jest-fetch-mock";
+import { ClassifyFood } from "models/models";
 import knexConfig from "../db/knexfile";
 import { seed } from "../db/seeds/01-init";
 import FoodService from "./food.service";
@@ -10,7 +12,7 @@ import FoodService from "./food.service";
 const knex = Knex(knexConfig[env.NODE_ENV]);
 
 describe("FoodService", () => {
-  const testFood = {
+  let testFood = {
     name: "test",
     calories: 0.1,
     protein: 0.1,
@@ -60,11 +62,15 @@ describe("FoodService", () => {
     sodium: "0.10",
   };
   const countFood = async () => +(await knex("food").count("id as count"))[0]["count"];
-  const getFoodIdsFromTestFood = async (...food: Array<Omit<Food, GeneralOmitFields>>) => {
+  const getFoodIdsFromTestFood = async (
+    ...food: Array<Omit<Food, GeneralOmitFields | "emoji">>
+  ) => {
     return (await knex("food").insert(food).returning("id")).map((e) => +e.id);
   };
+  const getTestFoodCatId = async (foodName: string) =>
+    (await knex<Food>("food").select("category_id").where("name", foodName).first()).category_id;
   let foodService: FoodService;
-  let testUserId: number;
+  let testUserIds: Array<number>;
   let foodCountBefore: number;
   let categories: Map<number, string>;
   beforeAll(async () => {
@@ -73,14 +79,21 @@ describe("FoodService", () => {
     await knex("user").del();
     await knex.raw(`ALTER SEQUENCE user_id_seq RESTART WITH 1`);
     await seed(knex);
-    testUserId = +(
+    testUserIds = (
       await knex("user")
-        .insert({
-          username: "testUser",
-          hash_password: "$2a$10$8nXBNisolSX6wdRW1xRKw.r/4QK4qgoRnaTHlNHTqcRr1bjV65VR6",
-        })
+        .insert([
+          {
+            username: "testUser",
+            hash_password: "$2a$10$8nXBNisolSX6wdRW1xRKw.r/4QK4qgoRnaTHlNHTqcRr1bjV65VR6",
+          },
+          {
+            username: "testUser2",
+            hash_password: "$2a$10$8nXBNisolSX6wdRW1xRKw.r/4QK4qgoRnaTHlNHTqcRr1bjV65VR6",
+          },
+        ])
         .returning("id")
-    )[0]["id"];
+    ).map((e) => e.id);
+
     categories = (await knex<Category>("category").select("id", "name")).reduce(
       (acc, { id, name }) => {
         acc.set(id, name);
@@ -90,85 +103,134 @@ describe("FoodService", () => {
     );
   });
   beforeEach(async () => {
-    await knex("user_custom_food").del();
-    await knex.raw(`ALTER SEQUENCE user_custom_food_id_seq RESTART WITH 1`);
-    await seed(knex);
+    fetchMock.enableMocks();
+    fetchMock.resetMocks();
     foodCountBefore = await countFood();
     jest.clearAllMocks();
     foodService = new FoodService(knex);
     jest.spyOn(foodService, "isExisting");
+
+    testFood = {
+      name: "test",
+      calories: 0.1,
+      protein: 0.1,
+      fat: 0.1,
+      saturated_fat: 0.1,
+      cholesterol: 0.1,
+      carbohydrates: 0.1,
+      fibre: 0.1,
+      sugar: 0.1,
+      sodium: 0.1,
+      category_id: 1,
+    };
   });
 
   describe("isExisting", () => {
-    it("should return food_id if food is existing", async () => {
+    it("returns food_id if food is existing", async () => {
       const food = (await knex("food").select("name", "id"))[0];
       const { id, name } = food;
       expect(foodService.isExisting({ name })).resolves.toBe(id);
       expect(foodService.isExisting({ id })).resolves.toBe(id);
     });
-    it("should return food_id if food name is in different cases", async () => {
+    it("returns food_id if food name is in different cases", async () => {
       const foodId = (await getFoodIdsFromTestFood(testFood))[0];
       expect(foodService.isExisting({ name: "TeSt" })).resolves.toBe(foodId);
       expect(foodService.isExisting({ name: " test  " })).resolves.toBe(foodId);
       expect(foodService.isExisting({ name: "   tEst  " })).resolves.toBe(foodId);
     });
-    it("should return -1 if food does not exist", () => {
+    it("returns -1 if food does not exist", () => {
       expect(foodService.isExisting({ id: 10000 })).resolves.toBe(-1);
       expect(foodService.isExisting({ name: "foo" })).resolves.toBe(-1);
     });
-    it("should throw bad request if neither name nor id is provided", () => {
+    it("throws bad request if neither name nor id is provided", () => {
       expect(foodService.isExisting({})).rejects.toThrow(BadRequestError);
     });
-    it("should throw bad request if both id and name are provided", () => {
+    it("throws bad request if both id and name are provided", () => {
       expect(foodService.isExisting({ id: 1, name: "foo" })).rejects.toThrow(BadRequestError);
     });
-    it("should throw bad request if input id <= 0", () => {
+    it("throws bad request if input id <= 0", () => {
       expect(foodService.isExisting({ id: -1 })).rejects.toThrow(BadRequestError);
     });
-    it("should throw bad request if input id is not a whole number", () => {
+    it("throws bad request if input id is not a whole number", () => {
       expect(foodService.isExisting({ id: 0.1 })).rejects.toThrow(BadRequestError);
     });
   });
 
   describe("insert", () => {
-    it("should insert food", async () => {
-      await foodService.insert(testUserId, testFood);
-      expect(countFood()).resolves.toBe(foodCountBefore + 1);
+    it("inserts to food", async () => {
+      expect(await foodService.insert(testUserIds[0], testFood)).toBe(true);
+      expect(await countFood()).toBe(foodCountBefore + 1);
     });
-    it("should insert user_custom_food", async () => {
-      await foodService.insert(testUserId, testFood);
+    it("inserts to user_custom_food", async () => {
+      expect(await foodService.insert(testUserIds[0], testFood)).toBe(true);
       expect((await knex("user_custom_food")).length).toBe(1);
     });
-    it("should check duplicate food", async () => {
-      await foodService.insert(testUserId, testFood);
+    it("checks duplicate food", async () => {
+      await foodService.insert(testUserIds[0], testFood);
       expect(foodService.isExisting).toBeCalledWith(expect.objectContaining({ name: "test" }));
     });
-    it("should only insert to user_custom_food for duplicate food from different user", async () => {
-      const testUserId2 = (
-        await knex("user")
-          .insert({
-            username: "testUser2",
-            hash_password: "$2a$10$8nXBNisolSX6wdRW1xRKw.r/4QK4qgoRnaTHlNHTqcRr1bjV65VR6",
-          })
-          .returning("id")
-      )[0]["id"];
-      await foodService.insert(testUserId, testFood);
+    it("only inserts to user_custom_food for duplicate food from different user", async () => {
+      await foodService.insert(testUserIds[0], testFood);
       expect(countFood()).resolves.toBe(foodCountBefore + 1);
       expect((await knex("user_custom_food").count("id as count"))[0]["count"]).toBe("1");
-      await foodService.insert(testUserId2, testFood);
+      await foodService.insert(testUserIds[1], testFood);
       expect(countFood()).resolves.toBe(foodCountBefore + 1);
       expect((await knex("user_custom_food").count("id as count"))[0]["count"]).toBe("2");
       expect(foodService.isExisting).toBeCalledTimes(2);
     });
-    it("should not insert duplicate food from the same user", async () => {
-      for (let i = 0; i < 3; i++) await foodService.insert(testUserId, testFood);
+    it("won't insert duplicate food from the same user", async () => {
+      for (let i = 0; i < 3; i++) await foodService.insert(testUserIds[0], testFood);
       expect(countFood()).resolves.toBe(foodCountBefore + 1);
       expect((await knex("user_custom_food").count("id as count"))[0]["count"]).toBe("1");
+    });
+    it("calls py API on new food", async () => {
+      fetchMock.doMock();
+      const classifyFood: ClassifyFood = {
+        calories: 0.1,
+        protein: 0.1,
+        fat: 0.1,
+        saturated_fat: 0.1,
+        cholesterol: 0.1,
+        carbohydrates: 0.1,
+        fibre: 0.1,
+        sugar: 0.1,
+        sodium: 0.1,
+      };
+      expect(await foodService.insert(testUserIds[0], testFood)).toBe(true);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0][0]).toEqual(`${env.PY_URL}:${env.PY_PORT}/foodClassifier`);
+      expect(fetchMock.mock.calls[0][1]).toMatchObject({
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(classifyFood),
+      });
+    });
+    it("won't call py API on existing food", async () => {
+      fetchMock.doMock();
+      expect(await foodService.insert(testUserIds[0], testFood)).toBe(true);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(await foodService.insert(testUserIds[1], testFood)).toBe(true);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+    it("calls py API and assign category_id", async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({ success: true, result: [1] }));
+      expect(await foodService.insert(testUserIds[0], testFood)).toBe(true);
+      expect(await getTestFoodCatId("test")).toBe(2);
+    });
+    it("sets category_id to null if fetch to py API is rejected", async () => {
+      fetchMock.mockRejectOnce(new Error("mock error"));
+      expect(await foodService.insert(testUserIds[0], testFood)).toBe(true);
+      expect(await getTestFoodCatId("test")).toBeNull();
+    });
+    it("sets category_id to null on py server error", async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({ success: false }));
+      expect(await foodService.insert(testUserIds[0], testFood)).toBe(true);
+      expect(await getTestFoodCatId("test")).toBeNull();
     });
   });
 
   describe("getFoodForShop", () => {
-    it("should get all food that have a price", async () => {
+    it("get all food that have a price", async () => {
       await knex("food").insert(testFood);
       const result = await foodService.getFoodForShop();
       expect(result.length).toBe(foodCountBefore);
@@ -176,7 +238,7 @@ describe("FoodService", () => {
         expect(food.cost).toBeTruthy();
       }
     });
-    it("should return only brief info about the food", async () => {
+    it("return only brief info about the food", async () => {
       const result = await foodService.getFoodForShop();
       for (const food of result) {
         const keys = Object.keys(food);
@@ -184,7 +246,7 @@ describe("FoodService", () => {
         expect(keys.length).toBe(4);
       }
     });
-    it("result should be ordered by id", async () => {
+    it("result be ordered by id", async () => {
       const result = await foodService.getFoodForShop();
       for (let i = 1; i < result.length; i++) {
         expect(result[i].id).toBeGreaterThan(result[i - 1].id);
@@ -193,41 +255,45 @@ describe("FoodService", () => {
   });
 
   describe("getDetails", () => {
-    it("should return nutrition of 1 food", async () => {
+    it("returns nutrition of 1 food", async () => {
       const insertedId = (await getFoodIdsFromTestFood(testFood))[0];
       const result = await foodService.getDetails(insertedId);
       expect(result.length).toBe(1);
       expect(result[0]).toMatchObject(expectTestFood);
     });
-    it("should return nutrition of > 1 food", async () => {
+    it("returns nutrition of > 1 food", async () => {
       const foodIds = await getFoodIdsFromTestFood(testFood, testFood2);
       const result = await foodService.getDetails(...foodIds);
       expect(result.length).toBe(2);
       expect(result[0]).toMatchObject(expectTestFood);
       expect(result[1]).toMatchObject(expectTestFood2);
     });
-    it("should get category name", async () => {
+    it("gets category name", async () => {
       const foodId = (await getFoodIdsFromTestFood(testFood))[0];
       expect((await foodService.getDetails(foodId))[0].category_name).toEqual(categories.get(1));
     });
-    it("should get null if no category", async () => {
+    it("gets null if no category", async () => {
       const foodId = (await getFoodIdsFromTestFood(testFood2))[0];
       expect((await foodService.getDetails(foodId))[0].category_name).toBeNull();
     });
-    it("should resolve if at least 1 foodId is valid", async () => {
+    it("resolves if at least 1 foodId is valid", async () => {
       const id = (await getFoodIdsFromTestFood(testFood))[0];
       expect(foodService.getDetails(id, 255, 65536)).resolves.toMatchObject([expectTestFood]);
       expect(foodService.getDetails(id, 1.1)).resolves.toMatchObject([expectTestFood]);
       expect(foodService.getDetails(id, -1)).resolves.toMatchObject([expectTestFood]);
     });
-    it("should throw bad request if all foodIds are invalid", () => {
+    it("throw bad request if all foodIds are invalid", () => {
       expect(foodService.getDetails(10000)).rejects.toThrow(BadRequestError);
       expect(foodService.getDetails(1000, 10000)).rejects.toThrow(BadRequestError);
       expect(foodService.getDetails(-1)).rejects.toThrow(BadRequestError);
       expect(foodService.getDetails(3.14)).rejects.toThrow(BadRequestError);
     });
   });
-
+  afterEach(async () => {
+    await knex("user_custom_food").del();
+    await knex.raw(`ALTER SEQUENCE user_custom_food_id_seq RESTART WITH 1`);
+    await seed(knex);
+  });
   afterAll(async () => {
     await knex("user").del();
     await knex.raw(`ALTER SEQUENCE user_id_seq RESTART WITH 1`);

@@ -8,7 +8,7 @@ export interface AuthServiceHelper {
 }
 
 export interface FoodServiceHelper {
-  insert(userId: number, food: Omit<Food, GeneralOmitFields>): Promise<void>;
+  insert(userId: number, food: Omit<Food, GeneralOmitFields>): Promise<boolean>;
   getFoodForShop(): Promise<Pick<Food, BriefFood>[]>;
   getDetails(...foodIds: Array<number>): Promise<FoodDetails[]>;
   isExisting(options: { id?: number; name?: string }): Promise<number>;
