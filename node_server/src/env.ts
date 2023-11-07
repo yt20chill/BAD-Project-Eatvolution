@@ -5,6 +5,7 @@ config({ path: join(__dirname, "..", ".env") });
 
 export const env = {
   NODE_ENV: "",
+  NODE_ENV_TEST: "",
   DB_HOST: "",
   DB_PORT: "",
   DB_NAME: "",
@@ -15,6 +16,8 @@ export const env = {
   REDIS_PORT: "",
   CN_API_KEY: "",
   SESSION_SECRET: "",
+  GOOGLE_CLIENT_ID: "",
+  GOOGLE_CLIENT_SECRET: "",
   PY_URL: process.env.PY_URL ?? "127.0.0.1",
   POSTGRES_DB: "",
   POSTGRES_USER: "",
