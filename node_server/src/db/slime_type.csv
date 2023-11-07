@@ -1,0 +1,5 @@
+name,max_calories,bMR_factor,earn_rate_factor
+Balance,500,1,1
+Keto,800,1.2,1.5
+Skinny Fat,400,0.8,0.8
+Obese,500,0.5,0.5

@@ -18,9 +18,9 @@ export type Category = {
 export type SlimeType = {
   id?: null | string; // uuid
   name: string;
-  category_id: number;
-  category?: Category;
-  required_count: number;
+  max_calories: number;
+  bMR_factor: number;
+  earn_rate_factor: number;
   created_at: string;
   updated_at: string;
 };

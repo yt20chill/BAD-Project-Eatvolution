@@ -14,8 +14,6 @@
 #
 ////////////////////////////////////
 
-#TODO: Update Slime_type table + model
-
 user
 ----
 id integer PK
@@ -26,13 +24,13 @@ total_money integer
 created_at timestamp
 updated_at timestamp
 
-
 slime_type
 ----------
 id uuid PK
 name varchar(255) unique
-category_id integer FK >- category.id
-required_count integer
+max_calories
+cal_reduction_factor decimal
+earn_rate_factor decimal
 created_at timestamp
 updated_at timestamp
 
