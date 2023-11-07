@@ -8,22 +8,23 @@ import { logger } from "../../src/utils/logger";
 
 export default class FoodService implements FoodServiceHelper {
   constructor(private readonly knex: Knex) {}
-  insert = async (userId: number, food_: InsertFood): Promise<boolean> => {
-    const food = { ...food_ };
-    food.cost = null;
-    food.name = food.name.trim().toLowerCase();
-    // if food.name is empty after conversion
-    if (!food.name) throw new BadRequestError();
-    let foodId = await this.isExisting(food);
+  insert = async (userId: number, food: InsertFood): Promise<boolean> => {
+    const foodCopy = { ...food };
+    foodCopy.cost = null;
+    foodCopy.name = foodCopy.name.trim().toLowerCase();
+    // if foodCopy.name is empty after conversion
+    if (!foodCopy.name) throw new BadRequestError();
+    let foodId = await this.isExisting(foodCopy);
     if (foodId !== -1 && (await this.isCustomFoodDuplicated(userId, foodId))) return false;
     const trx = await this.knex.transaction();
     try {
       if (foodId === -1) {
-        food.category_id = (await this.getCategory(food))[0] ?? null;
+        foodCopy.category_id = (await this.getCategory(foodCopy))[0] ?? null;
         // logger.debug(food.category_id);
       }
       //insert to food table only if foodId is not -1
-      foodId = foodId === -1 ? (await trx("food").insert(food).returning("id"))[0]["id"] : foodId;
+      foodId =
+        foodId === -1 ? (await trx("food").insert(foodCopy).returning("id"))[0]["id"] : foodId;
       await trx("user_custom_food").insert({ food_id: foodId, user_id: userId });
       trx.commit();
       return true;
