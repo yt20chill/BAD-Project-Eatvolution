@@ -32,23 +32,25 @@ describe("AuthService", () => {
   it("login should validate login and return user", async () => {
     expect(await authService.login("test", "123")).toBe(testId);
   });
-  // it("login should invalidate login for wrong password", async () => {
-  //   expect(authService.login("test", "1234")).resolves.toBe(-1);
-  // });
-  // it("login should invalidate login for wrong username", () => {
-  //   expect(authService.login("foo", "123")).resolves.toBe(-1);
-  // });
-  // it("should throw bad request if missing info", async () => {
-  //   expect(authService.login("", "")).rejects.toThrow(BadRequestError);
-  //   expect(authService.login("", "1234")).rejects.toThrow(BadRequestError);
-  //   expect(authService.login("test", "")).rejects.toThrow(BadRequestError);
-  // });
-  // it("isExisting should return userId if user exists", () => {
-  //   expect(authService.isExisting("test")).resolves.toBe(testId);
-  // });
-  // it("isExisting should return false if user does not exist", () => {
-  //   expect(authService.isExisting("test1")).resolves.toBe(-1);
-  // });
+  it("login should invalidate login for wrong password", async () => {
+    expect(await authService.login("test", "1234")).toBe(-1);
+  });
+
+  it("login should invalidate login for wrong username", async() => {
+     expect(await authService.login("foo", "123")).toBe(-1);
+  });
+
+  it("should throw bad request if missing info", async () => {
+    await expect(authService.login("", "")).rejects.toThrow(BadRequestError);
+    await expect(authService.login("", "1234")).rejects.toThrow(BadRequestError);
+    await expect(authService.login("test", "")).rejects.toThrow(BadRequestError);
+  });
+  it("isExisting should return userId if user exists", async () => {
+    expect(await authService.isExisting("test")).toBe(testId);
+  });
+  it("isExisting should return false if user does not exist", async () => {
+    expect(await authService.isExisting("test1")).toBe(-1);
+  });
   // it("sign up should first check the existence of username", async () => {
   //   await authService.signUp("test", "123");
   //   expect(authService.isExisting).toBeCalledWith("test");

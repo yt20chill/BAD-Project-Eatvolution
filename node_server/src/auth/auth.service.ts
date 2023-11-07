@@ -18,11 +18,12 @@ export default class AuthService implements AuthServiceHelper {
   };
 
   isExisting = async (username: string): Promise<number> => {
-    const db_UsernameChecking = this.knex<User>("user")
+
+    const db_UsernameChecking = await this.knex<User>("user")
       .select("id")
-      .where("username", username)[0];//if match success =>login, false => SignUp
+      .where("username", username);//if match success =>login, false => SignUp
     if (db_UsernameChecking.length === 0) return -1 //match false => SignUp
-    return db_UsernameChecking.id; //match success => login
+    return db_UsernameChecking[0].id; //match success => logins
   }
 
   signUp = async (username: string, password: string): Promise<number> => {
