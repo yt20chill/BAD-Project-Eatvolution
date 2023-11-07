@@ -2,13 +2,14 @@ import { Knex } from "knex";
 import { Food, FoodDetails } from "models/dbModels";
 import { InsertFood } from "models/models";
 import { FoodServiceHelper } from "models/serviceModels";
-import { env } from "src/env";
+import { env } from "../../src/env";
 import { BadRequestError } from "../../src/utils/error";
 import { logger } from "../../src/utils/logger";
 
 export default class FoodService implements FoodServiceHelper {
   constructor(private readonly knex: Knex) {}
-  insert = async (userId: number, food: InsertFood): Promise<boolean> => {
+  insert = async (userId: number, food_: InsertFood): Promise<boolean> => {
+    const food = { ...food_ };
     food.cost = null;
     food.name = food.name.trim().toLowerCase();
     // if food.name is empty after conversion
@@ -18,7 +19,8 @@ export default class FoodService implements FoodServiceHelper {
     const trx = await this.knex.transaction();
     try {
       if (foodId === -1) {
-        food.category_id = (await this.getCategory(food))[0];
+        food.category_id = (await this.getCategory(food))[0] ?? null;
+        // logger.debug(food.category_id);
       }
       //insert to food table only if foodId is not -1
       foodId = foodId === -1 ? (await trx("food").insert(food).returning("id"))[0]["id"] : foodId;
@@ -103,19 +105,24 @@ export default class FoodService implements FoodServiceHelper {
       ).length === 0
     );
   };
-  //TODO: test case for this
-  private getCategory = async (food: InsertFood): Promise<number> => {
+
+  private getCategory = async (food: InsertFood): Promise<Array<number>> => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { name, cost, category_id, ...rest } = food;
-    const res = await fetch(`${env.PY_URL}:${env.PY_PORT}/foodClassifier`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(rest),
-    });
-    if (!res.ok) return null;
-    const result = await res.json();
-    if (!result.success) return null;
-    return result.result.map((r: string | number) => +r + 1);
+    try {
+      const res = await fetch(`${env.PY_URL}:${env.PY_PORT}/foodClassifier`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(rest),
+      });
+      if (!res.ok) return [];
+      const result = await res.json();
+      if (!result.success) return [];
+      return result.result.map((r: string | number) => +r + 1);
+    } catch (error) {
+      logger.error(error.message);
+      return [];
+    }
   };
   // this is to retrain model based on inserted food
   private scheduleUpdateModel = async () => {};
