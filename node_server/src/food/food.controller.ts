@@ -15,7 +15,7 @@ export default class FoodController implements FoodControllerHelper {
     private readonly redis?: RedisClientType
   ) {}
 
-  insertFood = async (req: ExpressRequest): Promise<ControllerResult<boolean>> => {
+  insertFood = async (req: ExpressRequest): Promise<ControllerResult<string>> => {
     const foodName = req.body.foodName?.trim().toLowerCase();
     logger.debug(foodName);
     if (!foodName) throw new BadRequestError();
@@ -30,7 +30,7 @@ export default class FoodController implements FoodControllerHelper {
     const food: CnItem = (await res.json()).items[0];
     // not found or wrongly found
     if (!food?.name.includes(foodName))
-      return AppUtils.setServerResponse(`fail to search ${foodName}`, false);
+      return AppUtils.setServerResponse<string>(`fail to search ${foodName}`, false);
     return AppUtils.setServerResponse(
       null,
       await this.foodService.insert(req.session.userId, DbUtils.cnItemToInsertFood(food))
