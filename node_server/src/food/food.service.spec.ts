@@ -68,7 +68,7 @@ describe("FoodService", () => {
     return (await knex("food").insert(food).returning("id")).map((e) => +e.id);
   };
   const getTestFoodCatId = async (foodName: string) =>
-    (await knex<Food>("food").select("category_id").where("name", foodName).first()).category_id;
+    (await knex<Food>("food").select("category_id").where("name", foodName))[0].category_id;
   let foodService: FoodService;
   let testUserIds: Array<number>;
   let foodCountBefore: number;

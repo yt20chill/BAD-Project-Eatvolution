@@ -15,8 +15,6 @@ export default class FoodService implements FoodServiceHelper {
     const foodCopy = { ...food };
     foodCopy.cost = null;
     foodCopy.name = foodCopy.name.trim().toLowerCase();
-    // if foodCopy.name is empty after conversion
-    if (!foodCopy.name) throw new BadRequestError();
     let foodId = await this.isExisting(foodCopy);
     if (foodId !== -1 && (await this.isCustomFoodDuplicated(userId, foodId))) return false;
     const trx = await this.knex.transaction();

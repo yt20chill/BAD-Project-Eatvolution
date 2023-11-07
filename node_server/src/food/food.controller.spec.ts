@@ -3,7 +3,7 @@ import { Request } from "express";
 import fetchMock from "jest-fetch-mock";
 import { Knex } from "knex";
 import { RedisClientType } from "redis";
-import { ApplicationError } from "../../src/utils/error";
+import { ApplicationError, BadRequestError } from "../../src/utils/error";
 import { mockRedis, mockRequest } from "../../src/utils/testUtils";
 import FoodController from "./food.controller";
 import FoodService from "./food.service";
@@ -108,6 +108,12 @@ describe("FoodController", () => {
       });
       expect(() => foodController.insertFood(req)).rejects.toThrow(ApplicationError);
       expect(foodService.insert).not.toHaveBeenCalled();
+    });
+    it("throws bad error if no food name", () => {
+      req.body = {};
+      expect(() => foodController.insertFood(req)).rejects.toThrow(BadRequestError);
+      req.body.foodName = " ";
+      expect(() => foodController.insertFood(req)).rejects.toThrow(BadRequestError);
     });
   });
 });

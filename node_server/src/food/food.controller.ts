@@ -15,7 +15,7 @@ export default class FoodController implements FoodControllerHelper {
     private readonly redis?: RedisClientType
   ) {}
 
-  insertFood = async (req: ExpressRequest): Promise<ControllerResult<string>> => {
+  insertFood = async (req: ExpressRequest): Promise<ControllerResult<string | null>> => {
     const foodName = req.body.foodName?.trim().toLowerCase();
     logger.debug(foodName);
     if (!foodName) throw new BadRequestError();
@@ -36,7 +36,7 @@ export default class FoodController implements FoodControllerHelper {
       req.session.userId,
       foodId === -1 ? DbUtils.cnItemToInsertFood(food) : foodId
     );
-    return AppUtils.setServerResponse(null);
+    return AppUtils.setServerResponse<null>();
   };
 }
 
