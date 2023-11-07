@@ -1,6 +1,6 @@
 declare module "express-session" {
   interface SessionData {
-    userId?: number;
+    userId?: string;
     grant: Grant;
   }
 }
@@ -43,4 +43,25 @@ export type OAuthRes = {
   family_name: string;
   picture: string;
   locale: string;
+};
+
+export type CN_Response = {
+  error?: string;
+  response: Response;
+  body: { items: CNItem[] };
+};
+
+export type CNItem = {
+  sugar_g: number;
+  fiber_g: number;
+  serving_size_g: number;
+  sodium_mg: number;
+  name: string;
+  potassium_mg: number;
+  fat_saturated_g: number;
+  fat_total_g: number;
+  calories: number;
+  cholesterol_mg: number;
+  protein_g: number;
+  carbohydrates_total_g: number;
 };
