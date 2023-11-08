@@ -1,4 +1,5 @@
 import { Request } from "express";
+import { BriefFood } from "./models";
 
 export type Controller<ResultType = null> = (req: Request) => Promise<ControllerResult<ResultType>>;
 
@@ -15,4 +16,5 @@ export interface AuthControllerHelper {
 
 export interface FoodControllerHelper {
   insertFood: Controller<string | null>;
+  getFoodForShop: Controller<BriefFood[]>;
 }

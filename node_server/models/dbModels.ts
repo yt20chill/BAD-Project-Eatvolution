@@ -93,11 +93,3 @@ export type UserSlimeTypeCollection = {
   slime_type?: SlimeType;
   created_at: string;
 };
-
-export type GeneralOmitFields = "id" | "created_at" | "updated_at";
-export type BriefFood = "id" | "name" | "calories" | "cost";
-
-export interface FoodDetails extends Omit<Food, "cost" | "name" | "created_at" | "updated_at"> {
-  food_name: string;
-  category_name: string;
-}
