@@ -22,27 +22,30 @@ export default class AuthController implements AuthControllerHelper {
   // }
 
   signUp = async (req: Request) => {
+    if (!req.body) throw new BadRequestError();
     const { username, password, confirmPassword } = req.body;
 
-    if (password !== confirmPassword) return AppUtils.setServerResponse("duplicated username", false);
+    if (password !== confirmPassword) return AppUtils.setServerResponse("password mismatch", false);
+    
     //package ZOD for type checking
     if (!username || !password || !confirmPassword || typeof username !== "string" || typeof password !== "string" || typeof confirmPassword !== "string") throw new BadRequestError()
 
+    
     const result = await this.authService.signUp(username, password);
-
+    
+    if(result !== -1) return AppUtils.setServerResponse("duplicated username", false);
+    // if(result > -1) return AppUtils.setServerResponse(null, true);
     req.session.userId = result
+   
     return AppUtils.setServerResponse();
-
   }
 
   login = async (req: Request) => {
+    if (!req.body) throw new BadRequestError();
     const { username, password } = req.body;
-
-    if (typeof(username) != "string" || typeof(password) != "string" ) throw new BadRequestError();
-
-    if (!username || !password) throw new BadRequestError();
+    if (typeof username !== "string" || typeof password !== "string" ) throw new BadRequestError();
     const result = await this.authService.login(username, password);
-    if (result === 0) throw new BadRequestError()
+    if (result === -1) return AppUtils.setServerResponse(null, false);
     req.session.userId = result
     // res.json() == AppUtils.setServerResponse()
     return AppUtils.setServerResponse(); // return {success: true, result: is_password_correct} 
@@ -63,7 +66,7 @@ export default class AuthController implements AuthControllerHelper {
       const { email } = fetchedUser
       const result = await this.authService.oauthLogin(email);
 
-      req.session.userId = result[0].id
+      req.session.userId = result
 
       return AppUtils.setServerResponse();
       // return AppUtils.setServerResponse(null, false);

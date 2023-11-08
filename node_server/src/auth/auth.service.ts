@@ -31,7 +31,7 @@ export default class AuthService implements AuthServiceHelper {
    if (!username || !password) throw new BadRequestError()
  
     const isUserExist = await this.isExisting(username)
-    if (isUserExist > 0) {//received id = 2
+    if (isUserExist > 0) {
        return -1
     }
     else {
@@ -60,19 +60,22 @@ export default class AuthService implements AuthServiceHelper {
 
 
   oauthLogin = async (email: string): Promise<number> => {
-    if (!email) throw new NotFoundError();
-    const isUsernameValid = (await this.knex<User>("user")
-      .select("username", "id")
-      .where("username", email))[0];
+    // const isUsernameValid = (await this.knex<User>("user")
+    //   .select("username", "id")
+    //   .where("username", email))[0];
+    const userId = await this.isExisting(email);
+    if (userId !== -1) return userId;
 
-    if (!isUsernameValid) {
-      let newUser = {
-        username: email,
-        password: crypto.randomBytes(20).toString('hex')
-      }
-      const createUser = await this.knex("user").insert({ username: email, hash_password: await this.hashPassword(newUser.password) }).returning('id')
-      return createUser[0].id;
-    }
+    // if (!isUsernameValid) {
+    //   let newUser = {
+    //     username: email,
+    //     password: crypto.randomBytes(20).toString('hex')
+    //   }
+    //   const createUser = await this.knex("user").insert({ username: email, hash_password: await this.hashPassword(newUser.password) }).returning('id')
+    //   return createUser[0].id;
+    // }
+    const password = crypto.randomBytes(20).toString('hex')
+    return await this.signUp(email, password);
    
   }
 }
