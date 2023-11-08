@@ -1,6 +1,7 @@
 import { Knex } from "knex";
-import { Food, GeneralOmitFields, SlimeType } from "models/dbModels";
+import { Food, SlimeType } from "models/dbModels";
 import path from "path";
+import { GeneralOmitFields } from "../../../models/models";
 import DbUtils from "../../utils/dbUtils";
 import { logger } from "../../utils/logger";
 const categoryNames = ["Healthy", "Processed", "Empty", "Dessert"];
