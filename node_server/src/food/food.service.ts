@@ -1,5 +1,5 @@
 import { Knex } from "knex";
-import { FoodDetails, InsertFood } from "models/models";
+import { BriefFood, FoodCollection, InsertFood } from "models/models";
 import { FoodServiceHelper } from "models/serviceModels";
 import { Food } from "../../models/dbModels";
 import { env } from "../../src/env";
@@ -41,14 +41,14 @@ export default class FoodService implements FoodServiceHelper {
     return true;
   };
 
-  getFoodForShop = async () => {
-    return await this.knex<Food>("food")
+  getFoodForShop = async (): Promise<BriefFood[]> => {
+    return (await this.knex<Food>("food")
       .select("id", "name", "calories", "cost")
       .whereNotNull("cost")
-      .orderBy("id");
+      .orderBy("id")) as BriefFood[];
   };
 
-  getDetails = async (...foodIds: Array<number>): Promise<FoodDetails[]> => {
+  getDetails = async (...foodIds: Array<number>): Promise<FoodCollection[]> => {
     const validIds = (
       await Promise.all(
         foodIds.map(async (id) => {
@@ -63,7 +63,7 @@ export default class FoodService implements FoodServiceHelper {
     ).filter((id) => id !== null);
     if (validIds.length === 0) throw new BadRequestError();
     return await this.knex("food")
-      .select<FoodDetails[]>(
+      .select<FoodCollection[]>(
         "food.id",
         "food.name as food_name",
         "food.calories",
