@@ -74,6 +74,7 @@ describe("FoodService", () => {
   let foodCountBefore: number;
   let categories: Map<number, string>;
   beforeAll(async () => {
+    await knex.migrate.latest();
     await knex("user_custom_food").del();
     await knex.raw(`ALTER SEQUENCE user_custom_food_id_seq RESTART WITH 1`);
     await knex("user").del();
