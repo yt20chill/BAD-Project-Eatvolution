@@ -29,61 +29,88 @@ describe("AuthService", () => {
     jest.clearAllMocks();
     jest.spyOn(authService, "isExisting");
   });
-  it("login should validate login and return user", async () => {
-    expect(await authService.login("test", "123")).toBe(testId);
-  });
-  it("login should invalidate login for wrong password", async () => {
-    expect(await authService.login("test", "1234")).toBe(-1);
+  describe("login", () => {
+    it("validate login and return user", async () => {
+      expect(await authService.login("test", "123")).toBe(testId);
+    });
+    it("invalidate login for wrong password", async () => {
+      expect(await authService.login("test", "1234")).toBe(-1);
+    });
+
+    it("invalidate login for wrong username", async () => {
+      expect(await authService.login("foo", "123")).toBe(-1);
+    });
+
+    it("throws bad request if missing info", async () => {
+      await expect(authService.login("", "")).rejects.toThrow(BadRequestError);
+      await expect(authService.login("", "1234")).rejects.toThrow(BadRequestError);
+      await expect(authService.login("test", "")).rejects.toThrow(BadRequestError);
+    });
   });
 
-  it("login should invalidate login for wrong username", async () => {
-    expect(await authService.login("foo", "123")).toBe(-1);
+  describe("isExisting", () => {
+    it("returns userId if user exists", async () => {
+      expect(await authService.isExisting("test")).toBe(testId);
+    });
+    it("returns -1 if user does not exist", async () => {
+      expect(await authService.isExisting("test1")).toBe(-1);
+    });
   });
 
-  it("should throw bad request if missing info", () => {
-    expect(() => authService.login("", "")).rejects.toThrow(BadRequestError);
-    expect(() => authService.login("", "1234")).rejects.toThrow(BadRequestError);
-    expect(() => authService.login("test", "")).rejects.toThrow(BadRequestError);
-  });
-  it("isExisting should return userId if user exists", async () => {
-    expect(await authService.isExisting("test")).toBe(testId);
-  });
-  it("isExisting should return false if user does not exist", async () => {
-    expect(await authService.isExisting("test1")).toBe(-1);
-  });
-  it("sign up should first check the existence of username", async () => {
-    await authService.signUp("test", "123");
-    expect(authService.isExisting).toBeCalledWith("test");
-  });
-  it("sign up should create user and return user id", async () => {
-    const result = await authService.signUp("test1", "123");
-    expect(authService.isExisting).toBeCalledWith("test1");
-    const user = await knex<User>("user")
-      .select("id", "username", "hash_password")
-      .where("username", "test1");
-    expect(user).toHaveLength(1);
-    expect(result).toBe(user[0].id);
-    expect(user[0]).toMatchObject({ username: "test1" });
-    expect(user[0]["hash_password"].length).toEqual(60);
-    expect(+(await knex("user").count("id as count"))[0]["count"]).toBe(userCountBefore + 1);
-  });
-  it("sign up should return -1 if duplicate username", async () => {
-    expect(await authService.signUp("test", "12")).toBe(-1);
-    expect(authService.isExisting).toHaveBeenCalledTimes(1);
-    expect(authService.isExisting).toHaveBeenCalledWith("test");
-    expect(await countUser()).toBe(userCountBefore);
-  });
-  it("sign up should throw bad request if missing info", async () => {
-    await expect(authService.signUp("", "")).rejects.toThrow(BadRequestError);
-    expect(await countUser()).toBe(userCountBefore);
-    await expect(authService.signUp("test", "")).rejects.toThrow(BadRequestError);
-    expect(await countUser()).toBe(userCountBefore);
-    await expect(authService.signUp("", "test")).rejects.toThrow(BadRequestError);
-    expect(await countUser()).toBe(userCountBefore);
-    expect(authService.isExisting).toHaveBeenCalledTimes(0);
+  describe("sign up", () => {
+    it("sign up should first check the existence of username", async () => {
+      await authService.signUp("test", "123");
+      expect(authService.isExisting).toBeCalledWith("test");
+    });
+    it("sign up should create user and return user id", async () => {
+      const result = await authService.signUp("test1", "123");
+      expect(authService.isExisting).toBeCalledWith("test1");
+      const user = await knex<User>("user")
+        .select("id", "username", "hash_password")
+        .where("username", "test1");
+      expect(user).toHaveLength(1);
+      expect(result).toBe(user[0].id);
+      expect(user[0]).toMatchObject({ username: "test1" });
+      expect(user[0]["hash_password"].length).toEqual(60);
+      expect(+(await knex("user").count("id as count"))[0]["count"]).toBe(userCountBefore + 1);
+    });
+    it("sign up should return -1 if duplicate username", async () => {
+      expect(await authService.signUp("test", "12")).toBe(-1);
+      expect(authService.isExisting).toHaveBeenCalledTimes(1);
+      expect(authService.isExisting).toHaveBeenCalledWith("test");
+      expect(await countUser()).toBe(userCountBefore);
+    });
+    it("sign up should throw bad request if missing info", async () => {
+      await expect(authService.signUp("", "")).rejects.toThrow(BadRequestError);
+      expect(await countUser()).toBe(userCountBefore);
+      await expect(authService.signUp("test", "")).rejects.toThrow(BadRequestError);
+      expect(await countUser()).toBe(userCountBefore);
+      await expect(authService.signUp("", "test")).rejects.toThrow(BadRequestError);
+      expect(await countUser()).toBe(userCountBefore);
+      expect(authService.isExisting).toHaveBeenCalledTimes(0);
+    });
   });
 
-  afterEach(async () => {});
+  describe("oauthLogin", () => {
+    it("calls sign up if user does not exist", async () => {
+      jest.spyOn(authService, "signUp");
+      jest.spyOn(authService, "login");
+      //user id should be > 0
+      expect(await authService.oauthLogin("foo@example.com")).toBeGreaterThan(0);
+      expect(authService.signUp).toHaveBeenCalledTimes(1);
+      expect(authService.login).not.toHaveBeenCalled();
+    });
+    it("calls login if user exists", async () => {
+      jest.spyOn(authService, "signUp");
+      jest.spyOn(authService, "login");
+      await authService.oauthLogin("foo@example.com");
+      expect(authService.signUp).toHaveBeenCalledTimes(1);
+      expect(authService.login).not.toHaveBeenCalled();
+      await authService.oauthLogin("foo@example.com");
+      expect(authService.signUp).toHaveBeenCalledTimes(1);
+      expect(authService.login).toHaveBeenCalledTimes(1);
+    });
+  });
 
   afterAll(async () => {
     await knex.destroy();

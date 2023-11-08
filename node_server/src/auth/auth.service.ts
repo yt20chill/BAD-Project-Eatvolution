@@ -1,9 +1,9 @@
 import * as bcrypt from "bcryptjs";
+import crypto from "crypto";
 import { Knex } from "knex";
 import { User } from "models/dbModels";
 import { AuthServiceHelper } from "models/serviceModels";
-import { NotFoundError, BadRequestError } from "../utils/error";
-import crypto from "crypto";
+import { BadRequestError } from "../utils/error";
 
 export default class AuthService implements AuthServiceHelper {
   private SALT_ROUNDS = 10;
@@ -26,25 +26,13 @@ export default class AuthService implements AuthServiceHelper {
   };
 
   signUp = async (username: string, password: string): Promise<number> => {
-<<<<<<< HEAD
- 
-   if (!username || !password) throw new BadRequestError()
- 
-    const isUserExist = await this.isExisting(username)
-    if (isUserExist > 0) {
-       return -1
-    }
-    else {
-=======
     if (!username || !password) throw new BadRequestError();
 
     const isUserExist = await this.isExisting(username);
     if (isUserExist > 0) {
-      //received id = 2
       return -1;
     } else {
->>>>>>> origin/main
-      let newUser = {
+      const newUser = {
         username: username,
         password: password,
       };
@@ -84,8 +72,7 @@ export default class AuthService implements AuthServiceHelper {
     //   const createUser = await this.knex("user").insert({ username: email, hash_password: await this.hashPassword(newUser.password) }).returning('id')
     //   return createUser[0].id;
     // }
-    const password = crypto.randomBytes(20).toString('hex')
+    const password = crypto.randomBytes(20).toString("hex");
     return await this.signUp(email, password);
-   
-  }
+  };
 }

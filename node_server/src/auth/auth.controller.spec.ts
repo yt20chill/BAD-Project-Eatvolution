@@ -124,7 +124,10 @@ describe("AuthController", () => {
       req.session.grant.response.access_token = "foo";
       fetchMock.mockResponseOnce(JSON.stringify({ email: "foo@example.com" }));
       authService.isExisting = jest.fn(async (_username: string) => 1);
-      await expect(authController.oauthLogin(req)).resolves.toEqual({ success: true, result: null });
+      await expect(authController.oauthLogin(req)).resolves.toEqual({
+        success: true,
+        result: null,
+      });
       expect(authService.isExisting).toHaveBeenCalledWith("foo@example.com");
       expect(authService.login).toHaveBeenCalledTimes(0);
       expect(req.session.userId).toBe(1);
@@ -132,7 +135,10 @@ describe("AuthController", () => {
     it("oauth should create new user for non-existing user and assign userId", async () => {
       req.session.grant.response.access_token = "foo";
       fetchMock.mockResponseOnce(JSON.stringify({ email: "foo@example.com" }));
-      await expect(authController.oauthLogin(req)).resolves.toEqual({ success: true, result: null });
+      await expect(authController.oauthLogin(req)).resolves.toEqual({
+        success: true,
+        result: null,
+      });
       expect(authService.isExisting).toHaveBeenCalledWith("foo@example.com");
       expect(authService.signUp).toHaveBeenCalledTimes(1);
       expect(req.session.userId).toBe(1);
