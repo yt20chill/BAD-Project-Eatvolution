@@ -15,12 +15,11 @@ export const mockRequest = () => {
   return {
     session: {
       grant: {
-        response: {}
+        response: {},
       },
     },
     body: {},
     params: {},
-
   } as unknown as Request;
 };
 

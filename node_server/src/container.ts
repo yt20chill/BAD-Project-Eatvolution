@@ -13,4 +13,4 @@ export const authService = new AuthService(knex);
 export const authController = new AuthController(authService, redis);
 
 export const foodService = new FoodService(knex);
-export const foodController = new FoodController(foodService, redis);
+export const foodController = new FoodController(foodService);

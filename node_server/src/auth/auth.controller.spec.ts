@@ -57,7 +57,7 @@ describe("AuthController", () => {
     });
     it("should throw bad request error when input type is invalid", async () => {
       req.body = { username: 1, password: 2 };
-      () => expect(async() => await authController.login(req)).toThrow(new BadRequestError())
+      () => expect(async () => await authController.login(req)).toThrow(new BadRequestError());
       expect(authService.login).toHaveBeenCalledTimes(0);
       expect(req.session.userId).toBeUndefined();
     });
@@ -132,19 +132,19 @@ describe("AuthController", () => {
     });
     it("oauth should invalidate login if oauth login failed", async () => {
       req.session.grant.response.access_token = undefined;
-      expect(await authController.oauthLogin(req)).toMatchObject({success: false, result: null});
+      expect(await authController.oauthLogin(req)).toMatchObject({ success: false, result: null });
     });
     it.skip("oauth should invalidate login if fetch fails", async () => {
       req.session.grant.response.access_token = "foo";
       // global.fetch = jest.fn(await () => Promise.reject(new Error("123")));
-      expect(await authController.oauthLogin(req)).toMatchObject({success: false, result: null});
+      expect(await authController.oauthLogin(req)).toMatchObject({ success: false, result: null });
     });
     it.skip("oauth should invalidate login if fetch result is invalid", async () => {
       req.session.grant.response.access_token = "foo";
-      fetchMock.mockResponseOnce("", {status: 500, statusText: "internal server error"});
-      expect(await authController.oauthLogin(req)).toMatchObject({success: false, result: null});
-    })
+      fetchMock.mockResponseOnce("", { status: 500, statusText: "internal server error" });
+      expect(await authController.oauthLogin(req)).toMatchObject({ success: false, result: null });
     });
+  });
 
   describe("logout", () => {
     it("should clear session", async () => {
