@@ -16,10 +16,6 @@ export default class AuthController implements AuthControllerHelper {
     private readonly redis?: RedisClientType
   ) {}
 
-  // isExisting = async (req: Request)=>{
-
-  // }
-
   signUp = async (req: Request) => {
     if (!req.body) throw new BadRequestError();
     const { username, password, confirmPassword } = req.body;
@@ -84,4 +80,11 @@ export default class AuthController implements AuthControllerHelper {
       return AppUtils.setServerResponse(null, false);
     }
   };
+
+  logout= async (req: Request) => {
+    if (req.session) {
+      delete req.session
+    }
+    return AppUtils.setServerResponse(null, false);
+  }
 }

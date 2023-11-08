@@ -146,11 +146,11 @@ describe("AuthController", () => {
     })
     });
 
-  // describe("logout", () => {
-  //   it("should clear session", async () => {
-  //     req.session.userId = 1;
-  //     await authController.logout();
-  //     expect(req.session).toBeFalsy();
-  //   });
-  // });
+  describe("logout", () => {
+    it("should clear session", async () => {
+      req.session.userId = 1;
+      await authController.logout(req);
+      expect(req.session).toBeFalsy();
+    });
+  });
 });

@@ -28,6 +28,7 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 // Example for serving guarded folder
 app.use("/user", isLoggedIn, express.static(path.join(__dirname, "..", "private")));
 
+app.use("/logout",express.static(path.join(__dirname, "..", "public")))
 // app.use((_, res) => {
 //   res.sendFile(path.join(__dirname, "..", "public", "404.html"));
 // });
