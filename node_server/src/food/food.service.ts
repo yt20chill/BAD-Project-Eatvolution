@@ -1,7 +1,6 @@
 import { Knex } from "knex";
-import { BriefFood, FoodCollection, InsertFood } from "models/models";
 import { FoodServiceHelper } from "models/serviceModels";
-import { Food } from "../../models/dbModels";
+import { FoodCollection, InsertFood } from "../../models/models";
 import { env } from "../../src/env";
 import { BadRequestError } from "../../src/utils/error";
 import { logger } from "../../src/utils/logger";
@@ -39,13 +38,6 @@ export default class FoodService implements FoodServiceHelper {
     if (await this.isCustomFoodDuplicated(userId, foodId)) return false;
     await this.knex("user_custom_food").insert({ food_id: foodId, user_id: userId });
     return true;
-  };
-
-  getFoodForShop = async (): Promise<BriefFood[]> => {
-    return (await this.knex<Food>("food")
-      .select("id", "name", "calories", "cost")
-      .whereNotNull("cost")
-      .orderBy("id")) as BriefFood[];
   };
 
   getDetails = async (...foodIds: Array<number>): Promise<FoodCollection[]> => {
