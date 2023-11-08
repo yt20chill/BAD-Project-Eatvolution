@@ -38,7 +38,7 @@ export async function seed(knex: Knex): Promise<void> {
       50
     );
     await trx.commit();
-    logger.debug("category, slime_type, food successfully inserted");
+    // logger.debug("category, slime_type, food successfully inserted");
   } catch (error) {
     logger.error(error.message);
     await trx.rollback();

@@ -1,5 +1,5 @@
-name,max_calories,bMR_factor,earn_rate_factor
-Balance,500,1,1
-Keto,800,1.2,1.5
-Skinny Fat,400,0.8,0.8
-Obese,500,0.5,0.5
+name,description,max_calories,bMR_factor,earn_rate_factor
+Balance,The basic form of slime,500,1,1
+Keto,Fat burner,800,1.2,1.5
+Skinny Fat,Appear to be thin but has a high proporiton of body fat,400,0.8,0.8
+Obese,Eat too much,500,0.5,0.5

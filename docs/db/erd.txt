@@ -28,9 +28,10 @@ slime_type
 ----------
 id uuid PK
 name varchar(255) unique
-max_calories
-cal_reduction_factor decimal
-earn_rate_factor decimal
+description text
+max_calories integer
+bMR_multiplier decimal
+earn_rate_multiplier decimal
 created_at timestamp
 updated_at timestamp
 
