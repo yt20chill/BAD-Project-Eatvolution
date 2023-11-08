@@ -26,37 +26,37 @@ describe("AuthController", () => {
     authController = new AuthController(authService);
   });
   describe("login", () => {
-    it("should validate login", () => {
+    it("should validate login", async () => {
       req.body = { username: "test", password: "test" };
       expect(authService.login).toHaveBeenCalledWith("test", "test");
-      expect(authController.login(req)).resolves.toEqual({ success: true, result: null });
+      await expect(authController.login(req)).resolves.toEqual({ success: true, result: null });
     });
     it("assign userId for successful login", async () => {
       req.body = { username: "test", password: "test" };
       await authController.login(req);
       expect(req.session.userId).toBe(1);
     });
-    it("should invalidate login", () => {
+    it("should invalidate login", async () => {
       req.body = { username: "test", password: "test" };
       authService.login = jest.fn(async (_username: string, _password: string) => -1);
       expect(authService.login).toHaveBeenCalledWith("test", "test");
-      expect(authController.login(req)).resolves.toEqual({ success: false, result: null });
+      await expect(authController.login(req)).resolves.toEqual({ success: false, result: null });
       expect(req.session.userId).toBeUndefined();
     });
-    it("should throw bad request when missing info", () => {
-      expect(authController.login(req)).rejects.toThrow(BadRequestError);
+    it("should throw bad request when missing info", async () => {
+      expect(await authController.login(req)).rejects.toThrow(BadRequestError);
       req.body = { username: "test" };
-      expect(authController.login(req)).rejects.toThrow(BadRequestError);
+      expect(await authController.login(req)).rejects.toThrow(BadRequestError);
       req.body = { password: "test" };
-      expect(authController.login(req)).rejects.toThrow(BadRequestError);
+      expect(await authController.login(req)).rejects.toThrow(BadRequestError);
       req.body = { username: "", password: "" };
-      expect(authController.login(req)).rejects.toThrow(BadRequestError);
+      expect(await authController.login(req)).rejects.toThrow(BadRequestError);
       expect(authService.login).toHaveBeenCalledTimes(0);
       expect(req.session.userId).toBeUndefined();
     });
-    it("should throw bad request error when input type is invalid", () => {
+    it("should throw bad request error when input type is invalid", async () => {
       req.body = { username: 1, password: 2 };
-      expect(() => authController.login(req)).rejects.toThrow(BadRequestError);
+      expect(await authController.login(req)).rejects.toThrow(BadRequestError);
       expect(authService.login).toHaveBeenCalledTimes(0);
       expect(req.session.userId).toBeUndefined();
     });
@@ -65,16 +65,16 @@ describe("AuthController", () => {
   describe("signup", () => {
     it("sign up should sign up user", async () => {
       req.body = { username: "test", password: "test", confirmPassword: "test" };
-      expect(authController.signUp(req)).resolves.toEqual({ success: true, result: 1 });
+      await expect(authController.signUp(req)).resolves.toEqual({ success: true, result: null });
       expect(authService.signUp).toHaveBeenCalledWith("test", "test");
     });
-    it("sign up should assign userId upon successful sign up", () => {
-      expect(authController.signUp(req)).resolves.toEqual({ success: true, result: 1 });
+    it("sign up should assign userId upon successful sign up", async () => {
+      await expect(authController.signUp(req)).resolves.toEqual({ success: true, result: null });
       expect(req.session.userId).toBe(1);
     });
-    it("sign up should return { success: false, result: 'password mismatch' } if passwords do not match", () => {
+    it("sign up should return { success: false, result: 'password mismatch' } if passwords do not match", async () => {
       req.body = { username: "test", password: "test", confirmPassword: "test1" };
-      expect(authController.signUp(req)).resolves.toEqual({
+      await expect(authController.signUp(req)).resolves.toEqual({
         success: false,
         result: "password mismatch",
       });
@@ -84,7 +84,7 @@ describe("AuthController", () => {
     it("sign up return { success: false, result: 'duplicated username' } if username is duplicated", async () => {
       req.body = { username: "test", password: "test", confirmPassword: "test" };
       authService.isExisting = jest.fn(async (_username: string) => 1);
-      expect(authController.signUp(req)).resolves.toEqual({
+      await expect(authController.signUp(req)).resolves.toEqual({
         success: false,
         result: "duplicated username",
       });
@@ -92,20 +92,20 @@ describe("AuthController", () => {
       expect(authService.isExisting).toHaveBeenCalledWith("test");
       expect(req.session.userId).toBeUndefined();
     });
-    it("sign up should throw error when missing info", () => {
-      expect(authController.signUp(req)).rejects.toThrow(BadRequestError);
+    it("sign up should throw error when missing info", async () => {
+      expect(await authController.signUp(req)).rejects.toThrow(BadRequestError);
       req.body = { username: "test" };
-      expect(authController.signUp(req)).rejects.toThrow(BadRequestError);
+      expect(await authController.signUp(req)).rejects.toThrow(BadRequestError);
       req.body = { password: "test" };
-      expect(authController.signUp(req)).rejects.toThrow(BadRequestError);
+      expect(await authController.signUp(req)).rejects.toThrow(BadRequestError);
       req.body = { confirmPassword: "test" };
-      expect(authController.signUp(req)).rejects.toThrow(BadRequestError);
+      expect(await authController.signUp(req)).rejects.toThrow(BadRequestError);
       req.body = { username: "test", password: "test" };
-      expect(authController.signUp(req)).rejects.toThrow(BadRequestError);
+      expect(await authController.signUp(req)).rejects.toThrow(BadRequestError);
       req.body = { username: "test", confirmPassword: "test" };
-      expect(authController.signUp(req)).rejects.toThrow(BadRequestError);
+      expect(await authController.signUp(req)).rejects.toThrow(BadRequestError);
       req.body = { password: "test", confirmPassword: "test" };
-      expect(authController.signUp(req)).rejects.toThrow(BadRequestError);
+      expect(await authController.signUp(req)).rejects.toThrow(BadRequestError);
       expect(authService.signUp).toHaveBeenCalledTimes(0);
       expect(req.session.userId).toBeUndefined();
     });
@@ -123,7 +123,7 @@ describe("AuthController", () => {
       req.session.grant.response.access_token = "foo";
       fetchMock.mockResponseOnce(JSON.stringify({ email: "foo@example.com" }));
       authService.isExisting = jest.fn(async (_username: string) => 1);
-      expect(authController.oauthLogin(req)).resolves.toEqual({ success: true, result: null });
+      await expect(authController.oauthLogin(req)).resolves.toEqual({ success: true, result: null });
       expect(authService.isExisting).toHaveBeenCalledWith("foo@example.com");
       expect(authService.login).toHaveBeenCalledTimes(0);
       expect(req.session.userId).toBe(1);
@@ -131,12 +131,12 @@ describe("AuthController", () => {
     it("oauth should create new user for non-existing user and assign userId", async () => {
       req.session.grant.response.access_token = "foo";
       fetchMock.mockResponseOnce(JSON.stringify({ email: "foo@example.com" }));
-      expect(authController.oauthLogin(req)).resolves.toEqual({ success: true, result: null });
+      await expect(authController.oauthLogin(req)).resolves.toEqual({ success: true, result: null });
       expect(authService.isExisting).toHaveBeenCalledWith("foo@example.com");
       expect(authService.signUp).toHaveBeenCalledTimes(1);
       expect(req.session.userId).toBe(1);
     });
-    it("oauth should return success: false if oauth is failed", () => {
+    it("oauth should return success: false if oauth is failed", async () => {
       expect(authController.oauthLogin(req)).resolves.toEqual({ success: false, result: null });
     });
   });

@@ -61,17 +61,18 @@ export default class AuthService implements AuthServiceHelper {
 
   oauthLogin = async (email: string): Promise<number> => {
     if (!email) throw new NotFoundError();
-    const isUsernameValid = await this.knex<User>("user")
+    const isUsernameValid = (await this.knex<User>("user")
       .select("username", "id")
-      .where("username", email)[0];
+      .where("username", email))[0];
 
     if (!isUsernameValid) {
       let newUser = {
         username: email,
         password: crypto.randomBytes(20).toString('hex')
       }
-      await this.knex("user").insert({ username: email, hash_password: await this.hashPassword(newUser.password) })
+      const createUser = await this.knex("user").insert({ username: email, hash_password: await this.hashPassword(newUser.password) }).returning('id')
+      return createUser[0].id;
     }
-    return isUsernameValid.id;
+   
   }
 }
