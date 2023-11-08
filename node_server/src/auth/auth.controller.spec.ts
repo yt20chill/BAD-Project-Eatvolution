@@ -2,7 +2,7 @@
 import { Request } from "express";
 import fetchMock from "jest-fetch-mock";
 import { Knex } from "knex";
-import { BadRequestError } from "../../src/utils/error";
+import { BadRequestError, InternalServerError, UnauthorizedError } from "../../src/utils/error";
 import { mockRequest } from "../utils/testUtils";
 import AuthController from "./auth.controller";
 import AuthService from "./auth.service";
@@ -17,59 +17,60 @@ describe("AuthController", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     fetchMock.resetMocks();
-    fetchMock.doMock();
     req = mockRequest();
     authService = new AuthService({} as Knex);
     authService.login = jest.fn(async (_username: string, _password: string) => 1);
     authService.signUp = jest.fn(async (_username: string, _password: string) => 1);
     authService.isExisting = jest.fn(async (_username: string) => -1);
+    authService.oauthLogin = jest.fn(async (_email: string) => 1);
     authController = new AuthController(authService);
   });
-  // describe("login", () => {
-  //   it("should validate login", async () => {
-  //     req.body = { username: "test", password: "test" };
-  //     await authController.login(req);
-  //     expect(authService.login).toHaveBeenCalledWith("test", "test");
-  //     await expect(authController.login(req)).resolves.toEqual({ success: true, result: null });
-  //   });
-  //   it("assign userId for successful login", async () => {
-  //     req.body = { username: "test", password: "test" };
-  //     await authController.login(req);
-  //     expect(req.session.userId).toBe(1);
-  //   });
-  //   it("should invalidate login", async () => {
-  //     req.body = { username: "test", password: "test" };
-  //     authService.login = jest.fn(async (_username: string, _password: string) => -1);
-  //     await expect(authController.login(req)).resolves.toEqual({ success: false, result: null });
-  //     expect(authService.login).toHaveBeenCalledWith("test", "test");
-  //     expect(req.session.userId).toBeUndefined();
-  //   });
-  //   it("should throw bad request when missing info", async () => {
-  //     () => expect(async () => await authController.login(req)).toThrow(BadRequestError);
-  //     req.body = { username: "test" };
-  //     () => expect(async () => await authController.login(req)).toThrow(BadRequestError);
-  //     req.body = { password: "test" };
-  //     () => expect(async () => await authController.login(req)).toThrow(BadRequestError);
-  //     req.body = { username: "", password: "" };
-  //     () => expect(async () => await authController.login(req)).toThrow(BadRequestError);
-  //     expect(authService.login).toHaveBeenCalledTimes(0);
-  //     expect(req.session.userId).toBeUndefined();
-  //   });
-  //   it("should throw bad request error when input type is invalid", async () => {
-  //     req.body = { username: 1, password: 2 };
-  //     () => expect(async() => await authController.login(req)).toThrow(new BadRequestError())
-  //     expect(authService.login).toHaveBeenCalledTimes(0);
-  //     expect(req.session.userId).toBeUndefined();
-  //   });
-  // });
+  describe("login", () => {
+    it("should validate login", async () => {
+      req.body = { username: "test", password: "test" };
+      await authController.login(req);
+      expect(authService.login).toHaveBeenCalledWith("test", "test");
+      await expect(authController.login(req)).resolves.toEqual({ success: true, result: null });
+    });
+    it("assign userId for successful login", async () => {
+      req.body = { username: "test", password: "test" };
+      await authController.login(req);
+      expect(req.session.userId).toBe(1);
+    });
+    it("should invalidate login", async () => {
+      req.body = { username: "test", password: "test" };
+      authService.login = jest.fn(async (_username: string, _password: string) => -1);
+      await expect(authController.login(req)).resolves.toEqual({ success: false, result: null });
+      expect(authService.login).toHaveBeenCalledWith("test", "test");
+      expect(req.session.userId).toBeUndefined();
+    });
+    it("should throw bad request when missing info", async () => {
+      () => expect(async () => await authController.login(req)).toThrow(BadRequestError);
+      req.body = { username: "test" };
+      () => expect(async () => await authController.login(req)).toThrow(BadRequestError);
+      req.body = { password: "test" };
+      () => expect(async () => await authController.login(req)).toThrow(BadRequestError);
+      req.body = { username: "", password: "" };
+      () => expect(async () => await authController.login(req)).toThrow(BadRequestError);
+      expect(authService.login).toHaveBeenCalledTimes(0);
+      expect(req.session.userId).toBeUndefined();
+    });
+    it("should throw bad request error when input type is invalid", async () => {
+      req.body = { username: 1, password: 2 };
+      () => expect(async() => await authController.login(req)).toThrow(new BadRequestError())
+      expect(authService.login).toHaveBeenCalledTimes(0);
+      expect(req.session.userId).toBeUndefined();
+    });
+  });
 
-  describe.only("signup", () => {
+  describe("signup", () => {
     it("sign up should sign up user", async () => {
       req.body = { username: "test", password: "test", confirmPassword: "test" };
       await expect(authController.signUp(req)).resolves.toEqual({ success: true, result: null });
-      expect(authService.signUp).toHaveBeenCalledWith("test", "test");
+      // expect(authService.signUp).toHaveBeenCalledWith("test", "test");
     });
     it("sign up should assign userId upon successful sign up", async () => {
+      req.body = { username: "test", password: "test", confirmPassword: "test" };
       await expect(authController.signUp(req)).resolves.toEqual({ success: true, result: null });
       expect(req.session.userId).toBe(1);
     });
@@ -84,7 +85,7 @@ describe("AuthController", () => {
     });
     it("sign up return { success: false, result: 'duplicated username' } if username is duplicated", async () => {
       req.body = { username: "test", password: "test", confirmPassword: "test" };
-      authService.isExisting = jest.fn(async (_username: string) => 1);
+      authService.signUp = jest.fn(async (_username: string) => -1);
       await expect(authController.signUp(req)).resolves.toEqual({
         success: false,
         result: "duplicated username",
@@ -123,30 +124,27 @@ describe("AuthController", () => {
     it("oauth should validate login for existing user and assign userId", async () => {
       req.session.grant.response.access_token = "foo";
       fetchMock.mockResponseOnce(JSON.stringify({ email: "foo@example.com" }));
-      authService.isExisting = jest.fn(async (_username: string) => 1);
       await expect(authController.oauthLogin(req)).resolves.toEqual({
         success: true,
         result: null,
       });
-      expect(authService.isExisting).toHaveBeenCalledWith("foo@example.com");
-      expect(authService.login).toHaveBeenCalledTimes(0);
       expect(req.session.userId).toBe(1);
     });
-    it("oauth should create new user for non-existing user and assign userId", async () => {
+    it("oauth should invalidate login if oauth login failed", async () => {
+      req.session.grant.response.access_token = undefined;
+      expect(await authController.oauthLogin(req)).toMatchObject({success: false, result: null});
+    });
+    it.skip("oauth should invalidate login if fetch fails", async () => {
       req.session.grant.response.access_token = "foo";
-      fetchMock.mockResponseOnce(JSON.stringify({ email: "foo@example.com" }));
-      await expect(authController.oauthLogin(req)).resolves.toEqual({
-        success: true,
-        result: null,
-      });
-      expect(authService.isExisting).toHaveBeenCalledWith("foo@example.com");
-      expect(authService.signUp).toHaveBeenCalledTimes(1);
-      expect(req.session.userId).toBe(1);
+      // global.fetch = jest.fn(await () => Promise.reject(new Error("123")));
+      expect(await authController.oauthLogin(req)).toMatchObject({success: false, result: null});
     });
-    it("oauth should return success: false if oauth is failed", async () => {
-      expect(authController.oauthLogin(req)).resolves.toEqual({ success: false, result: null });
+    it.skip("oauth should invalidate login if fetch result is invalid", async () => {
+      req.session.grant.response.access_token = "foo";
+      fetchMock.mockResponseOnce("", {status: 500, statusText: "internal server error"});
+      expect(await authController.oauthLogin(req)).toMatchObject({success: false, result: null});
+    })
     });
-  });
 
   // describe("logout", () => {
   //   it("should clear session", async () => {

@@ -12,9 +12,14 @@ export const mockSocketIO = () => {
 
 export const mockRequest = () => {
   return {
-    session: {},
+    session: {
+      grant: {
+        response: {}
+      },
+    },
     body: {},
     params: {},
+
   } as unknown as Request;
 };
 

@@ -94,21 +94,16 @@ describe("AuthService", () => {
   describe("oauthLogin", () => {
     it("calls sign up if user does not exist", async () => {
       jest.spyOn(authService, "signUp");
-      jest.spyOn(authService, "login");
       //user id should be > 0
       expect(await authService.oauthLogin("foo@example.com")).toBeGreaterThan(0);
       expect(authService.signUp).toHaveBeenCalledTimes(1);
-      expect(authService.login).not.toHaveBeenCalled();
     });
-    it("calls login if user exists", async () => {
+    it("return userId if user exists", async () => {
       jest.spyOn(authService, "signUp");
-      jest.spyOn(authService, "login");
       await authService.oauthLogin("foo@example.com");
       expect(authService.signUp).toHaveBeenCalledTimes(1);
-      expect(authService.login).not.toHaveBeenCalled();
       await authService.oauthLogin("foo@example.com");
       expect(authService.signUp).toHaveBeenCalledTimes(1);
-      expect(authService.login).toHaveBeenCalledTimes(1);
     });
   });
 

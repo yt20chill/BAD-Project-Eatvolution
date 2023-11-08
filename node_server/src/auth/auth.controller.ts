@@ -38,11 +38,11 @@ export default class AuthController implements AuthControllerHelper {
       throw new BadRequestError();
 
     const result = await this.authService.signUp(username, password);
+    
+    if(result === -1) return AppUtils.setServerResponse("duplicated username", false);
 
-    if (result !== -1) return AppUtils.setServerResponse("duplicated username", false);
-    // if(result > -1) return AppUtils.setServerResponse(null, true);
-    req.session.userId = result;
-
+    req.session.userId = result
+   
     return AppUtils.setServerResponse();
   };
 
@@ -60,7 +60,7 @@ export default class AuthController implements AuthControllerHelper {
   oauthLogin = async (req: Request) => {
     try {
       const accessToken = req.session?.["grant"].response.access_token;
-      console.log(accessToken);
+      if(!accessToken)  return AppUtils.setServerResponse(null, false);
 
       const fetchRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
         method: "get",
@@ -68,14 +68,17 @@ export default class AuthController implements AuthControllerHelper {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      const fetchedUser = await fetchRes.json();
+
+
+      const fetchedUser = await fetchRes.json();//login success => get user data in google
+
       const { email } = fetchedUser;
       const result = await this.authService.oauthLogin(email);
-
+      
       req.session.userId = result;
 
       return AppUtils.setServerResponse();
-      // return AppUtils.setServerResponse(null, false);
+      
     } catch (err) {
       console.log(err);
       return AppUtils.setServerResponse(null, false);
