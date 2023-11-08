@@ -2,7 +2,7 @@ name: Eatvolution CICD
 on:
   push:
     branches:
-      - "*"
+      - main
   workflow_dispatch:
 env:
   POSTGRES_DB: test
