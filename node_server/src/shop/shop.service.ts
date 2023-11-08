@@ -21,9 +21,13 @@ export default class ShopService implements ShopServiceHelper {
     return Array.from(randomNumberSet);
   };
   private getUniversalShop = async (): Promise<BriefFood[]> => {
-    return await this.knex<BriefFood>("shop")
+    const food = await this.knex<BriefFood>("shop")
       .select("food.id", "food.name", "food.calories", "food.cost")
-      .join("food", "food_id", "food.id");
+      .join("food", "food_id", "food.id")
+      .orderBy([{ column: "food.cost" }, { column: "food.id" }]);
+    if (food.length > 0) return food;
+    await this.updateUniversalShop();
+    return this.getUniversalShop();
   };
   private getUserShop = async (userId: number): Promise<BriefFood[]> => {
     return await this.knex<BriefFood>("user_shop")

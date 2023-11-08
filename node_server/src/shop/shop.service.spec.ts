@@ -2,6 +2,7 @@ import Knex from "knex";
 import knexConfig from "../../src/db/knexfile";
 import { seed } from "../db/seeds/01-init";
 import { env } from "../env";
+import { logger } from "../utils/logger";
 import { idFromInsertingTestUser } from "../utils/testUtils";
 import ShopService from "./shop.service";
 
@@ -15,7 +16,17 @@ describe.only("ShopService", () => {
   });
   beforeEach(async () => {
     shopService = new ShopService(knex);
-    await knex("user").del();
+    const trx = await knex.transaction();
+    try {
+      await trx("user").del();
+      await trx.raw("ALTER SEQUENCE user_id_seq RESTART WITH 1;");
+      await trx("shop").del();
+      await trx("user_shop").del();
+      await trx.commit();
+    } catch (error) {
+      logger.error(error);
+      await trx.rollback();
+    }
     testUserId = await idFromInsertingTestUser(knex);
     await seed(knex);
   });
@@ -46,7 +57,7 @@ describe.only("ShopService", () => {
     it("result be ordered by cost", async () => {
       const result = await shopService.getShopItems(testUserId);
       for (let i = 1; i < result.length; i++) {
-        expect(result[i].cost).toBeGreaterThan(result[i - 1].cost);
+        expect(result[i].cost).toBeGreaterThanOrEqual(result[i - 1].cost);
       }
     });
   });
