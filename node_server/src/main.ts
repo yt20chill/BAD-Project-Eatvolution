@@ -1,14 +1,13 @@
 import express from "express";
 import path from "path";
+import { authRoutes } from "./auth/auth.routes";
+import { isLoggedIn } from "./auth/guard";
+import { grantExpress } from "./auth/oauth";
 import { env } from "./env";
 import { app, io, server, socketSession } from "./socket";
 import { ApplicationError } from "./utils/error";
 import { logger } from "./utils/logger";
 import { AppUtils } from "./utils/utils";
-import {grantExpress} from "./auth/oauth"
-import { authRoutes } from "./auth/auth.routes";
-import { isLoggedIn } from "./auth/guard";
-
 
 app.use(express.json());
 app.use(socketSession);
@@ -19,14 +18,11 @@ io.use((socket, next) => {
   socketSession(req, res, next as express.NextFunction);
 });
 
-
 //Examples of routes
 // app.use("/api", isLoggedInForApi, apiRoutes);
 app.use("/auth", authRoutes);
 // app.use("/oauth", oauthRoutes);
-app.use(isLoggedIn)
-
-
+app.use(isLoggedIn);
 
 app.use(express.static(path.join(__dirname, "..", "public")));
 // Example for serving guarded folder

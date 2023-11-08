@@ -9,7 +9,7 @@ import { fetch } from "cross-fetch";
 import { json } from "stream/consumers";
 // import grant from "grant"
 
-const a: boolean = null
+const a: boolean = null;
 
 export default class AuthController implements AuthControllerHelper {
   constructor(
@@ -48,7 +48,7 @@ export default class AuthController implements AuthControllerHelper {
     if (result === -1) return AppUtils.setServerResponse(null, false);
     req.session.userId = result
     // res.json() == AppUtils.setServerResponse()
-    return AppUtils.setServerResponse(); // return {success: true, result: is_password_correct} 
+    return AppUtils.setServerResponse(); // return {success: true, result: is_password_correct}
   };
 
   oauthLogin = async (req: Request) => {

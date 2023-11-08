@@ -5,7 +5,6 @@ config({ path: join(__dirname, "..", ".env") });
 
 export const env = {
   NODE_ENV: "",
-  NODE_ENV_TEST: "",
   DB_HOST: "",
   DB_PORT: "",
   DB_NAME: "",

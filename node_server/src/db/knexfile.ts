@@ -20,13 +20,14 @@ const config: { [key: string]: Knex.Config } = {
       max: 10,
     },
     migrations: {
+      directory: __dirname + "/migrations",
       tableName: "knex_migrations",
     },
   },
 
   test: {
     client: "postgresql",
-    debug:true,
+    // debug: true,
     connection: {
       host: env.POSTGRES_HOST,
       database: env.POSTGRES_DB,
@@ -38,6 +39,7 @@ const config: { [key: string]: Knex.Config } = {
       max: 10,
     },
     migrations: {
+      directory: __dirname + "/migrations",
       tableName: "knex_migrations",
     },
   },
@@ -56,6 +58,7 @@ const config: { [key: string]: Knex.Config } = {
       max: 10,
     },
     migrations: {
+      directory: __dirname + "/migrations",
       tableName: "knex_migrations",
     },
   },

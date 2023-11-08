@@ -14,7 +14,6 @@
 #
 ////////////////////////////////////
 
-
 user
 ----
 id integer PK
@@ -25,13 +24,14 @@ total_money integer
 created_at timestamp
 updated_at timestamp
 
-
 slime_type
 ----------
 id uuid PK
 name varchar(255) unique
-category_id integer FK >- category.id
-required_count integer
+description text
+max_calories integer
+bMR_multiplier decimal
+earn_rate_multiplier decimal
 created_at timestamp
 updated_at timestamp
 

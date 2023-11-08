@@ -18,9 +18,9 @@ export type Category = {
 export type SlimeType = {
   id?: null | string; // uuid
   name: string;
-  category_id: number;
-  category?: Category;
-  required_count: number;
+  max_calories: number;
+  bMR_factor: number;
+  earn_rate_factor: number;
   created_at: string;
   updated_at: string;
 };
@@ -93,11 +93,3 @@ export type UserSlimeTypeCollection = {
   slime_type?: SlimeType;
   created_at: string;
 };
-
-export type GeneralOmitFields = "id" | "created_at" | "updated_at";
-export type BriefFood = "id" | "name" | "calories" | "cost";
-
-export interface FoodDetails extends Omit<Food, "cost" | "name" | "created_at" | "updated_at"> {
-  food_name: string;
-  category_name: string;
-}

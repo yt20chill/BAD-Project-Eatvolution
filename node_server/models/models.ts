@@ -1,3 +1,5 @@
+import { Food } from "./dbModels";
+
 declare module "express-session" {
   interface SessionData {
     userId?: number;
@@ -86,3 +88,25 @@ export type InsertFood = {
   sugar: number;
   sodium: number;
 };
+
+export type GeneralOmitFields = "id" | "created_at" | "updated_at";
+export type BriefFood = {
+  id: number;
+  name: string;
+  calories: number;
+  cost: number;
+};
+
+export interface FoodCollection extends Omit<Food, "cost" | "name" | "created_at" | "updated_at"> {
+  food_name: string;
+  category_name: string;
+}
+
+export interface SlimeCollection {
+  id: string; //uuid
+  name: string;
+  description: string;
+  max_calories: number;
+  bMR_multiplier: number;
+  earn_rate_multiplier: number;
+}

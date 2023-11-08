@@ -15,9 +15,9 @@ Feed slimes with healthy food and they will reward you with their ability to ear
 
 requirements:
 
-- Keto: > 50% protein
-- Skinny fat: > 60% carbs
-- Obese: extra calories > 2000
+- Keto: eat >=10 food && > 50% protein
+- Skinny fat: eat >= 10 food >  > 60% carbs
+- Obese: eat >= 10 food, extra calories > 2000
 
 **slime_type table**
 | Attribute | Balanced | Keto | Skinny Fat | Obese |

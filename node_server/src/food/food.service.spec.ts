@@ -68,12 +68,13 @@ describe("FoodService", () => {
     return (await knex("food").insert(food).returning("id")).map((e) => +e.id);
   };
   const getTestFoodCatId = async (foodName: string) =>
-    (await knex<Food>("food").select("category_id").where("name", foodName).first()).category_id;
+    (await knex<Food>("food").select("category_id").where("name", foodName))[0].category_id;
   let foodService: FoodService;
   let testUserIds: Array<number>;
   let foodCountBefore: number;
   let categories: Map<number, string>;
   beforeAll(async () => {
+    await knex.migrate.latest();
     await knex("user_custom_food").del();
     await knex.raw(`ALTER SEQUENCE user_custom_food_id_seq RESTART WITH 1`);
     await knex("user").del();
@@ -129,18 +130,18 @@ describe("FoodService", () => {
     it("returns food_id if food is existing", async () => {
       const food = (await knex("food").select("name", "id"))[0];
       const { id, name } = food;
-      expect(foodService.isExisting({ name })).resolves.toBe(id);
-      expect(foodService.isExisting({ id })).resolves.toBe(id);
+      expect(await foodService.isExisting({ name })).toBe(id);
+      expect(await foodService.isExisting({ id })).toBe(id);
     });
     it("returns food_id if food name is in different cases", async () => {
       const foodId = (await getFoodIdsFromTestFood(testFood))[0];
-      expect(foodService.isExisting({ name: "TeSt" })).resolves.toBe(foodId);
-      expect(foodService.isExisting({ name: " test  " })).resolves.toBe(foodId);
-      expect(foodService.isExisting({ name: "   tEst  " })).resolves.toBe(foodId);
+      expect(await foodService.isExisting({ name: "TeSt" })).toBe(foodId);
+      expect(await foodService.isExisting({ name: " test  " })).toBe(foodId);
+      expect(await foodService.isExisting({ name: "   tEst  " })).toBe(foodId);
     });
-    it("returns -1 if food does not exist", () => {
-      expect(foodService.isExisting({ id: 10000 })).resolves.toBe(-1);
-      expect(foodService.isExisting({ name: "foo" })).resolves.toBe(-1);
+    it("returns -1 if food does not exist", async () => {
+      expect(await foodService.isExisting({ id: 10000 })).toBe(-1);
+      expect(await foodService.isExisting({ name: "foo" })).toBe(-1);
     });
     it("throws bad request if neither name nor id is provided", () => {
       expect(foodService.isExisting({})).rejects.toThrow(BadRequestError);
@@ -171,16 +172,16 @@ describe("FoodService", () => {
     });
     it("only inserts to user_custom_food for duplicate food from different user", async () => {
       await foodService.insert(testUserIds[0], testFood);
-      expect(countFood()).resolves.toBe(foodCountBefore + 1);
+      expect(await countFood()).toBe(foodCountBefore + 1);
       expect((await knex("user_custom_food").count("id as count"))[0]["count"]).toBe("1");
       await foodService.insert(testUserIds[1], testFood);
-      expect(countFood()).resolves.toBe(foodCountBefore + 1);
+      expect(await countFood()).toBe(foodCountBefore + 1);
       expect((await knex("user_custom_food").count("id as count"))[0]["count"]).toBe("2");
       expect(foodService.isExisting).toBeCalledTimes(2);
     });
     it("won't insert duplicate food from the same user", async () => {
       for (let i = 0; i < 3; i++) await foodService.insert(testUserIds[0], testFood);
-      expect(countFood()).resolves.toBe(foodCountBefore + 1);
+      expect(await countFood()).toBe(foodCountBefore + 1);
       expect((await knex("user_custom_food").count("id as count"))[0]["count"]).toBe("1");
     });
     it("calls py API on new food", async () => {
@@ -226,6 +227,21 @@ describe("FoodService", () => {
       fetchMock.mockResponseOnce(JSON.stringify({ success: false }));
       expect(await foodService.insert(testUserIds[0], testFood)).toBe(true);
       expect(await getTestFoodCatId("test")).toBeNull();
+    });
+    it("inserts to user_custom_food if foodId is parsed", async () => {
+      expect(await foodService.insert(testUserIds[0], 1)).toBe(true);
+      expect((await knex("user_custom_food"))[0]).toMatchObject({
+        user_id: testUserIds[0],
+        food_id: 1,
+      });
+    });
+    it("won't insert to user_custom_food if foodId is parsed but duplicated", async () => {
+      for (let i = 0; i < 3; i++) await foodService.insert(testUserIds[0], 1);
+      expect((await knex("user_custom_food").count("id as count"))[0]["count"]).toBe("1");
+    });
+    it("won't insert to food if food id is parsed", async () => {
+      await foodService.insert(testUserIds[0], 1);
+      expect(await countFood()).toBe(foodCountBefore);
     });
   });
 
@@ -278,9 +294,9 @@ describe("FoodService", () => {
     });
     it("resolves if at least 1 foodId is valid", async () => {
       const id = (await getFoodIdsFromTestFood(testFood))[0];
-      expect(foodService.getDetails(id, 255, 65536)).resolves.toMatchObject([expectTestFood]);
-      expect(foodService.getDetails(id, 1.1)).resolves.toMatchObject([expectTestFood]);
-      expect(foodService.getDetails(id, -1)).resolves.toMatchObject([expectTestFood]);
+      expect(await foodService.getDetails(id, 255, 65536)).toMatchObject([expectTestFood]);
+      expect(await foodService.getDetails(id, 1.1)).toMatchObject([expectTestFood]);
+      expect(await foodService.getDetails(id, -1)).toMatchObject([expectTestFood]);
     });
     it("throw bad request if all foodIds are invalid", () => {
       expect(foodService.getDetails(10000)).rejects.toThrow(BadRequestError);

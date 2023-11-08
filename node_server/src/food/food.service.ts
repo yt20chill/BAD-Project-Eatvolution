@@ -1,19 +1,20 @@
 import { Knex } from "knex";
-import { Food, FoodDetails } from "models/dbModels";
-import { InsertFood } from "models/models";
+import { BriefFood, FoodCollection, InsertFood } from "models/models";
 import { FoodServiceHelper } from "models/serviceModels";
+import { Food } from "../../models/dbModels";
 import { env } from "../../src/env";
 import { BadRequestError } from "../../src/utils/error";
 import { logger } from "../../src/utils/logger";
 
 export default class FoodService implements FoodServiceHelper {
   constructor(private readonly knex: Knex) {}
-  insert = async (userId: number, food: InsertFood): Promise<boolean> => {
+  insert = async (userId: number, food: InsertFood | number): Promise<boolean> => {
+    if (typeof food === "number") {
+      return await this.insertExistingFood(userId, food);
+    }
     const foodCopy = { ...food };
     foodCopy.cost = null;
     foodCopy.name = foodCopy.name.trim().toLowerCase();
-    // if foodCopy.name is empty after conversion
-    if (!foodCopy.name) throw new BadRequestError();
     let foodId = await this.isExisting(foodCopy);
     if (foodId !== -1 && (await this.isCustomFoodDuplicated(userId, foodId))) return false;
     const trx = await this.knex.transaction();
@@ -26,23 +27,28 @@ export default class FoodService implements FoodServiceHelper {
       foodId =
         foodId === -1 ? (await trx("food").insert(foodCopy).returning("id"))[0]["id"] : foodId;
       await trx("user_custom_food").insert({ food_id: foodId, user_id: userId });
-      trx.commit();
+      await trx.commit();
       return true;
     } catch (error) {
       logger.error(error.message);
-      trx.rollback();
+      await trx.rollback();
       return false;
     }
   };
-
-  getFoodForShop = async () => {
-    return await this.knex<Food>("food")
-      .select("id", "name", "calories", "cost")
-      .whereNotNull("cost")
-      .orderBy("id");
+  private insertExistingFood = async (userId: number, foodId: number) => {
+    if (await this.isCustomFoodDuplicated(userId, foodId)) return false;
+    await this.knex("user_custom_food").insert({ food_id: foodId, user_id: userId });
+    return true;
   };
 
-  getDetails = async (...foodIds: Array<number>): Promise<FoodDetails[]> => {
+  getFoodForShop = async (): Promise<BriefFood[]> => {
+    return (await this.knex<Food>("food")
+      .select("id", "name", "calories", "cost")
+      .whereNotNull("cost")
+      .orderBy("id")) as BriefFood[];
+  };
+
+  getDetails = async (...foodIds: Array<number>): Promise<FoodCollection[]> => {
     const validIds = (
       await Promise.all(
         foodIds.map(async (id) => {
@@ -57,7 +63,7 @@ export default class FoodService implements FoodServiceHelper {
     ).filter((id) => id !== null);
     if (validIds.length === 0) throw new BadRequestError();
     return await this.knex("food")
-      .select<FoodDetails[]>(
+      .select<FoodCollection[]>(
         "food.id",
         "food.name as food_name",
         "food.calories",
@@ -87,7 +93,7 @@ export default class FoodService implements FoodServiceHelper {
       (foodId && foodName) ||
       (!foodName && (foodId <= 0 || foodId % 1 !== 0))
     ) {
-      logger.debug(`invalid input: ${foodId}, ${foodName}`);
+      // logger.debug(`invalid input: ${foodId}, ${foodName}`);
       throw new BadRequestError();
     }
     const query = this.knex("food").select("id");

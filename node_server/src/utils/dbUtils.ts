@@ -42,7 +42,7 @@ export default class DbUtils {
     );
   };
   static cnItemToInsertFood = (item: CnItem): InsertFood => {
-    const unitRegex = /(_g$|_mg$)/;
+    const unitRegex = /(_g$|_mg$|_total_g$)/;
     const food = {} as InsertFood;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { name, potassium_mg, serving_size_g, fat_saturated_g, ...rest } = item;
