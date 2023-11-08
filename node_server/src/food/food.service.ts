@@ -1,7 +1,7 @@
 import { Knex } from "knex";
-import { Food, FoodDetails } from "models/dbModels";
-import { InsertFood } from "models/models";
+import { FoodDetails, InsertFood } from "models/models";
 import { FoodServiceHelper } from "models/serviceModels";
+import { Food } from "../../models/dbModels";
 import { env } from "../../src/env";
 import { BadRequestError } from "../../src/utils/error";
 import { logger } from "../../src/utils/logger";
@@ -27,11 +27,11 @@ export default class FoodService implements FoodServiceHelper {
       foodId =
         foodId === -1 ? (await trx("food").insert(foodCopy).returning("id"))[0]["id"] : foodId;
       await trx("user_custom_food").insert({ food_id: foodId, user_id: userId });
-      trx.commit();
+      await trx.commit();
       return true;
     } catch (error) {
       logger.error(error.message);
-      trx.rollback();
+      await trx.rollback();
       return false;
     }
   };
@@ -93,7 +93,7 @@ export default class FoodService implements FoodServiceHelper {
       (foodId && foodName) ||
       (!foodName && (foodId <= 0 || foodId % 1 !== 0))
     ) {
-      logger.debug(`invalid input: ${foodId}, ${foodName}`);
+      // logger.debug(`invalid input: ${foodId}, ${foodName}`);
       throw new BadRequestError();
     }
     const query = this.knex("food").select("id");
