@@ -12,7 +12,7 @@ export interface AuthControllerHelper {
   login: Controller;
   signUp: Controller<number | string>;
   oauthLogin: Controller;
-  logout: Controller
+  logout: Controller;
 }
 
 export interface FoodControllerHelper {
