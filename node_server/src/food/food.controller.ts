@@ -5,6 +5,7 @@ import { env } from "../../src/env";
 import DbUtils from "../../src/utils/dbUtils";
 import { ApplicationError, BadRequestError } from "../../src/utils/error";
 import { AppUtils } from "../../src/utils/utils";
+import { logger } from "../utils/logger";
 import FoodService from "./food.service";
 
 export default class FoodController implements FoodControllerHelper {
@@ -12,7 +13,7 @@ export default class FoodController implements FoodControllerHelper {
 
   insertFood = async (req: ExpressRequest): Promise<ControllerResult<string | null>> => {
     const foodName = req.body.foodName?.trim().toLowerCase();
-    // logger.debug(foodName);
+    logger.debug(foodName);
     if (!foodName) throw new BadRequestError();
     const foodId = await this.foodService.isExisting({ name: foodName });
     let food: CnItem;

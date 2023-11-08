@@ -7,7 +7,7 @@ export const app = express();
 export const server = new http.Server(app);
 export const io = new SocketIO.Server(server);
 
-const socketLog: Map<string, SocketIO.Socket> = new Map();
+const socketLog: Map<number, SocketIO.Socket> = new Map();
 
 export const socketSession = expressSession({
   secret: env.SESSION_SECRET,
@@ -16,15 +16,11 @@ export const socketSession = expressSession({
   cookie: { secure: false },
 });
 
-export const assignSocket = (userId: string, socket: SocketIO.Socket) => {
+export const assignSocket = (userId: number, socket: SocketIO.Socket) => {
   if (socketLog.has(userId)) {
     const prevSocket = socketLog.get(userId);
     if (prevSocket) prevSocket.disconnect();
   }
-  socket.join(userId);
+  socket.join(userId.toString());
   socketLog.set(userId, socket);
-};
-
-export const removeFromSocketLog = (userId: string) => {
-  socketLog.delete(userId);
 };

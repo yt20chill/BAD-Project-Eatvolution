@@ -45,6 +45,9 @@ describe("FoodService", () => {
   };
   const getTestFoodCatId = async (foodName: string) =>
     (await knex<Food>("food").select("category_id").where("name", foodName))[0].category_id;
+  const countUserCustomFood = async () => {
+    return (await knex("user_custom_food").count("id as count"))[0]["count"];
+  };
   let foodService: FoodService;
   let testUserIds: Array<number>;
   let foodCountBefore: number;
@@ -80,10 +83,10 @@ describe("FoodService", () => {
     );
   });
   beforeEach(async () => {
-    fetchMock.enableMocks();
-    fetchMock.resetMocks();
-    foodCountBefore = await countFood(knex);
     jest.clearAllMocks();
+    fetchMock.resetMocks();
+    fetchMock.enableMocks();
+    foodCountBefore = await countFood(knex);
     foodService = new FoodService(knex);
     jest.spyOn(foodService, "isExisting");
   });
@@ -145,6 +148,16 @@ describe("FoodService", () => {
       for (let i = 0; i < 3; i++) await foodService.insert(testUserIds[0], testFood);
       expect(await countFood(knex)).toBe(foodCountBefore + 1);
       expect((await knex("user_custom_food").count("id as count"))[0]["count"]).toBe("1");
+    });
+    it("won't insert food that is not custom (i.e. available to every user) to user_custom_food", async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id, created_at, updated_at, ...rest } = (await knex<Food>("food"))[0];
+      await foodService.insert(testUserIds[0], id);
+      expect(await countFood(knex)).toBe(foodCountBefore);
+      expect(await countUserCustomFood()).toBe(0);
+      await foodService.insert(testUserIds[0], rest);
+      expect(await countFood(knex)).toBe(foodCountBefore);
+      expect(await countUserCustomFood()).toBe(0);
     });
     it("calls py API on new food", async () => {
       fetchMock.doMock();

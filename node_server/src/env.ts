@@ -22,6 +22,7 @@ export const env = {
   POSTGRES_USER: "",
   POSTGRES_PASSWORD: "",
   POSTGRES_HOST: "",
+  EXPRESS_URL: process.env.EXPRESS_URL ?? "127.0.0.1",
 };
 
 populateEnv(env, { mode: "halt" });

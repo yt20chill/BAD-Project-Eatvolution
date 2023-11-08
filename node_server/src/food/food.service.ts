@@ -9,7 +9,7 @@ export default class FoodService implements FoodServiceHelper {
   constructor(private readonly knex: Knex) {}
   insert = async (userId: number, food: InsertFood | number): Promise<boolean> => {
     if (typeof food === "number") {
-      return await this.insertExistingFood(userId, food);
+      return await this.insertCustomFood(this.knex, userId, food);
     }
     const foodCopy = { ...food };
     foodCopy.cost = null;
@@ -21,11 +21,9 @@ export default class FoodService implements FoodServiceHelper {
       if (foodId === -1) {
         foodCopy.category_id = (await this.getCategory(foodCopy))[0] ?? null;
         // logger.debug(food.category_id);
+        foodId = (await trx("food").insert(foodCopy).returning("id"))[0]["id"];
       }
-      //insert to food table only if foodId is not -1
-      foodId =
-        foodId === -1 ? (await trx("food").insert(foodCopy).returning("id"))[0]["id"] : foodId;
-      await trx("user_custom_food").insert({ food_id: foodId, user_id: userId });
+      await this.insertCustomFood(trx, userId, foodId);
       await trx.commit();
       return true;
     } catch (error) {
@@ -34,10 +32,32 @@ export default class FoodService implements FoodServiceHelper {
       return false;
     }
   };
-  private insertExistingFood = async (userId: number, foodId: number) => {
-    if (await this.isCustomFoodDuplicated(userId, foodId)) return false;
-    await this.knex("user_custom_food").insert({ food_id: foodId, user_id: userId });
+
+  private insertCustomFood = async (knex: Knex, userId: number, foodId: number) => {
+    if (
+      foodId === -1 ||
+      (await this.isCustomFood(foodId)) ||
+      (await this.isCustomFoodDuplicated(userId, foodId))
+    )
+      return false;
+    await knex("user_custom_food").insert({ food_id: foodId, user_id: userId });
     return true;
+  };
+  private isCustomFood = async (foodId: number) => {
+    return (
+      (await this.knex("food").select("id").whereNotNull("cost").andWhere("id", foodId)).length > 0
+    );
+  };
+  private isCustomFoodDuplicated = async (userId: number, foodId: number): Promise<boolean> => {
+    return !(
+      foodId === -1 ||
+      (
+        await this.knex("user_custom_food")
+          .select("id")
+          .where("food_id", foodId)
+          .andWhere("user_id", userId)
+      ).length === 0
+    );
   };
 
   getDetails = async (...foodIds: Array<number>): Promise<FoodCollection[]> => {
@@ -91,18 +111,6 @@ export default class FoodService implements FoodServiceHelper {
     const query = this.knex("food").select("id");
     const result = foodId ? await query.where("id", foodId) : await query.where("name", foodName);
     return result.length !== 0 ? result[0]["id"] : -1;
-  };
-
-  private isCustomFoodDuplicated = async (userId: number, foodId: number): Promise<boolean> => {
-    return !(
-      foodId === -1 ||
-      (
-        await this.knex("user_custom_food")
-          .select("id")
-          .where("food_id", foodId)
-          .andWhere("user_id", userId)
-      ).length === 0
-    );
   };
 
   private getCategory = async (food: InsertFood): Promise<Array<number>> => {
