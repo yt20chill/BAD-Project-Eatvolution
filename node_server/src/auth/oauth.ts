@@ -3,10 +3,7 @@ import { env } from "../env";
 
 export const grantExpress = grant.express({
   defaults: {
-    origin:
-      env.NODE_ENV === "production"
-        ? `${env.EXPRESS_URL}:${env.WEB_PORT}`
-        : "http://localhost:8080",
+    origin: env.NODE_ENV === "production" ? `${env.EXPRESS_URL}` : "http://localhost:8080",
     transport: "session",
     state: true,
   },
