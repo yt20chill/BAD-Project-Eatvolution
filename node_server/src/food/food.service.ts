@@ -31,7 +31,6 @@ export default class FoodService implements FoodServiceHelper {
       return false;
     }
   };
-
   private insertCustomFood = async (knex: Knex, userId: number, foodId: number) => {
     if (
       foodId === -1 ||
@@ -86,7 +85,8 @@ export default class FoodService implements FoodServiceHelper {
         "food.fibre",
         "food.sugar",
         "food.sodium",
-        "category.name as category_name"
+        "category.name as category_name",
+        this.knex.raw("CASE WHEN food.cost IS NULL THEN true ELSE false END as isCustom")
       )
       .leftJoin("category", "category.id", "food.category_id")
       .whereIn("food.id", validIds)

@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { BriefFood, FoodCollection, SlimeCollection } from "./models";
+import { BriefFood, ExportFoodCollection, SlimeCollection } from "./models";
 
 export type Controller<ResultType = null> = (req: Request) => Promise<ControllerResult<ResultType>>;
 
@@ -25,8 +25,7 @@ export interface ShopControllerHelper {
 }
 
 export interface FoodCollectionControllerHelper {
-  get: Controller<FoodCollection[]>;
-  insert: Controller;
+  getWholeFoodCollection: Controller<ExportFoodCollection>;
 }
 
 export interface SlimeCollectionControllerHelper {

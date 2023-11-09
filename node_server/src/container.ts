@@ -3,6 +3,8 @@ import { RedisClientType, createClient } from "redis";
 import knexConfig from "../src/db/knexfile";
 import AuthController from "./auth/auth.controller";
 import AuthService from "./auth/auth.service";
+import FoodCollectionController from "./collection/foodCollection/foodCollection.controller";
+import FoodCollectionService from "./collection/foodCollection/foodCollection.service";
 import { env } from "./env";
 import FoodController from "./food/food.controller";
 import FoodService from "./food/food.service";
@@ -19,3 +21,9 @@ export const foodController = new FoodController(foodService);
 
 export const shopService = new ShopService(knex);
 export const shopController = new ShopController(shopService, redis);
+
+export const foodCollectionService = new FoodCollectionService(knex);
+export const foodCollectionController = new FoodCollectionController(
+  foodCollectionService,
+  foodService
+);

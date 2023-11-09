@@ -100,6 +100,7 @@ export type BriefFood = {
 export interface FoodCollection extends Omit<Food, "cost" | "name" | "created_at" | "updated_at"> {
   food_name: string;
   category_name: string;
+  isCustom: boolean;
 }
 
 export interface SlimeCollection {
@@ -109,4 +110,14 @@ export interface SlimeCollection {
   max_calories: number;
   bMR_multiplier: number;
   earn_rate_multiplier: number;
+}
+
+export interface ExportFoodCollection {
+  unlocked: { universal: FoodCollection[]; custom: FoodCollection[] };
+  locked: { universal: number[]; custom: number[] };
+}
+
+export interface FoodCollectionIds {
+  universal: number[];
+  custom: number[];
 }
