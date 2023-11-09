@@ -103,15 +103,6 @@ export interface FoodCollection extends Omit<Food, "cost" | "name" | "created_at
   isCustom: boolean;
 }
 
-export interface SlimeCollection {
-  id: string; //uuid
-  name: string;
-  description: string;
-  max_calories: number;
-  bMR_multiplier: number;
-  earn_rate_multiplier: number;
-}
-
 export interface ExportFoodCollection {
   unlocked: { universal: FoodCollection[]; custom: FoodCollection[] };
   locked: { universal: number[]; custom: number[] };
@@ -120,4 +111,17 @@ export interface ExportFoodCollection {
 export interface FoodCollectionIds {
   universal: number[];
   custom: number[];
+}
+
+export interface SlimeCollection {
+  id: string; //uuid
+  name: string;
+  description: string;
+  max_calories: number;
+  bMR_multiplier: number;
+  earn_rate_multiplier: number;
+}
+export interface ExportSlimeCollection {
+  unlocked: SlimeCollection[];
+  locked: SlimeCollection[];
 }

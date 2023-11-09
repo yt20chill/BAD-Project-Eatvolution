@@ -1,5 +1,11 @@
 import { Knex } from "knex";
-import { BriefFood, FoodCollection, InsertFood } from "./models";
+import {
+  BriefFood,
+  ExportSlimeCollection,
+  FoodCollection,
+  FoodCollectionIds,
+  InsertFood,
+} from "./models";
 
 export interface AuthServiceHelper {
   login(username: string, password: string): Promise<number>;
@@ -29,5 +35,12 @@ export interface ShopServiceHelper {
 }
 
 export interface FoodCollectionServiceHelper {
-  getUnlockedFoodIds(userId: number): Promise<number[]>;
+  getUnlockedFoodIds(userId: number): Promise<FoodCollectionIds>;
+  getAllFoodIds(
+    userId: number
+  ): Promise<{ unlockedIds: FoodCollectionIds; lockedIds: FoodCollectionIds }>;
+}
+
+export interface SlimeCollectionServiceHelper {
+  getSlimeType(userId: number): Promise<ExportSlimeCollection>;
 }

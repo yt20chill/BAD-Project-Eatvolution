@@ -5,6 +5,8 @@ import AuthController from "./auth/auth.controller";
 import AuthService from "./auth/auth.service";
 import FoodCollectionController from "./collection/foodCollection/foodCollection.controller";
 import FoodCollectionService from "./collection/foodCollection/foodCollection.service";
+import SlimeCollectionController from "./collection/slimeCollection/slimeCollection.controller";
+import SlimeCollectionService from "./collection/slimeCollection/slimeCollection.service";
 import { env } from "./env";
 import FoodController from "./food/food.controller";
 import FoodService from "./food/food.service";
@@ -27,3 +29,6 @@ export const foodCollectionController = new FoodCollectionController(
   foodCollectionService,
   foodService
 );
+
+export const slimeCollectionService = new SlimeCollectionService(knex);
+export const slimeCollectionController = new SlimeCollectionController(slimeCollectionService);
