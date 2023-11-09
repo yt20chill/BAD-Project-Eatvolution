@@ -13,10 +13,11 @@ export default class ShopService implements ShopServiceHelper {
     );
   };
   private drawRandomFood = async (): Promise<number[]> => {
-    const availableFoodLength = (await this.getAllFoodIdsForShop()).length;
+    const availableFoodIds = await this.getAllFoodIdsForShop();
     const randomNumberSet = new Set<number>();
     while (randomNumberSet.size < ShopService.FOOD_NUM_ALLOWED) {
-      randomNumberSet.add(Math.floor(Math.random() * availableFoodLength));
+      const randomFoodId = availableFoodIds[Math.floor(Math.random() * availableFoodIds.length)];
+      randomNumberSet.add(randomFoodId);
     }
     return Array.from(randomNumberSet);
   };
