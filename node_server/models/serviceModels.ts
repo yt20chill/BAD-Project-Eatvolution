@@ -14,3 +14,11 @@ export interface FoodServiceHelper {
   getDetails(...foodIds: Array<number>): Promise<FoodCollection[]>;
   isExisting(options: { id?: number; name?: string }): Promise<number>;
 }
+
+export interface SlimeServiceHelper {
+  slimeFeed(foodId:number,slimeId:number): Promise<boolean>;
+  getTotalProtein(foodId:number,slimeId:number): Promise<number>;
+  getSlimeData(): Promise<number>;
+  calEarnRate(): Promise<number>;
+  evolution(): Promise<number>;
+}
