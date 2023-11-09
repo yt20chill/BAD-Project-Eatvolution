@@ -8,8 +8,6 @@ import { AppUtils } from "../utils/utils";
 import AuthService from "./auth.service";
 // import grant from "grant"
 
-const a: boolean = null;
-
 export default class AuthController implements AuthControllerHelper {
   constructor(
     private readonly authService: AuthService,

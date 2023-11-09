@@ -20,7 +20,6 @@ export default class FoodService implements FoodServiceHelper {
     try {
       if (foodId === -1) {
         foodCopy.category_id = (await this.getCategory(foodCopy))[0] ?? null;
-        // logger.debug(food.category_id);
         foodId = (await trx("food").insert(foodCopy).returning("id"))[0]["id"];
       }
       await this.insertCustomFood(trx, userId, foodId);
@@ -105,7 +104,6 @@ export default class FoodService implements FoodServiceHelper {
       (foodId && foodName) ||
       (!foodName && (foodId <= 0 || foodId % 1 !== 0))
     ) {
-      // logger.debug(`invalid input: ${foodId}, ${foodName}`);
       throw new BadRequestError();
     }
     const query = this.knex("food").select("id");
