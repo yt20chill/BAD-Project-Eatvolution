@@ -14,6 +14,13 @@ export interface FoodServiceHelper {
   isExisting(options: { id?: number; name?: string }): Promise<number>;
 }
 
+export interface SlimeServiceHelper {
+  slimeFeed(foodId:number,slimeId:number): Promise<boolean>;
+  getTotalProtein(foodId:number,slimeId:number): Promise<number>;
+  getSlimeData(): Promise<number>;
+  calEarnRate(): Promise<number>;
+  evolution(): Promise<number>;}
+  
 export interface ShopServiceHelper {
   getShopItems(userId: number): Promise<{ food: BriefFood[]; isUniversal: boolean }>;
   updateUniversalShop(): Promise<boolean>;
