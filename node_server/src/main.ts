@@ -22,13 +22,11 @@ io.use((socket, next) => {
 //Examples of routes
 app.use("/api", isLoggedInAPI, apiRoutes);
 app.use("/auth", authRoutes);
-// app.use("/oauth", oauthRoutes);
 
 app.use(express.static(path.join(__dirname, "..", "public")));
 // Example for serving guarded folder
 app.use("/user", isLoggedInFrontEnd, express.static(path.join(__dirname, "..", "private")));
 
-app.use("/logout", express.static(path.join(__dirname, "..", "public")));
 app.use((_, res) => {
   res.sendFile(path.join(__dirname, "..", "public", "404.html"));
 });
