@@ -12,7 +12,7 @@ export default class SlimeController implements SlimeControllerHelper {
     ) {}
     getTotalProtein: Controller<null>;
     calEarnRate: Controller<null>;
-    getSlimeData: Controller<null>;
+   
     evolution: Controller<null>;
 
     slimeFeed = async (req: Request) => {
@@ -20,9 +20,16 @@ export default class SlimeController implements SlimeControllerHelper {
         const { foodId, slimeId } = req.body;
 
         const result = await this.slimeService.slimeFeed(foodId, slimeId);
-        return AppUtils.setServerResponse();
+       
+        return AppUtils.setServerResponse(result);
 
     }
+    getSlimeData= async (req: Request) => {
+        const {slimeId} = req.body;
+        const result = await this.slimeService.slimeFeed(slimeId);
+        return AppUtils.setServerResponse(result);
+    }
+    
 
     // getTotalProtein: Controller<null>;
     // calEarnRate: Controller<null>;

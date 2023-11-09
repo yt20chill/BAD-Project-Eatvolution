@@ -3,10 +3,10 @@ import { Request } from "express";
 import fetchMock from "jest-fetch-mock";
 import Knex from "knex";
 import knexConfig from "../../src/db/knexfile";
-import { env } from "../../src/env";
 import { ApplicationError, BadRequestError } from "../../src/utils/error";
 import { mockRequest } from "../../src/utils/testUtils";
 import { seed } from "../db/seeds/01-init";
+import { env } from "../utils/env";
 import FoodController from "./food.controller";
 import FoodService from "./food.service";
 

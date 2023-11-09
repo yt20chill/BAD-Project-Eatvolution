@@ -1,7 +1,7 @@
 import Knex from "knex";
 import { User } from "models/dbModels";
 import knexConfig from "../db/knexfile";
-import { env } from "../env";
+import { env } from "../utils/env";
 import { BadRequestError } from "../utils/error";
 import { countUser, idFromInsertingTestUser } from "../utils/testUtils";
 import AuthService from "./auth.service";

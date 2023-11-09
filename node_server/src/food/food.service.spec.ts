@@ -1,7 +1,7 @@
 import Knex from "knex";
 import { Category, Food } from "models/dbModels";
-import { env } from "../../src/env";
 import { BadRequestError } from "../../src/utils/error";
+import { env } from "../utils/env";
 //import { logger } from "../../src/utils/logger";
 import fetchMock from "jest-fetch-mock";
 import { ClassifyFood, GeneralOmitFields } from "models/models";

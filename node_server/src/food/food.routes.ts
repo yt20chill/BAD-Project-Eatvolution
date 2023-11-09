@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { foodController } from "../container";
+import { foodController } from "../utils/container";
 import { AppUtils } from "../utils/utils";
 
 export const foodRoutes = Router();

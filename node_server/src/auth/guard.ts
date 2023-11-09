@@ -9,7 +9,7 @@ export const isLoggedInAPI = (req: Request, res: Response, next: NextFunction) =
   return;
 };
 
-export const isLoggedInFrontEnd = (req: Request, res: Response, next: NextFunction) => {
+export const isLoggedInClient = (req: Request, res: Response, next: NextFunction) => {
   if (req.session.userId) {
     next();
     return;

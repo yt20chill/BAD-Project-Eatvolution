@@ -1,9 +1,9 @@
 import { Request } from "express";
-import { BriefFood, FoodCollection, SlimeCollection } from "./models";
+import { BriefFood, ExportFoodCollection, ExportSlimeCollection } from "./models";
 
 export type Controller<ResultType = null> = (req: Request) => Promise<ControllerResult<ResultType>>;
 
-export interface ControllerResult<ResultType> {
+export interface ControllerResult<ResultType = null> {
   success: boolean;
   result: ResultType;
 }
@@ -20,16 +20,20 @@ export interface FoodControllerHelper {
 }
 
 export interface ShopControllerHelper {
-  getFood: Controller<BriefFood[]>;
+  getShopItems: Controller<BriefFood[]>;
+  refreshShop: Controller<BriefFood[]>;
 }
 
 export interface FoodCollectionControllerHelper {
-  get: Controller<FoodCollection[]>;
-  insert: Controller;
+  getWholeFoodCollection: Controller<ExportFoodCollection>;
 }
 
 export interface SlimeCollectionControllerHelper {
-  get: Controller<SlimeCollection[]>;
+  getWholeSlimeCollection: Controller<ExportSlimeCollection>;
+}
+
+export interface UserControllerHelper {
+  getCurrentMoney: Controller<number>;
 }
 
 export interface SlimeControllerHelper {

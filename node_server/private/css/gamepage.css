@@ -27,6 +27,7 @@ body {
     height: 200px;
     background-color: #f1f1f1;
     transition: left 0.5s ease-in-out;
+    z-index: 9999;
     /* 使用 0.5 秒的过渡效果，并添加缓动函数 */
 }
 
@@ -48,7 +49,6 @@ body {
     background-color: blueviolet;
     border: 5px solid #fafafa;
     border-radius: 5px;
-
 }
 
 .fas.fa-times {
@@ -116,10 +116,10 @@ body {
 }
 
 .game_container {
-    position: absolute;
-    top: 50%;
+    position: relative;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
+
     height: 700px;
     width: 40%;
     margin-top: 60px;
