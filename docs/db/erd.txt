@@ -14,6 +14,7 @@
 #
 ////////////////////////////////////
 
+
 user
 ----
 id integer PK
@@ -23,6 +24,7 @@ money integer
 total_money integer
 created_at timestamp
 updated_at timestamp
+
 
 slime_type
 ----------
@@ -60,7 +62,7 @@ food
 ----
 id integer PK
 name varchar(255) unique
-cost integer null
+cost integer NULL
 calories decimal
 protein decimal
 fat decimal
@@ -75,11 +77,12 @@ emoji varchar(255)
 created_at timestamp
 updated_at timestamp
 
+
 user_custom_food
--
-id
-food_id FK >- food.id
-user_id FK >- user.id
+----------------
+id integer PK
+food_id integer FK >- food.id
+user_id integer FK >- user.id
 created_at timestamp
 updated_at timestamp
 
@@ -93,7 +96,7 @@ created_at timestamp
 
 
 user_food_collection
-------------------
+--------------------
 id integer PK
 user_id integer FK >- user.id
 food_id integer FK >- food.id
@@ -101,23 +104,35 @@ created_at timestamp
 
 
 user_slime_type_collection
-------------------------
+--------------------------
 id integer PK
 user_id integer FK >- user.id
 slime_type_id uuid FK >- slime_type.id
 created_at timestamp
 
+
 shop
--
-id
+----
+id integer PK
 food_id integer FK >- food.id
 created_at timestamp
 updated_at timestamp
 
+
 user_shop
--
-id
+---------
+id integer PK
 user_id integer FK >- user.id
 food_id integer FK >- food.id
+created_at timestamp
+updated_at timestamp
+
+
+item
+----
+id integer PK
+name varchar(255)
+description text
+cost integer
 created_at timestamp
 updated_at timestamp

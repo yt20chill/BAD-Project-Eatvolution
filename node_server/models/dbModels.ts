@@ -111,3 +111,12 @@ export type UserShop = {
   created_at: string;
   updated_at: string;
 };
+
+export type Item = {
+  id?: null | number;
+  name: string;
+  description: string;
+  cost: number;
+  created_at: string;
+  updated_at: string;
+};
