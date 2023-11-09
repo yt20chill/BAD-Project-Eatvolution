@@ -1,12 +1,11 @@
 import { Request } from "express";
 import { RedisClientType } from "redis";
-import { ControllerResult } from "../../models/controllerModels";
+import { ControllerResult, ShopControllerHelper } from "../../models/controllerModels";
 import { BriefFood } from "../../models/models";
-import { logger } from "../utils/logger";
 import { AppUtils } from "../utils/utils";
 import ShopService from "./shop.service";
 
-export default class ShopController {
+export default class ShopController implements ShopControllerHelper {
   constructor(
     private readonly shopService: ShopService,
     private readonly redis: RedisClientType
@@ -14,10 +13,8 @@ export default class ShopController {
   // redis maybe buggy. need testing
   getShopItems = async (req: Request): Promise<ControllerResult<BriefFood[]>> => {
     const { userId } = req.session;
-    logger.debug(`getShopItems: userId=${userId}`);
     const existsCustomShop = await this.redis.exists(`shop-${userId}`);
     const existsUniversalShop = await this.redis.exists("shop");
-    logger.debug(`getShopItems${existsCustomShop}, ${existsUniversalShop}}`);
     if (existsCustomShop) {
       const food = JSON.parse(await this.redis.get(`shop-${userId}`));
       return AppUtils.setServerResponse(food);
