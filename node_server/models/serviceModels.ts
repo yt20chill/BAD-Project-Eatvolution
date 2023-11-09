@@ -46,7 +46,8 @@ export interface SlimeCollectionServiceHelper {
 }
 
 export interface UserServiceHelper {
-  getCurrentMoney(userId: number): Promise<number>;
-  makeFoodPurchase(userId: number, foodId: number, knex: Knex): Promise<boolean>;
-  updateMoney(userId: number): Promise<void>;
+  getCurrentMoney(userId: number, knex?: Knex): Promise<number>;
+  makeFoodPurchase(userId: number, foodId: number, knex?: Knex): Promise<boolean>;
+  receiveSalary(userId: number, knex?: Knex): Promise<boolean>;
+  calculateEarningRate(userId: number): Promise<number>;
 }
