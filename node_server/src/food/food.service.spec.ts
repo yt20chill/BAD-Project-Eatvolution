@@ -86,6 +86,7 @@ describe("FoodService", () => {
     jest.clearAllMocks();
     fetchMock.resetMocks();
     fetchMock.enableMocks();
+    fetchMock.mockResponse(JSON.stringify({}));
     foodCountBefore = await countFood(knex);
     foodService = new FoodService(knex);
     jest.spyOn(foodService, "isExisting");
@@ -154,10 +155,10 @@ describe("FoodService", () => {
       const { id, created_at, updated_at, ...rest } = (await knex<Food>("food"))[0];
       await foodService.insert(testUserIds[0], id);
       expect(await countFood(knex)).toBe(foodCountBefore);
-      expect(await countUserCustomFood()).toBe(0);
+      expect(await countUserCustomFood()).toBe("0");
       await foodService.insert(testUserIds[0], rest);
       expect(await countFood(knex)).toBe(foodCountBefore);
-      expect(await countUserCustomFood()).toBe(0);
+      expect(await countUserCustomFood()).toBe("0");
     });
     it("calls py API on new food", async () => {
       fetchMock.doMock();
@@ -203,18 +204,20 @@ describe("FoodService", () => {
       expect(await foodService.insert(testUserIds[0], testFood)).toBe(true);
       expect(await getTestFoodCatId("test")).toBeNull();
     });
-    it("inserts to user_custom_food if foodId is parsed", async () => {
-      expect(await foodService.insert(testUserIds[0], 1)).toBe(true);
+    it("inserts to user_custom_food if foodId of custom food is parsed", async () => {
+      const customFoodId = (await idFromInsertingTestFood(testFood))[0];
+      expect(await foodService.insert(testUserIds[0], customFoodId)).toBe(true);
       expect((await knex("user_custom_food"))[0]).toMatchObject({
         user_id: testUserIds[0],
-        food_id: 1,
+        food_id: customFoodId,
       });
     });
     it("won't insert to user_custom_food if foodId is parsed but duplicated", async () => {
-      for (let i = 0; i < 3; i++) await foodService.insert(testUserIds[0], 1);
+      const customFoodId = (await idFromInsertingTestFood(testFood))[0];
+      for (let i = 0; i < 3; i++) await foodService.insert(testUserIds[0], customFoodId);
       expect((await knex("user_custom_food").count("id as count"))[0]["count"]).toBe("1");
     });
-    it("won't insert to food if food id is parsed", async () => {
+    it("won't insert to food if food id of non custom food is parsed", async () => {
       await foodService.insert(testUserIds[0], 1);
       expect(await countFood(knex)).toBe(foodCountBefore);
     });
