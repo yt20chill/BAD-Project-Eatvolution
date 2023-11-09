@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 import { join } from "path";
 import populateEnv from "populate-env";
-config({ path: join(__dirname, "..", ".env") });
+config({ path: join(__dirname, "..", "..", ".env") });
 
 export const env = {
   NODE_ENV: "",

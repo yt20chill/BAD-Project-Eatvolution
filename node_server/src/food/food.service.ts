@@ -1,9 +1,9 @@
 import { Knex } from "knex";
 import { FoodServiceHelper } from "models/serviceModels";
 import { FoodCollection, InsertFood } from "../../models/models";
-import { env } from "../../src/env";
 import { BadRequestError } from "../../src/utils/error";
 import { logger } from "../../src/utils/logger";
+import { env } from "../utils/env";
 
 export default class FoodService implements FoodServiceHelper {
   constructor(private readonly knex: Knex) {}

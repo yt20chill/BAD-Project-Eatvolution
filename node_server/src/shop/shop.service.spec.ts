@@ -1,7 +1,7 @@
 import Knex from "knex";
 import knexConfig from "../../src/db/knexfile";
 import { seed } from "../db/seeds/01-init";
-import { env } from "../env";
+import { env } from "../utils/env";
 import { logger } from "../utils/logger";
 import { idFromInsertingTestUser } from "../utils/testUtils";
 import ShopService from "./shop.service";

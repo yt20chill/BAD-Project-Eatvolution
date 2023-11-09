@@ -44,3 +44,9 @@ export interface FoodCollectionServiceHelper {
 export interface SlimeCollectionServiceHelper {
   getSlimeType(userId: number): Promise<ExportSlimeCollection>;
 }
+
+export interface UserServiceHelper {
+  getCurrentMoney(userId: number): Promise<number>;
+  makeFoodPurchase(userId: number, foodId: number, knex: Knex): Promise<boolean>;
+  updateMoney(userId: number): Promise<void>;
+}

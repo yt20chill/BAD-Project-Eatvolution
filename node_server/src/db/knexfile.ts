@@ -1,6 +1,6 @@
 import { config as dotenvConfig } from "dotenv";
 import type { Knex } from "knex";
-import { env } from "../env";
+import { env } from "../utils/env";
 
 dotenvConfig();
 // Update with your config settings.

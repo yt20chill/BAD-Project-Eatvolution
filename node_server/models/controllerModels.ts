@@ -31,3 +31,7 @@ export interface FoodCollectionControllerHelper {
 export interface SlimeCollectionControllerHelper {
   getWholeSlimeCollection: Controller<ExportSlimeCollection>;
 }
+
+export interface UserControllerHelper {
+  getCurrentMoney: Controller<number>;
+}

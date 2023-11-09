@@ -1,10 +1,10 @@
 import { Request as ExpressRequest } from "express";
 import { ControllerResult, FoodControllerHelper } from "models/controllerModels";
 import { CnItem } from "models/models";
-import { env } from "../../src/env";
 import DbUtils from "../../src/utils/dbUtils";
 import { ApplicationError, BadRequestError } from "../../src/utils/error";
 import { AppUtils } from "../../src/utils/utils";
+import { env } from "../utils/env";
 import FoodService from "./food.service";
 
 export default class FoodController implements FoodControllerHelper {

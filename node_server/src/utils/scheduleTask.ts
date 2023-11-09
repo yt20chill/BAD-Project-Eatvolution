@@ -1,6 +1,6 @@
 import schedule from "node-schedule";
-import { redis, shopService } from "../container";
 import ShopService from "../shop/shop.service";
+import { redis, shopService } from "./container";
 import RedisClientWrapper from "./redisUtils";
 
 // TODO: test case
