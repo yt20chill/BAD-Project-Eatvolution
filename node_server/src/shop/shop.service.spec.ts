@@ -31,23 +31,24 @@ describe("ShopService", () => {
     await seed(knex);
   });
   beforeEach(async () => {});
+  // TODO: should test universal and user shop
   describe("getShopItems", () => {
     it("get n = foodNumAllowed unique food", async () => {
-      const result = await shopService.getShopItems(testUserId);
+      const result = (await shopService.getShopItems(testUserId)).food;
       expect(result.length).toBe(foodNumAllowed);
       for (const food of result) {
         expect(food.cost).toBeTruthy();
       }
     });
     it("all food should have a price", async () => {
-      const result = await shopService.getShopItems(testUserId);
+      const result = (await shopService.getShopItems(testUserId)).food;
       expect(result.length).toBe(foodNumAllowed);
       for (const food of result) {
         expect(food.cost).toBeTruthy();
       }
     });
     it("returns only brief info about the food", async () => {
-      const result = await shopService.getShopItems(testUserId);
+      const result = (await shopService.getShopItems(testUserId)).food;
       for (const food of result) {
         const keys = Object.keys(food);
         expect(keys).toMatchObject(["id", "name", "calories", "cost"]);
@@ -55,7 +56,7 @@ describe("ShopService", () => {
       }
     });
     it("result be ordered by cost", async () => {
-      const result = await shopService.getShopItems(testUserId);
+      const result = (await shopService.getShopItems(testUserId)).food;
       for (let i = 1; i < result.length; i++) {
         expect(result[i].cost).toBeGreaterThanOrEqual(result[i - 1].cost);
       }
