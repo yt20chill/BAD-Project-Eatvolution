@@ -19,8 +19,8 @@ export type SlimeType = {
   id?: null | string; // uuid
   name: string;
   max_calories: number;
-  bMR_factor: number;
-  earn_rate_factor: number;
+  bMR_multiplier: number;
+  earn_rate_multiplier: number;
   created_at: string;
   updated_at: string;
 };
