@@ -4,4 +4,5 @@ import { AppUtils } from "../utils/utils";
 
 export const shopRoutes = Router();
 
-shopRoutes.get("/shop", AppUtils.exceptionWrapper(shopController.getShopItems));
+shopRoutes.get("/", AppUtils.exceptionWrapper(shopController.getShopItems));
+shopRoutes.put("/", AppUtils.exceptionWrapper(shopController.refreshShop));

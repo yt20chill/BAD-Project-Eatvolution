@@ -1,4 +1,5 @@
 import { Knex } from "knex";
+import schedule from "node-schedule";
 import { Food } from "../../models/dbModels";
 import { BriefFood } from "../../models/models";
 import { ShopServiceHelper } from "../../models/serviceModels";
@@ -6,7 +7,11 @@ import { logger } from "../utils/logger";
 
 export default class ShopService implements ShopServiceHelper {
   private static FOOD_NUM_ALLOWED = 12;
-  constructor(private readonly knex: Knex) {}
+  private static RULE = new schedule.RecurrenceRule();
+  constructor(private readonly knex: Knex) {
+    //default rule: every 8am, 1pm, 7pm
+    ShopService.RULE.hour = [8, 13, 19];
+  }
   private getAllFoodIdsForShop = async (): Promise<number[]> => {
     return (await this.knex<Food>("food").select("id").whereNotNull("cost").orderBy("cost")).map(
       (e) => +e.id
@@ -31,14 +36,19 @@ export default class ShopService implements ShopServiceHelper {
     return this.getUniversalShop();
   };
   private getUserShop = async (userId: number): Promise<BriefFood[]> => {
-    return await this.knex<BriefFood>("user_shop")
+    const userShop = await this.knex<BriefFood>("user_shop")
       .select("food.id", "food.name", "food.calories", "food.cost")
       .join("food", "food_id", "food.id")
       .where("user_id", userId);
+    return userShop;
   };
-  getShopItems = async (userId: number): Promise<BriefFood[]> => {
+  getShopItems = async (userId: number): Promise<{ food: BriefFood[]; isUniversal: boolean }> => {
     const userShop = await this.getUserShop(userId);
-    return userShop.length === 0 ? await this.getUniversalShop() : userShop;
+    if (userShop.length === 0) {
+      const food = await this.getUniversalShop();
+      return { food, isUniversal: true };
+    }
+    return { food: userShop, isUniversal: false };
   };
   updateUniversalShop = async (): Promise<boolean> => {
     const foodIds = await this.drawRandomFood();
@@ -79,5 +89,11 @@ export default class ShopService implements ShopServiceHelper {
   };
   static get foodNumAllowed() {
     return ShopService.FOOD_NUM_ALLOWED;
+  }
+  static set rule(rule: schedule.RecurrenceRule) {
+    ShopService.RULE = rule;
+  }
+  static get rule() {
+    return ShopService.RULE;
   }
 }
