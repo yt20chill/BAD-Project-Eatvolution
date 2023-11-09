@@ -18,7 +18,7 @@ export interface SlimeServiceHelper {
   slimeFeed(foodId:number,slimeId:number): Promise<boolean>;
   getTotalProtein(foodId:number,slimeId:number): Promise<number>;
   getSlimeData(): Promise<number>;
-  calEarnRate(): Promise<number>;
+  calEarnRate(slimeId:number): Promise<number>;
   evolution(): Promise<number>;}
   
 export interface ShopServiceHelper {

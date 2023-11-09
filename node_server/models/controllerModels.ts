@@ -31,3 +31,13 @@ export interface FoodCollectionControllerHelper {
 export interface SlimeCollectionControllerHelper {
   get: Controller<SlimeCollection[]>;
 }
+
+export interface SlimeControllerHelper {
+  slimeFeed: Controller<number | null>;
+  getTotalProtein: Controller;
+  calEarnRate:Controller;
+  getSlimeData:Controller;
+  evolution:Controller;
+  //autoMinusCalor:Controller;
+
+}
