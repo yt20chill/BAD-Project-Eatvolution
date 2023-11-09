@@ -23,12 +23,14 @@ export default class SlimeService implements SlimeServiceHelper {
         //cal slime id
         //we have foodID => to select in food table => protein
 
-    const totalProtein = await this.knex('slime_food')
+    const result = await this.knex('slime_food')
     .join('food','slime_food.food_id','=','food.id')
+    .join('slime', 'slime_food.slime_id', '=', 'slime.id')
     .sum('food.protein as total_protein')
+    .where('slime.id',slimeId)
     .first()
-
-        return totalProtein.total_protein
+    const totalProtein = parseInt(result.total_protein)
+    return totalProtein
     };
     getSlimeData = async(): Promise<number> =>{
         return 

@@ -8,8 +8,6 @@ import { AppUtils } from "../utils/utils";
 import AuthService from "./auth.service";
 // import grant from "grant"
 
-const a: boolean = null;
-
 export default class AuthController implements AuthControllerHelper {
   constructor(
     private readonly authService: AuthService,
@@ -34,11 +32,11 @@ export default class AuthController implements AuthControllerHelper {
       throw new BadRequestError();
 
     const result = await this.authService.signUp(username, password);
-    
-    if(result === -1) return AppUtils.setServerResponse("duplicated username", false);
 
-    req.session.userId = result
-   
+    if (result === -1) return AppUtils.setServerResponse("duplicated username", false);
+
+    req.session.userId = result;
+
     return AppUtils.setServerResponse();
   };
 
@@ -56,7 +54,7 @@ export default class AuthController implements AuthControllerHelper {
   oauthLogin = async (req: Request) => {
     try {
       const accessToken = req.session?.["grant"].response.access_token;
-      if(!accessToken)  return AppUtils.setServerResponse(null, false);
+      if (!accessToken) return AppUtils.setServerResponse(null, false);
 
       const fetchRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
         method: "get",
@@ -65,26 +63,24 @@ export default class AuthController implements AuthControllerHelper {
         },
       });
 
-
-      const fetchedUser = await fetchRes.json();//login success => get user data in google
+      const fetchedUser = await fetchRes.json(); //login success => get user data in google
 
       const { email } = fetchedUser;
       const result = await this.authService.oauthLogin(email);
-      
+
       req.session.userId = result;
 
       return AppUtils.setServerResponse();
-      
     } catch (err) {
       console.log(err);
       return AppUtils.setServerResponse(null, false);
     }
   };
 
-  logout= async (req: Request) => {
+  logout = async (req: Request) => {
     if (req.session) {
-      delete req.session
+      delete req.session;
     }
     return AppUtils.setServerResponse(null, false);
-  }
+  };
 }

@@ -1,7 +1,7 @@
 import csvParser from "csv-parser";
 import fs from "fs";
-import { Food, GeneralOmitFields } from "models/dbModels";
-import { CnItem, InsertFood } from "models/models";
+import { Food } from "models/dbModels";
+import { CnItem, GeneralOmitFields, InsertFood } from "models/models";
 
 export default class DbUtils {
   /**

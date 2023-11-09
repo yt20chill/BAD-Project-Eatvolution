@@ -10,9 +10,9 @@ export interface ControllerResult<ResultType> {
 
 export interface AuthControllerHelper {
   login: Controller;
-  signUp: Controller<number | string>;
+  signUp: Controller<string | null>;
   oauthLogin: Controller;
-  logout: Controller
+  logout: Controller;
 }
 
 export interface FoodControllerHelper {

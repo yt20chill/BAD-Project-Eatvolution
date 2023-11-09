@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap');
+
+body * {
+	font-family: 'Pixelify Sans', sans-serif;
+}
+
 *,
 *::after,
 main-c *::before {
@@ -25,7 +31,7 @@ main-c *::before {
 	--cursor-blend-mode: exclusion;
 	--gradient-text-1: #e8c942;
 	--gradient-text-2: rgb(148 98 209);
-	background-image: url(../img/bg1.jpg);
+	background-image: url(./background.svg);
 }
 
 .demo-2 {
@@ -57,7 +63,7 @@ main-c *::before {
 	--cursor-blend-mode: exclusion;
 	--gradient-text-1: #aedfea;
 	--gradient-text-2: rgb(253 235 188);
-	background-image: url(../img/bg4.jpg);
+	background-image: url(./background.svg);
 }
 
 .demo-5 {

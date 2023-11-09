@@ -2,11 +2,10 @@
 import { Request } from "express";
 import fetchMock from "jest-fetch-mock";
 import Knex from "knex";
-import { RedisClientType } from "redis";
 import knexConfig from "../../src/db/knexfile";
 import { env } from "../../src/env";
 import { ApplicationError, BadRequestError } from "../../src/utils/error";
-import { mockRedis, mockRequest } from "../../src/utils/testUtils";
+import { mockRequest } from "../../src/utils/testUtils";
 import { seed } from "../db/seeds/01-init";
 import FoodController from "./food.controller";
 import FoodService from "./food.service";
@@ -60,7 +59,6 @@ describe("FoodController", () => {
   };
   let req: Request;
   let foodService: FoodService;
-  let redis: RedisClientType;
   let foodController: FoodController;
   beforeAll(async () => {
     await knex.migrate.latest();
@@ -73,11 +71,10 @@ describe("FoodController", () => {
     req = mockRequest();
     req.session.userId = 1;
     req.body.foodName = "oranges";
-    redis = mockRedis();
     foodService = new FoodService({} as Knex.Knex);
     foodService.insert = jest.fn(async (_userId, _food) => true);
     foodService.isExisting = jest.fn(async ({}) => -1);
-    foodController = new FoodController(foodService, redis);
+    foodController = new FoodController(foodService);
   });
   describe("insert food", () => {
     it("fetches api and call insert on valid and new food", async () => {

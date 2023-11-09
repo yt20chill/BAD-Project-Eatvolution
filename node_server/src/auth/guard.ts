@@ -1,11 +1,19 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 
-export const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
+export const isLoggedInAPI = (req: Request, res: Response, next: NextFunction) => {
   if (req.session.userId) {
     next();
     return;
   }
   res.status(401).json({ success: false, message: "Login false" });
-  console.log(isLoggedIn);
+  return;
+};
+
+export const isLoggedInFrontEnd = (req: Request, res: Response, next: NextFunction) => {
+  if (req.session.userId) {
+    next();
+    return;
+  }
+  res.redirect("/");
   return;
 };
