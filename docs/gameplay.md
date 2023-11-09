@@ -30,4 +30,5 @@ extra calories will reduce once current calories is 0.
 
 formula:
 
-`earning_rate` = `slime_type.earning_rate_factor` x `total_protein` x`constant`
+`slime.earning_rate` = `slime_type.earning_rate_factor` x `slime.total_protein` x`constant`
+`user.earning_rate` = sum(slime.earning_rate) || 1
