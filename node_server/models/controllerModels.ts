@@ -3,7 +3,7 @@ import { BriefFood, FoodCollection, SlimeCollection } from "./models";
 
 export type Controller<ResultType = null> = (req: Request) => Promise<ControllerResult<ResultType>>;
 
-export interface ControllerResult<ResultType> {
+export interface ControllerResult<ResultType = null> {
   success: boolean;
   result: ResultType;
 }

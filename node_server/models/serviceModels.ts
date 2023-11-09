@@ -15,7 +15,7 @@ export interface FoodServiceHelper {
 }
 
 export interface ShopServiceHelper {
-  getShopItems(userId: number): Promise<BriefFood[]>;
+  getShopItems(userId: number): Promise<{ food: BriefFood[]; isUniversal: boolean }>;
   updateUniversalShop(): Promise<boolean>;
   updateUserShop(userId: number): Promise<boolean>;
 }

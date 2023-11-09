@@ -6,7 +6,7 @@ import { logger } from "../utils/logger";
 import { idFromInsertingTestUser } from "../utils/testUtils";
 import ShopService from "./shop.service";
 
-describe.only("ShopService", () => {
+describe("ShopService", () => {
   const knex = Knex(knexConfig[env.NODE_ENV]);
   let shopService: ShopService;
   let testUserId: number;
