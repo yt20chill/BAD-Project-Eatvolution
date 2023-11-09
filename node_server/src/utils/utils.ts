@@ -19,8 +19,29 @@ export class AppUtils {
         return;
       }
     };
+
   static setServerResponse = <ResultType = null>(
     result: ResultType = null,
     success: boolean = true
   ) => ({ success, result });
+
+  /**
+   * redirect to game page if req.session.userId !== undefined. redirect to home page on error. json response if result !== null (maybe have message to show?)
+   * @param controller
+   * @returns redirect to game page if controller return success = true and result = null, else response in json format
+   */
+  static redirectWrapper =
+    <T>(controller: Controller<T>) =>
+    async (req: Request, res: Response) => {
+      try {
+        const { success, result } = await controller(req);
+        if (req.session.userId) res.redirect("/user");
+        // result to be handled by client
+        else res.json({ success, result });
+        return;
+      } catch (error) {
+        res.redirect("/");
+        return;
+      }
+    };
 }
