@@ -7,7 +7,7 @@ import { BadRequestError } from "../utils/error";
 
 export default class AuthService implements AuthServiceHelper {
   private SALT_ROUNDS = 10;
-  constructor(private readonly knex: Knex) { }
+  constructor(private readonly knex: Knex) {}
 
   private hashPassword = async (password: string): Promise<string> => {
     return await bcrypt.hash(password, this.SALT_ROUNDS);
@@ -59,7 +59,7 @@ export default class AuthService implements AuthServiceHelper {
 
   oauthLogin = async (email: string): Promise<number> => {
     const userId = await this.isExisting(email);
-    if (userId !== -1) return userId
+    if (userId !== -1) return userId;
     const password = crypto.randomBytes(20).toString("hex");
     return await this.signUp(email, password);
   };

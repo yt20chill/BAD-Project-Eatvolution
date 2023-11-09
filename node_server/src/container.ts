@@ -6,6 +6,8 @@ import AuthService from "./auth/auth.service";
 import { env } from "./env";
 import FoodController from "./food/food.controller";
 import FoodService from "./food/food.service";
+import ShopController from "./shop/shop.controller";
+import ShopService from "./shop/shop.service";
 export const redis: RedisClientType = createClient();
 export const knex = Knex(knexConfig[env.NODE_ENV]);
 
@@ -13,4 +15,7 @@ export const authService = new AuthService(knex);
 export const authController = new AuthController(authService, redis);
 
 export const foodService = new FoodService(knex);
-export const foodController = new FoodController(foodService, redis);
+export const foodController = new FoodController(foodService);
+
+export const shopService = new ShopService(knex);
+export const shopController = new ShopController(shopService, redis);

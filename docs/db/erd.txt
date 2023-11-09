@@ -106,3 +106,18 @@ id integer PK
 user_id integer FK >- user.id
 slime_type_id uuid FK >- slime_type.id
 created_at timestamp
+
+shop
+-
+id
+food_id integer FK >- food.id
+created_at timestamp
+updated_at timestamp
+
+user_shop
+-
+id
+user_id integer FK >- user.id
+food_id integer FK >- food.id
+created_at timestamp
+updated_at timestamp

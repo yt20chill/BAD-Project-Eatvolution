@@ -1,7 +1,6 @@
 import { Request as ExpressRequest } from "express";
 import { ControllerResult, FoodControllerHelper } from "models/controllerModels";
 import { CnItem } from "models/models";
-import { RedisClientType } from "redis";
 import { env } from "../../src/env";
 import DbUtils from "../../src/utils/dbUtils";
 import { ApplicationError, BadRequestError } from "../../src/utils/error";
@@ -9,14 +8,10 @@ import { AppUtils } from "../../src/utils/utils";
 import FoodService from "./food.service";
 
 export default class FoodController implements FoodControllerHelper {
-  constructor(
-    private readonly foodService: FoodService,
-    private readonly redis?: RedisClientType
-  ) {}
+  constructor(private readonly foodService: FoodService) {}
 
   insertFood = async (req: ExpressRequest): Promise<ControllerResult<string | null>> => {
     const foodName = req.body.foodName?.trim().toLowerCase();
-    // logger.debug(foodName);
     if (!foodName) throw new BadRequestError();
     const foodId = await this.foodService.isExisting({ name: foodName });
     let food: CnItem;
@@ -38,6 +33,3 @@ export default class FoodController implements FoodControllerHelper {
     return AppUtils.setServerResponse<null>();
   };
 }
-
-// const foodController = new FoodController(new FoodService(Knex(knexConfig[env.NODE_ENV])));
-// foodController.insertFood({ body: { foodName: "pineapple bun" } } as unknown as ExpressRequest);

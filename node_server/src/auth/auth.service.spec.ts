@@ -3,28 +3,19 @@ import { User } from "models/dbModels";
 import knexConfig from "../db/knexfile";
 import { env } from "../env";
 import { BadRequestError } from "../utils/error";
+import { countUser, idFromInsertingTestUser } from "../utils/testUtils";
 import AuthService from "./auth.service";
 const knex = Knex(knexConfig[env.NODE_ENV]);
 describe("AuthService", () => {
   let authService: AuthService;
   let userCountBefore: number;
   let testId: number;
-  const countUser = async () => +(await knex("user").count("id as count"))[0]["count"];
 
   beforeEach(async () => {
     await knex("user").del();
     await knex.raw("ALTER SEQUENCE user_id_seq RESTART WITH 1");
-    // insert username: "test", password: "123" to user
-    testId = (
-      await knex("user")
-        .insert({
-          username: "test",
-          hash_password: "$2a$10$8nXBNisolSX6wdRW1xRKw.r/4QK4qgoRnaTHlNHTqcRr1bjV65VR6",
-        })
-        .returning("id")
-    )[0]["id"];
-
-    userCountBefore = await countUser();
+    testId = await idFromInsertingTestUser(knex);
+    userCountBefore = await countUser(knex);
     authService = new AuthService(knex);
     jest.clearAllMocks();
     jest.spyOn(authService, "isExisting");
@@ -78,15 +69,15 @@ describe("AuthService", () => {
       expect(await authService.signUp("test", "12")).toBe(-1);
       expect(authService.isExisting).toHaveBeenCalledTimes(1);
       expect(authService.isExisting).toHaveBeenCalledWith("test");
-      expect(await countUser()).toBe(userCountBefore);
+      expect(await countUser(knex)).toBe(userCountBefore);
     });
     it("sign up should throw bad request if missing info", async () => {
       await expect(authService.signUp("", "")).rejects.toThrow(BadRequestError);
-      expect(await countUser()).toBe(userCountBefore);
+      expect(await countUser(knex)).toBe(userCountBefore);
       await expect(authService.signUp("test", "")).rejects.toThrow(BadRequestError);
-      expect(await countUser()).toBe(userCountBefore);
+      expect(await countUser(knex)).toBe(userCountBefore);
       await expect(authService.signUp("", "test")).rejects.toThrow(BadRequestError);
-      expect(await countUser()).toBe(userCountBefore);
+      expect(await countUser(knex)).toBe(userCountBefore);
       expect(authService.isExisting).toHaveBeenCalledTimes(0);
     });
   });

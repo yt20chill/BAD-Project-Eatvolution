@@ -93,3 +93,21 @@ export type UserSlimeTypeCollection = {
   slime_type?: SlimeType;
   created_at: string;
 };
+
+export type Shop = {
+  id?: null | number;
+  food_id: number;
+  food?: Food;
+  created_at: string;
+  updated_at: string;
+};
+
+export type UserShop = {
+  id?: null | number;
+  user_id: number;
+  user?: User;
+  food_id: number;
+  food?: Food;
+  created_at: string;
+  updated_at: string;
+};

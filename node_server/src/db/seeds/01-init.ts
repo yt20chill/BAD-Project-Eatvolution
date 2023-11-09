@@ -1,6 +1,7 @@
 import { Knex } from "knex";
-import { Food, GeneralOmitFields, SlimeType } from "models/dbModels";
+import { Food, SlimeType } from "models/dbModels";
 import path from "path";
+import { GeneralOmitFields } from "../../../models/models";
 import DbUtils from "../../utils/dbUtils";
 import { logger } from "../../utils/logger";
 const categoryNames = ["Healthy", "Processed", "Empty", "Dessert"];
@@ -9,6 +10,8 @@ export async function seed(knex: Knex): Promise<void> {
   const trx = await knex.transaction();
   try {
     // Deletes ALL existing entries
+    await trx("shop").del();
+    await trx("user_shop").del();
     await trx("food").del();
     await trx("category").del();
     await trx("slime_type").del();
