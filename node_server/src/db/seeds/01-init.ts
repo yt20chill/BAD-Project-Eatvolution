@@ -10,6 +10,8 @@ export async function seed(knex: Knex): Promise<void> {
   const trx = await knex.transaction();
   try {
     // Deletes ALL existing entries
+    await trx("shop").del();
+    await trx("user_shop").del();
     await trx("food").del();
     await trx("category").del();
     await trx("slime_type").del();
