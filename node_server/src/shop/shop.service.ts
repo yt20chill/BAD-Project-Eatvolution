@@ -28,7 +28,7 @@ export default class ShopService implements ShopServiceHelper {
   };
   private getUniversalShop = async (): Promise<BriefFood[]> => {
     const food = await this.knex<BriefFood>("shop")
-      .select("food.id", "food.name", "food.calories", "food.cost")
+      .select("food.id", "food.name", "food.calories", "food.cost", "food.emoji")
       .join("food", "food_id", "food.id")
       .orderBy([{ column: "food.cost" }, { column: "food.id" }]);
     if (food.length > 0) return food;
@@ -37,7 +37,7 @@ export default class ShopService implements ShopServiceHelper {
   };
   private getUserShop = async (userId: number): Promise<BriefFood[]> => {
     const userShop = await this.knex<BriefFood>("user_shop")
-      .select("food.id", "food.name", "food.calories", "food.cost")
+      .select("food.id", "food.name", "food.calories", "food.cost", "food.emoji")
       .join("food", "food_id", "food.id")
       .where("user_id", userId);
     return userShop;
