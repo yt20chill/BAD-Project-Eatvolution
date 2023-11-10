@@ -62,9 +62,9 @@ export default class UserService implements UserServiceHelper {
       .where("user.id", userId);
     // apply formula: userEarnRate = (protein * earnRateMultiplier * EARNING_RATE_CONSTANT), sum all for all food.protein
     // knex.sum() only supports summing up a single column
-    const { userEarnRate } = (await this.knex("slime_food")
+    const { userEarnRate } = await this.knex("slime_food")
       .with("user_slime", subquery)
-      .select(
+      .select<{ userEarnRate: string }>(
         this.knex.raw(`SUM(food.protein * user_slime.earn_rate_multiplier * ?) as "userEarnRate"`, [
           gameConfig.EARNING_RATE_CONSTANT,
         ])
@@ -73,9 +73,9 @@ export default class UserService implements UserServiceHelper {
       .join("user_slime", "user_slime.slime_id", "slime_food.slime_id")
       .join("food", "food.id", "slime_food.food_id")
       .join("slime", "slime.id", "slime_food.slime_id")
-      .first()) as any;
+      .first();
     await this.redis.setEx(`salary-${userId}`, 30 * 60, (userEarnRate || 1) + "");
-    return userEarnRate || 1;
+    return +userEarnRate || 1;
   };
 }
 
