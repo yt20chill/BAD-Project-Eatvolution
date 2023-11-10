@@ -10,6 +10,7 @@ import { ApplicationError } from "./utils/error";
 import { logger } from "./utils/logger";
 import { scheduleUpdateShop } from "./utils/scheduleTask";
 import { AppUtils } from "./utils/utils";
+import { authRoutes } from "./auth/auth.routes";
 app.use(express.json());
 app.use(socketSession);
 app.use(grantExpress);
@@ -22,7 +23,7 @@ redis.connect();
 scheduleUpdateShop();
 //Examples of routes
 app.use("/api", isLoggedInAPI, apiRoutes);
-// app.use("/auth", authRoutes);
+app.use("/auth", authRoutes);
 app.use("/api-test", apiRoutes);
 
 app.use(express.static(path.join(__dirname, "..", "public")));
