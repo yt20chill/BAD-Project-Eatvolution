@@ -12,13 +12,13 @@ export default class TestController {
       
     ) {}
 
-    test = async (req: Request, res: any) => {
-        const slimeService = new SlimeService(this.knex)
-        const result = await slimeService.getAllSlimeType()
-        console.log(result)
-        res.json(result)
+    // test = async (req: Request, res: any) => {
+    //     const slimeService = new SlimeService(this.knex)
+    //     const result = await slimeService.getAllSlimeType()
+    //     console.log(result)
+    //     res.json(result)
 
-    }
+    // }
     getTotalProtein: Controller<null>;
     calEarnRate: Controller<null>;
    
