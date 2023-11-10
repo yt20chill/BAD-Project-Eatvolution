@@ -11,6 +11,8 @@ import FoodController from "../food/food.controller";
 import FoodService from "../food/food.service";
 import ShopController from "../shop/shop.controller";
 import ShopService from "../shop/shop.service";
+import UserController from "../user/user.controller";
+import UserService from "../user/user.service";
 import { env } from "./env";
 import SlimeService from "../slime/slime.service";
 import TestController from "../slime/test.controller";
@@ -38,3 +40,6 @@ export const slimeCollectionController = new SlimeCollectionController(slimeColl
 
 export const slimeService = new SlimeService(knex)
 export const testController = new TestController(slimeService)
+
+export const userService = new UserService(knex);
+export const userController = new UserController(userService, redis);

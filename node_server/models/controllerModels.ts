@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { BriefFood, ExportFoodCollection, ExportSlimeCollection } from "./models";
+import { BriefFood, ExportFoodCollection, ExportSlimeCollection, FinancialData } from "./models";
 
 export type Controller<ResultType = null> = (req: Request) => Promise<ControllerResult<ResultType>>;
 
@@ -33,7 +33,7 @@ export interface SlimeCollectionControllerHelper {
 }
 
 export interface UserControllerHelper {
-  getCurrentMoney: Controller<number>;
+  getFinancialData: Controller<FinancialData>;
 }
 
 export interface SlimeControllerHelper {
