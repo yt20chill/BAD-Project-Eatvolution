@@ -35,3 +35,13 @@ export interface SlimeCollectionControllerHelper {
 export interface UserControllerHelper {
   getFinancialData: Controller<FinancialData>;
 }
+
+export interface SlimeControllerHelper {
+  slimeFeed: Controller<number | null>;
+  getTotalProtein: Controller;
+  calEarnRate:Controller;
+  getSlimeData:Controller;
+  evolution:Controller;
+  //autoMinusCalor:Controller;
+
+}

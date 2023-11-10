@@ -21,11 +21,24 @@ export interface FoodServiceHelper {
 }
 
 export interface SlimeServiceHelper {
-  slimeFeed(foodId: number, slimeId: number, knex: Knex): Promise<boolean>;
-  getTotalProtein(foodId: number, slimeId: number): Promise<number>;
-  getSlimeData(): Promise<number>;
-  calEarnRate(): Promise<number>;
-  evolution(): Promise<number>;
+  slimeFeed(foodId: number, slimeId: number): Promise<number>;
+//   totalMacroNutrients(slimeId: number): Promise<{
+//     totalProtein: number,
+//     totalCarbs: number,
+//     totalFat: number
+// }>
+  // totalProtein(slimeId: number): Promise<number>;
+  // totalCarbs(slimeId: number): Promise<number>;
+  // extraCalories(slimeId: number): Promise<number>;
+  slimeData(slimeId: number): Promise<{
+    id: number,
+    calories: number,
+    extra_calories: number,
+    // protein: number
+    // earnRate: number
+  }>;
+  // calEarnRate(slimeId: number): Promise<number>;
+  evolution(slimeId: number): Promise<number>;
 }
 
 export interface ShopServiceHelper {
