@@ -15,6 +15,17 @@ CREATE DATABASE "eatvolution"
 
 &nbsp;
 
+
+## Rebuild database (Linux/macOS)
+this line will delete and recreate db named `eatvolution` and `eatvolution_test`, then run latest migrations and seed
+
+**IMPORTANT** This action will delete all the data inside the db. Use with caution
+```bash
+source {path_to_project_root_folder}/bin/rebuildDb.sh
+```
+
+&nbsp;
+
 ## Rules to be observed
 
 1. Make small commits
