@@ -1,16 +1,26 @@
 import schedule from "node-schedule";
-import { redis, shopService } from "./container";
+import { io } from "../socket";
+import { gameService, shopService } from "./container";
 import gameConfig from "./gameConfig";
-import RedisClientWrapper from "./redisUtils";
+import { logger } from "./logger";
 
 // TODO: test case
 export const scheduleUpdateShop = async () =>
   schedule.scheduleJob(gameConfig.SHOP_REFRESH_SCHEDULE, async () => {
-    await shopService.updateUniversalShop();
-    const extendedRedis = new RedisClientWrapper(redis);
-    // delete all keys that start with shop
-    extendedRedis.deleteKeys("shop*");
+    try {
+      await shopService.updateUniversalShop();
+      io.emit(gameConfig.GAME_STATUS_CODE.refreshShop);
+    } catch (error) {
+      logger.error(error);
+    }
   });
 
 export const scheduleUpdateUserSavings = async () =>
-  schedule.scheduleJob(gameConfig.MONEY_UPDATE_SCHEDULE, async () => {});
+  schedule.scheduleJob(gameConfig.MONEY_UPDATE_SCHEDULE, async () => {
+    try {
+      await gameService.updateAllUsers();
+      io.emit(gameConfig.GAME_STATUS_CODE.payDay);
+    } catch (error) {
+      logger.error(error);
+    }
+  });

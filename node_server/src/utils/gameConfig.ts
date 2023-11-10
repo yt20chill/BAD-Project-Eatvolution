@@ -5,4 +5,5 @@ export default class GameConfig {
   static readonly FOOD_NUM_ALLOWED = 12; // number of food allowed in shop
   static readonly CHEAP_FOOD_NUM = 1; // min number of cheap food in shop
   static readonly CHEAP_FOOD_MAX_INDEX = Math.min(this.CHEAP_FOOD_NUM + 5, this.FOOD_NUM_ALLOWED);
+  static readonly GAME_STATUS_CODE = { refreshShop: "200", payDay: "201" };
 }
