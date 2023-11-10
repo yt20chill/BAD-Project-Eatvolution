@@ -2,7 +2,6 @@ import { Knex } from "knex";
 import { RedisClientType } from "redis";
 import { User } from "../../models/dbModels";
 import { UserServiceHelper } from "../../models/serviceModels";
-import { knex, redis } from "../utils/container";
 import { BadRequestError, UnauthorizedError } from "../utils/error";
 import gameConfig from "../utils/gameConfig";
 
@@ -78,7 +77,3 @@ export default class UserService implements UserServiceHelper {
     return +userEarnRate || 1;
   };
 }
-
-const userService = new UserService(knex, redis);
-userService.getEarningRate(1);
-redis.disconnect();
