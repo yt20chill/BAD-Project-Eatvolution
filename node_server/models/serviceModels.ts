@@ -21,17 +21,6 @@ export interface FoodServiceHelper {
 }
 
 export interface SlimeServiceHelper {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-  slimeFeed(foodId: number, slimeId: number, knex: Knex): Promise<boolean>;
-  getTotalProtein(foodId: number, slimeId: number): Promise<number>;
-  getSlimeData(): Promise<number>;
-  calEarnRate(slimeId:number): Promise<number>;
-  evolution(): Promise<number>;}
-  
-=======
-=======
->>>>>>> Stashed changes
   slimeFeed(foodId: number, slimeId: number): Promise<number>;
 //   totalMacroNutrients(slimeId: number): Promise<{
 //     totalProtein: number,
@@ -52,10 +41,6 @@ export interface SlimeServiceHelper {
   evolution(slimeId: number): Promise<number>;
 }
 
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 export interface ShopServiceHelper {
   getShopItems(userId: number): Promise<{ food: BriefFood[]; isUniversal: boolean }>;
   updateUniversalShop(): Promise<boolean>;

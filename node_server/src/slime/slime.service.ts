@@ -2,19 +2,6 @@ import { Knex } from "knex";
 import { SlimeServiceHelper } from "models/serviceModels";
 
 export default class SlimeService implements SlimeServiceHelper {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-   
-    constructor(private readonly knex: Knex) { }
-    
-    getSlimeData(): Promise<number> {
-        throw new Error("Method not implemented.");
-    }
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
     constructor(private readonly knex: Knex) { }
 
@@ -31,52 +18,7 @@ export default class SlimeService implements SlimeServiceHelper {
 
         return insertSlimeFood[0].id//slime_food.id
     };
-=======
-  constructor(private readonly knex: Knex) {}
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-  slimeFeed = async (foodId: number, slimeId: number): Promise<boolean> => {
-    //receive food data
-    //insert food in database
-    const insertFood = await this.knex("slime_food")
-      .insert({ food_id: foodId, slime_id: slimeId })
-      .returning("id");
-
-    return insertFood[0].id;
-  };
->>>>>>> main
-
-  getTotalProtein = async (slimeId: number): Promise<number> => {
-    //cal slime id
-    //we have foodID => to select in food table => protein
-
-<<<<<<< HEAD
-    const result = await this.knex('slime_food')
-    .join('food','slime_food.food_id','=','food.id')
-    .join('slime', 'slime_food.slime_id', '=', 'slime.id')
-    .sum('food.protein as total_protein')
-    .where('slime.id',slimeId)
-    .first()
-    const totalProtein = parseInt(result.total_protein)
-    return totalProtein
-=======
-
-    private totalMacroNutrients = async (slimeId: number): Promise<{
-        totalProtein: number,
-        totalCarbs: number,
-        totalFat: number
-    }> => {
-        const result = await this.knex('slime_food')
-            .join('food', 'slime_food.food_id', '=', 'food.id')
-            .join('slime', 'slime_food.slime_id', '=', 'slime.id')
-            .sum('food.protein as total_protein', 'food.carbohydrates as total_carbs', 'food.fat as total_fat')
-            .where('slime.id', slimeId)
-            .groupBy('slime.id')
-            .first()
->>>>>>> Stashed changes
-
-=======
 
     private totalMacroNutrients = async (slimeId: number): Promise<{
         totalProtein: number,
@@ -91,14 +33,13 @@ export default class SlimeService implements SlimeServiceHelper {
             .groupBy('slime.id')
             .first()
 
->>>>>>> Stashed changes
-            const protein = parseFloat(result.total_protein)
-            const carbs = parseFloat(result.total_carbs)
-            const fat = parseFloat(result.total_fat)
+        const protein = parseFloat(result.total_protein)
+        const carbs = parseFloat(result.total_carbs)
+        const fat = parseFloat(result.total_fat)
 
-            // const protein = result.total_protein
-            // const carbs = result.total_carbs
-            // const fat = result.total_fat
+        // const protein = result.total_protein
+        // const carbs = result.total_carbs
+        // const fat = result.total_fat
 
         let listMacroNutrients: {
             totalProtein: number,
@@ -107,7 +48,7 @@ export default class SlimeService implements SlimeServiceHelper {
         } = {
             totalProtein: protein,
             totalCarbs: carbs,
-            totalFat:fat
+            totalFat: fat
         }
 
         return listMacroNutrients
@@ -196,7 +137,6 @@ export default class SlimeService implements SlimeServiceHelper {
         return true
     }
 
-
     evolution = async (slimeId: number): Promise<any> => {
         // - Keto: eat >=10 food && > 50% protein
         // - Skinny fat: eat >= 10 food >  > 60% carbs
@@ -236,24 +176,3 @@ export default class SlimeService implements SlimeServiceHelper {
     //     return 
     // };
 }
-=======
-    const result = await this.knex("slime_food")
-      .join("food", "slime_food.food_id", "=", "food.id")
-      .join("slime", "slime_food.slime_id", "=", "slime.id")
-      .sum("food.protein as total_protein")
-      .where("slime.id", slimeId)
-      .first();
-    const totalProtein = parseInt(result.total_protein);
-    return totalProtein;
-  };
-  getSlimeData = async (): Promise<number> => {
-    return;
-  };
-  calEarnRate = async (): Promise<number> => {
-    return;
-  };
-  evolution = async (): Promise<number> => {
-    return;
-  };
-}
->>>>>>> main

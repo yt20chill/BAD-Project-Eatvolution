@@ -3,7 +3,7 @@ import SlimeService from "./slime.service";
 import { Request } from "express";
 import { AppUtils } from "../utils/utils";
 
-export default class SlimeController implements SlimeControllerHelper {
+export default class TestController implements SlimeControllerHelper {
     [x: string]: any;
     
     constructor(

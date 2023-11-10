@@ -12,6 +12,9 @@ import FoodService from "../food/food.service";
 import ShopController from "../shop/shop.controller";
 import ShopService from "../shop/shop.service";
 import { env } from "./env";
+import SlimeService from "../slime/slime.service";
+import TestController from "../slime/test.controller";
+
 export const redis: RedisClientType = createClient();
 export const knex = Knex(knexConfig[env.NODE_ENV]);
 
@@ -32,3 +35,6 @@ export const foodCollectionController = new FoodCollectionController(
 
 export const slimeCollectionService = new SlimeCollectionService(knex);
 export const slimeCollectionController = new SlimeCollectionController(slimeCollectionService);
+
+export const slimeService = new SlimeService(knex)
+export const testController = new TestController(slimeService)
