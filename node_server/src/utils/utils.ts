@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { Controller } from "models/controllerModels";
 import { ApplicationError, InternalServerError } from "./error";
+import { logger } from "./logger";
 
 export class AppUtils {
   static exceptionWrapper =
@@ -11,6 +12,7 @@ export class AppUtils {
         res.json(this.setServerResponse(result.result));
         return;
       } catch (error) {
+        logger.error(error);
         if (error instanceof ApplicationError) {
           next(error);
           return;
@@ -40,8 +42,20 @@ export class AppUtils {
         else res.json({ success, result });
         return;
       } catch (error) {
+        logger.error(error);
         res.redirect("/");
         return;
       }
     };
+
+  private static timeout = async (milliseconds: number) =>
+    new Promise((_, reject) => {
+      setTimeout(
+        () => reject(new InternalServerError(`process ran for > ${milliseconds / 1000} s`)),
+        milliseconds
+      );
+    });
+  static promiseTimeout = async <T>(promise: Promise<T>, milliseconds: number) => {
+    await Promise.race([promise, AppUtils.timeout(milliseconds)]);
+  };
 }
