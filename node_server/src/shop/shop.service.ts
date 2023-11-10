@@ -45,7 +45,7 @@ export default class ShopService implements ShopServiceHelper {
    * @returns universal foodShop Items which applies to all users
    */
   private getUniversalShop = async (): Promise<BriefFood[]> => {
-    let foodShop: Record<string, BriefFood[]>;
+    let foodShop: Record<string, BriefFood[]> = {};
     if (await this.redis.exists("foodShop")) {
       foodShop = JSON.parse(await this.redis.get("foodShop"));
       if (foodShop.universal) return foodShop.universal;
@@ -63,7 +63,7 @@ export default class ShopService implements ShopServiceHelper {
     return this.getUniversalShop();
   };
   private getUserShop = async (userId: number): Promise<BriefFood[]> => {
-    let foodShop: Record<string, BriefFood[]>;
+    let foodShop: Record<string, BriefFood[]> = {};
     if (await this.redis.exists("foodShop")) {
       foodShop = JSON.parse(await this.redis.get("foodShop"));
       if (foodShop[userId]?.length > 0) return foodShop[userId];
@@ -84,7 +84,7 @@ export default class ShopService implements ShopServiceHelper {
    * @returns userShop if exists, universalShop if userShop is empty, otherwise update userShop and return it
    */
   getFoodShop = async (userId: number): Promise<BriefFood[]> => {
-    let foodShop: Record<string, BriefFood[]>;
+    let foodShop: Record<string, BriefFood[]> = {};
     if (await this.redis.exists("foodShop")) {
       foodShop = JSON.parse(await this.redis.get("foodShop"));
       if (foodShop[userId]?.length > 0) return foodShop[userId];
@@ -95,7 +95,7 @@ export default class ShopService implements ShopServiceHelper {
       this.redis.set("foodShop", JSON.stringify(foodShop));
       return userShop;
     }
-    if (foodShop.universal?.length > 0) {
+    if (foodShop?.universal?.length > 0) {
       return foodShop.universal;
     }
     const universalShop = await AppUtils.rejectTimeoutPromise(this.getUniversalShop(), 5000);

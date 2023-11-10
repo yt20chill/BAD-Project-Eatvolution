@@ -61,7 +61,7 @@ export interface SlimeCollectionServiceHelper {
 export interface UserServiceHelper {
   getSavings(userId: number): Promise<number>;
   receiveSalary(userId: number): Promise<boolean>;
-  calculateEarningRate(userId: number): Promise<number>;
+  getEarningRate(userId: number): Promise<number>;
 }
 
 export interface GameServiceHelper {

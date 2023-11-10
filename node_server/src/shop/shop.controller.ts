@@ -6,16 +6,16 @@ import ShopService from "./shop.service";
 
 export default class ShopController implements ShopControllerHelper {
   constructor(private readonly shopService: ShopService) {}
-  getShopItems = async (req: Request): Promise<ControllerResult<BriefFood[]>> => {
+  getFoodShop = async (req: Request): Promise<ControllerResult<BriefFood[]>> => {
     const userId = req.session.user.id;
-    const food = await this.shopService.getShopItems(userId);
+    const food = await this.shopService.getFoodShop(userId);
     return AppUtils.setServerResponse(food);
   };
   refreshShop = async (req: Request): Promise<ControllerResult<BriefFood[]>> => {
     const userId = req.session.user.id;
     const success = await this.shopService.updateUserShop(userId);
     if (!success) return AppUtils.setServerResponse(null, false);
-    const newShop = await this.shopService.getShopItems(userId);
+    const newShop = await this.shopService.getFoodShop(userId);
     return AppUtils.setServerResponse(newShop);
   };
 }
