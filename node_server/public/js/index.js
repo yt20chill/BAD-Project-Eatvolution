@@ -72,3 +72,4 @@ gsap.delayedCall(1, () => {
         // { x: -300, duration: 5, ease: 'power4.out' }
     );
 });
+
