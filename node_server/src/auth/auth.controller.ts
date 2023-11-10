@@ -1,6 +1,8 @@
 import { Request } from "express";
 import { AuthControllerHelper } from "models/controllerModels";
+import { deleteSocket } from "../socket";
 import { BadRequestError } from "../utils/error";
+import { logger } from "../utils/logger";
 import { AppUtils } from "../utils/utils";
 import AuthService from "./auth.service";
 
@@ -44,33 +46,30 @@ export default class AuthController implements AuthControllerHelper {
   };
 
   oauthLogin = async (req: Request) => {
-    // try {
-    const accessToken = req.session?.["grant"].response.access_token;
-    if (!accessToken) return AppUtils.setServerResponse(null, false);
-
-    const fetchRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
-      method: "get",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    const fetchedUser = await fetchRes.json(); //login success => get user data in google
-
-    const { email } = fetchedUser;
-    const id = await this.authService.oauthLogin(email);
-
-    req.session.user = { id, username: email };
-
-    return AppUtils.setServerResponse();
-    // } catch (err) {
-    //   logger.error(err);
-    //   return AppUtils.setServerResponse(null, false);
-    // }
+    try {
+      const accessToken = req.session?.["grant"].response.access_token;
+      if (!accessToken) return AppUtils.setServerResponse(null, false);
+      const fetchRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+        method: "get",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (fetchRes.status >= 400) return AppUtils.setServerResponse(null, false);
+      const fetchedUser = await fetchRes.json(); //login success => get user data in google
+      const { email } = fetchedUser;
+      const id = await this.authService.oauthLogin(email);
+      req.session.user = { id, username: email };
+      return AppUtils.setServerResponse();
+    } catch (err) {
+      logger.error(err);
+      return AppUtils.setServerResponse(null, false);
+    }
   };
 
   logout = async (req: Request) => {
     if (req.session) {
+      if (req.session?.user?.id) deleteSocket(req.session.user.id);
       delete req.session;
     }
     return AppUtils.setServerResponse();
