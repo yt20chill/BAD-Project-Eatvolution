@@ -12,31 +12,19 @@ export default class TestController {
       
     ) {}
 
-    // test = async (req: Request, res: any) => {
-    //     const slimeService = new SlimeService(this.knex)
-    //     const result = await slimeService.getAllSlimeType()
-    //     console.log(result)
-    //     res.json(result)
-
-    // }
-    getTotalProtein: Controller<null>;
-    calEarnRate: Controller<null>;
-   
-    evolution: Controller<null>;
-
-    slimeFeed = async (req: Request) => {
-   
-        const { foodId, slimeId } = req.body;
-
-        const result = await this.slimeService.slimeFeed(foodId, slimeId);
-       
-        return AppUtils.setServerResponse(result);
+    test = async (req: Request, res: any) => {
+        const slimeService = new SlimeService(this.knex)
+        const result = await slimeService.totalMacroNutrients(1)
+        console.log(`result: ${result}`)
+        res.json(result)
 
     }
-    getSlimeData= async (req: Request) => {
-        const {slimeId} = req.body;
-        const result = await this.slimeService.slimeFeed(slimeId);
-        return AppUtils.setServerResponse(result);
+    slimeFeed = async (req: Request, res: any) => {
+        const slimeService = new SlimeService(this.knex)
+        const result = await slimeService.slimeFeed(54,1)
+        console.log(result)
+        res.json(result)
+
     }
     
 
