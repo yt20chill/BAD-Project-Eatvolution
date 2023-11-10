@@ -42,7 +42,7 @@ export interface SlimeServiceHelper {
 }
 
 export interface ShopServiceHelper {
-  getShopItems(userId: number): Promise<BriefFood[]>;
+  getFoodShop(userId: number): Promise<BriefFood[]>;
   updateUniversalShop(): Promise<boolean>;
   updateUserShop(userId: number): Promise<boolean>;
 }
@@ -60,8 +60,8 @@ export interface SlimeCollectionServiceHelper {
 
 export interface UserServiceHelper {
   getSavings(userId: number): Promise<number>;
-  receiveSalary(userId: number, trx?: Knex.Transaction): Promise<boolean>;
-  // calculateEarningRate(userId: number): Promise<number>;
+  receiveSalary(userId: number): Promise<boolean>;
+  calculateEarningRate(userId: number): Promise<number>;
 }
 
 export interface GameServiceHelper {

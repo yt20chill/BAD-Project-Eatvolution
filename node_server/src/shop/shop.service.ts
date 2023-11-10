@@ -3,14 +3,20 @@ import { RedisClientType } from "redis";
 import { Food } from "../../models/dbModels";
 import { BriefFood } from "../../models/models";
 import { ShopServiceHelper } from "../../models/serviceModels";
+import { InternalServerError } from "../utils/error";
 import gameConfig from "../utils/gameConfig";
 import { logger } from "../utils/logger";
+import { AppUtils } from "../utils/utils";
 
 export default class ShopService implements ShopServiceHelper {
   constructor(
     private readonly knex: Knex,
     private readonly redis: RedisClientType
   ) {}
+  /**
+   *
+   * @returns an array of food ids sorted by cost
+   */
   private getAllFoodIdsForShop = async (): Promise<number[]> => {
     return (await this.knex<Food>("food").select("id").whereNotNull("cost").orderBy("cost")).map(
       (e) => +e.id
@@ -19,51 +25,92 @@ export default class ShopService implements ShopServiceHelper {
   private drawRandomFood = async (): Promise<number[]> => {
     const availableFoodIds = await this.getAllFoodIdsForShop();
     const randomNumberSet = new Set<number>();
-    while (randomNumberSet.size < gameConfig.FOOD_NUM_ALLOWED) {
-      const randomFoodId = availableFoodIds[Math.floor(Math.random() * availableFoodIds.length)];
+    const foodNumAllowed = Math.min(gameConfig.FOOD_NUM_ALLOWED, availableFoodIds.length - 1);
+    const maxCheapFoodIndex = Math.min(
+      gameConfig.CHEAP_FOOD_MAX_INDEX,
+      availableFoodIds.length - 1
+    );
+    while (randomNumberSet.size < foodNumAllowed) {
+      const randomFoodId =
+        randomNumberSet.size <= gameConfig.CHEAP_FOOD_NUM
+          ? availableFoodIds[Math.floor(Math.random() * maxCheapFoodIndex)]
+          : availableFoodIds[Math.floor(Math.random() * availableFoodIds.length)];
+
       randomNumberSet.add(randomFoodId);
     }
     return Array.from(randomNumberSet);
   };
+  /**
+   * Use timeout to wrap it in case it stuck in inf loop calling itself
+   * @returns universal foodShop Items which applies to all users
+   */
   private getUniversalShop = async (): Promise<BriefFood[]> => {
-    const food = await this.knex<BriefFood>("shop")
-      .select("food.id", "food.name", "food.calories", "food.cost", "food.emoji")
+    let foodShop: Record<string, BriefFood[]>;
+    if (await this.redis.exists("foodShop")) {
+      foodShop = JSON.parse(await this.redis.get("foodShop"));
+      if (foodShop.universal) return foodShop.universal;
+    }
+    const universalShop = await this.knex("shop")
+      .select<BriefFood[]>("food.id", "food.name", "food.calories", "food.cost", "food.emoji")
       .join("food", "food_id", "food.id")
       .orderBy([{ column: "food.cost" }, { column: "food.id" }]);
-    if (food.length > 0) return food;
+    if (universalShop.length > 0) {
+      foodShop.universal = universalShop;
+      await this.redis.set("foodShop", JSON.stringify(foodShop));
+      return universalShop;
+    }
     await this.updateUniversalShop();
     return this.getUniversalShop();
   };
   private getUserShop = async (userId: number): Promise<BriefFood[]> => {
+    let foodShop: Record<string, BriefFood[]>;
+    if (await this.redis.exists("foodShop")) {
+      foodShop = JSON.parse(await this.redis.get("foodShop"));
+      if (foodShop[userId]?.length > 0) return foodShop[userId];
+    }
     const userShop = await this.knex<BriefFood>("user_shop")
       .select("food.id", "food.name", "food.calories", "food.cost", "food.emoji")
       .join("food", "food_id", "food.id")
       .where("user_id", userId);
+    if (userShop.length > 0) {
+      foodShop[userId] = userShop;
+      await this.redis.set("foodShop", JSON.stringify(foodShop));
+    }
     return userShop;
   };
-  getShopItems = async (userId: number): Promise<BriefFood[]> => {
-    let food: BriefFood[];
-    if (await this.redis.exists(`shop-${userId}`)) {
-      return JSON.parse(await this.redis.get(`shop-${userId}`));
+  /**
+   *
+   * @param userId
+   * @returns userShop if exists, universalShop if userShop is empty, otherwise update userShop and return it
+   */
+  getFoodShop = async (userId: number): Promise<BriefFood[]> => {
+    let foodShop: Record<string, BriefFood[]>;
+    if (await this.redis.exists("foodShop")) {
+      foodShop = JSON.parse(await this.redis.get("foodShop"));
+      if (foodShop[userId]?.length > 0) return foodShop[userId];
     }
-    food = await this.getUserShop(userId);
-    if (food.length !== 0) {
-      this.redis.set(`shop-${userId}`, JSON.stringify(food));
-      return food;
+    const userShop = await this.getUserShop(userId);
+    if (userShop.length > 0) {
+      foodShop[userId] = userShop;
+      this.redis.set("foodShop", JSON.stringify(foodShop));
+      return userShop;
     }
-    if (await this.redis.exists(`shop`)) {
-      return JSON.parse(await this.redis.get(`shop`));
+    if (foodShop.universal?.length > 0) {
+      return foodShop.universal;
     }
-    food = await this.getUniversalShop();
-    this.redis.set(`shop`, JSON.stringify(food));
-    return food;
+    const universalShop = await AppUtils.rejectTimeoutPromise(this.getUniversalShop(), 5000);
+    foodShop.universal = universalShop;
+    this.redis.set("foodShop", JSON.stringify(foodShop));
+    return universalShop;
   };
   updateUniversalShop = async (): Promise<boolean> => {
     const foodIds = await this.drawRandomFood();
+    if (foodIds.length === 0) throw new InternalServerError();
     const foodArr = foodIds.reduce((acc, food_id) => {
       acc.push({ food_id });
       return acc;
     }, []);
+    await this.redis.del("foodShop");
     const trx = await this.knex.transaction();
     try {
       await trx("user_shop").del();
@@ -83,8 +130,11 @@ export default class ShopService implements ShopServiceHelper {
       acc.push({ food_id, user_id: userId });
       return acc;
     }, []);
+    const foodShop = JSON.parse(await this.redis.get("foodShop"));
     const trx = await this.knex.transaction();
     try {
+      delete foodShop[userId];
+      await this.redis.set("foodShop", JSON.stringify(foodShop));
       await trx("user_shop").del().where({ user_id: userId });
       await trx("user_shop").insert(foodArr);
       await trx.commit();
