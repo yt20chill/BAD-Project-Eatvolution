@@ -2,7 +2,7 @@ name: Eatvolution CICD
 on:
   push:
     branches:
-      - main
+      # - main
       - production
   workflow_dispatch:
 env:
@@ -45,7 +45,7 @@ jobs:
             git pull origin main
             cd ./node_server
             npm i
-            npm run knex migrate:latest --env production
+            npm run knex migrate:latest
             cd ../py_server
             source ./.venv/bin/activate
             poetry install
