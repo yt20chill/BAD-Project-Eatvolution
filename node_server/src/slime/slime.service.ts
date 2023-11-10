@@ -1,5 +1,7 @@
 import { Knex } from "knex";
 import { SlimeServiceHelper } from "models/serviceModels";
+import { join } from "path";
+import { io } from "src/socket";
 
 export default class SlimeService implements SlimeServiceHelper {
 
@@ -137,35 +139,50 @@ export default class SlimeService implements SlimeServiceHelper {
         return true
     }
 
+    getAllSlimeType = async (): Promise<any> => {
+        const slimeTypes = (await this.knex('slime_type')
+            .select('id', 'name'))
+        return slimeTypes
+    }
+    typeOfSlime = async (slimeId: number): Promise<any> => {
+        const slimeType = (await this.knex('slime_type')
+            .select('id', 'name'))
+
+        console.log(slimeType)
+        return slimeType
+
+        // const slimeType
+
+    }
+
     evolution = async (slimeId: number): Promise<any> => {
         // - Keto: eat >=10 food && > 50% protein
         // - Skinny fat: eat >= 10 food >  > 60% carbs
         // - Obese: eat >= 10 food, extra calories > 2000
-        
+
         const countFood = await this.countFood(slimeId)
         if (!countFood) {
             return false
         }
         // const slimeDiet = await this.knex('')
+        const slimeTypes = await this.getAllSlimeType()
         const extra_calories = await this.extraCalories(slimeId)
         if (extra_calories > 2000) {
-            return //Obese
+            return slimeTypes[3]//Obese
         }
-
         const obj = this.totalMacroNutrients(slimeId)
         const carbs = (await obj).totalCarbs//246
         const protein = (await obj).totalProtein//124
         const fat = (await obj).totalFat//548
         let slimeTotalDiet = carbs + protein + fat //918
 
-        if(protein/slimeTotalDiet > 0.5){
-            return // Keto
-        }
-        if(carbs/slimeTotalDiet > 0.6){
-        return // Skinny fat
-        }
-        return
 
+        if (protein / slimeTotalDiet > 0.5) {
+            return slimeTypes[1]// Keto
+        } else if (carbs / slimeTotalDiet > 0.6) {
+            return slimeTypes[2]// Skinny fat
+        }
+        return slimeTypes[0]
     };
 
     // autoMinusCalor = async(): Promise<number> =>{

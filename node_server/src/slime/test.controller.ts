@@ -2,14 +2,23 @@ import {  Controller, SlimeControllerHelper } from "models/controllerModels";
 import SlimeService from "./slime.service";
 import { Request } from "express";
 import { AppUtils } from "../utils/utils";
+import { Knex } from "knex";
 
-export default class TestController implements SlimeControllerHelper {
+export default class TestController {
     [x: string]: any;
     
     constructor(
-      private readonly authService: SlimeService,
+        private knex: Knex
       
     ) {}
+
+    test = async (req: Request, res: any) => {
+        const slimeService = new SlimeService(this.knex)
+        const result = await slimeService.getAllSlimeType()
+        console.log(result)
+        res.json(result)
+
+    }
     getTotalProtein: Controller<null>;
     calEarnRate: Controller<null>;
    

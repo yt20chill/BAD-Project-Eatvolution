@@ -38,8 +38,8 @@ export const foodCollectionController = new FoodCollectionController(
 export const slimeCollectionService = new SlimeCollectionService(knex);
 export const slimeCollectionController = new SlimeCollectionController(slimeCollectionService);
 
-export const slimeService = new SlimeService(knex)
-export const testController = new TestController(slimeService)
-
+// export const slimeService = new SlimeService(knex)
+export const testController = new TestController(knex)
+console.log(knex)
 export const userService = new UserService(knex);
 export const userController = new UserController(userService, redis);

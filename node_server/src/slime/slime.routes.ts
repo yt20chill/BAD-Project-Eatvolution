@@ -6,3 +6,4 @@ export const slimeRoutes = Router();
 
 slimeRoutes.post('/slimeFeed',AppUtils.redirectWrapper(testController.slimeFeed))
 slimeRoutes.get('/getSlimeData',AppUtils.redirectWrapper(testController.getSlimeData))
+slimeRoutes.get('/test', testController.test)

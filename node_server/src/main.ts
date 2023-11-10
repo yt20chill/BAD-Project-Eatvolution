@@ -24,6 +24,7 @@ scheduleUpdateShop();
 //Examples of routes
 app.use("/api", isLoggedInAPI, apiRoutes);
 // app.use("/auth", authRoutes);
+app.use("/api-test", apiRoutes);
 
 app.use(express.static(path.join(__dirname, "..", "public")));
 // Example for serving guarded folder
