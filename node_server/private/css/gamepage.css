@@ -389,12 +389,12 @@ body {
     width: 100%;
     height: 100%;
     text-align: center;
-    transition: transform 0.8s;
     transform-style: preserve-3d;
     cursor: pointer;
+    transition: transform 0.8s;
 }
 
-.myCard:hover .innerCard {
+.flipped {
     transform: rotateY(180deg);
 }
 
@@ -424,10 +424,14 @@ body {
 .backSide,
 .backSide::before {
     background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.8s, visibility 0.8s;
 }
 
-.backSide {
-    transform: rotateY(180deg);
+.flipped .backSide {
+    opacity: 1;
+    visibility: visible;
 }
 
 .frontSide::before,
@@ -457,4 +461,9 @@ body {
     100% {
         opacity: 0.3;
     }
+}
+
+/* 新增的 CSS */
+.backSide {
+    transform: rotateY(180deg);
 }

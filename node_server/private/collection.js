@@ -9,7 +9,7 @@ const cardData = [
 const cardsContainer = document.getElementById("cards-container");
 
 // 使用 for 循环生成卡片并添加到容器中
-for (let i = 0; i < cardData.length; i++) {
+for (let i = 0; i < 150; i++) {
     const card = cardData[i];
     const cardElement = `
       <div class="card">
@@ -19,3 +19,5 @@ for (let i = 0; i < cardData.length; i++) {
     `;
     cardsContainer.innerHTML += cardElement;
 }
+
+// collection page js
