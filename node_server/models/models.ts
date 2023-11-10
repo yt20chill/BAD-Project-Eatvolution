@@ -2,7 +2,7 @@ import { Food } from "./dbModels";
 
 declare module "express-session" {
   interface SessionData {
-    userId?: number;
+    user: { id: number; username: string };
     grant: Grant;
   }
 }

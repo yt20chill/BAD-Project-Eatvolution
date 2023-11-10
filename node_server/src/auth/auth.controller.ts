@@ -1,18 +1,11 @@
-import { fetch } from "cross-fetch";
 import { Request } from "express";
 import { AuthControllerHelper } from "models/controllerModels";
-import { RedisClientType } from "redis";
-import {} from "../../models/models";
 import { BadRequestError } from "../utils/error";
 import { AppUtils } from "../utils/utils";
 import AuthService from "./auth.service";
-// import grant from "grant"
 
 export default class AuthController implements AuthControllerHelper {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly redis?: RedisClientType
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   signUp = async (req: Request) => {
     if (!req.body) throw new BadRequestError();
@@ -31,11 +24,11 @@ export default class AuthController implements AuthControllerHelper {
     )
       throw new BadRequestError();
 
-    const result = await this.authService.signUp(username, password);
+    const id = await this.authService.signUp(username, password);
 
-    if (result === -1) return AppUtils.setServerResponse("duplicated username", false);
+    if (id === -1) return AppUtils.setServerResponse("duplicated username", false);
 
-    req.session.userId = result;
+    req.session.user = { id, username };
 
     return AppUtils.setServerResponse();
   };
@@ -44,43 +37,42 @@ export default class AuthController implements AuthControllerHelper {
     if (!req.body) throw new BadRequestError();
     const { username, password } = req.body;
     if (typeof username !== "string" || typeof password !== "string") throw new BadRequestError();
-    const result = await this.authService.login(username, password);
-    if (result === -1) return AppUtils.setServerResponse(null, false);
-    req.session.userId = result;
-    // res.json() == AppUtils.setServerResponse()
-    return AppUtils.setServerResponse(); // return {success: true, result: is_password_correct}
+    const id = await this.authService.login(username, password);
+    if (id === -1) return AppUtils.setServerResponse(null, false);
+    req.session.user = { id, username };
+    return AppUtils.setServerResponse(); // return {success: true, result: null}
   };
 
   oauthLogin = async (req: Request) => {
-    try {
-      const accessToken = req.session?.["grant"].response.access_token;
-      if (!accessToken) return AppUtils.setServerResponse(null, false);
+    // try {
+    const accessToken = req.session?.["grant"].response.access_token;
+    if (!accessToken) return AppUtils.setServerResponse(null, false);
 
-      const fetchRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
-        method: "get",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+    const fetchRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+      method: "get",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
 
-      const fetchedUser = await fetchRes.json(); //login success => get user data in google
+    const fetchedUser = await fetchRes.json(); //login success => get user data in google
 
-      const { email } = fetchedUser;
-      const result = await this.authService.oauthLogin(email);
+    const { email } = fetchedUser;
+    const id = await this.authService.oauthLogin(email);
 
-      req.session.userId = result;
+    req.session.user = { id, username: email };
 
-      return AppUtils.setServerResponse();
-    } catch (err) {
-      console.log(err);
-      return AppUtils.setServerResponse(null, false);
-    }
+    return AppUtils.setServerResponse();
+    // } catch (err) {
+    //   logger.error(err);
+    //   return AppUtils.setServerResponse(null, false);
+    // }
   };
 
   logout = async (req: Request) => {
     if (req.session) {
       delete req.session;
     }
-    return AppUtils.setServerResponse(null, false);
+    return AppUtils.setServerResponse();
   };
 }
