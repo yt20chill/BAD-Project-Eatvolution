@@ -95,6 +95,7 @@ export type BriefFood = {
   name: string;
   calories: number;
   cost: number;
+  emoji: string;
 };
 
 export interface FoodCollection extends Omit<Food, "cost" | "name" | "created_at" | "updated_at"> {
@@ -125,3 +126,8 @@ export interface ExportSlimeCollection {
   unlocked: SlimeCollection[];
   locked: SlimeCollection[];
 }
+
+export type FinancialData = {
+  money: number;
+  salaryPerSecond: number;
+};

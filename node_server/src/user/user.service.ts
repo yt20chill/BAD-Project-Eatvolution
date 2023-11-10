@@ -1,21 +1,32 @@
 import { Knex } from "knex";
-import { Food, Slime, User } from "../../models/dbModels";
+import { Food, Item, Slime, User } from "../../models/dbModels";
 import { UserServiceHelper } from "../../models/serviceModels";
 import { BadRequestError, UnauthorizedError } from "../utils/error";
 import { gameConfig } from "../utils/gameConfig";
 
 export default class UserService implements UserServiceHelper {
   constructor(private readonly knex: Knex) {}
-  getCurrentMoney = async (userId: number, knex = this.knex): Promise<number> => {
+  getSavings = async (userId: number, knex = this.knex): Promise<number> => {
     await this.receiveSalary(userId, knex);
     const { money } = await this.knex<User>("user").select("money").where("id", userId)[0];
-    if (!money) throw new BadRequestError();
+    // will not throw error if money = 0
+    if (money === undefined) throw new BadRequestError();
     return money;
   };
-  makeFoodPurchase = async (userId: number, foodId: number, knex = this.knex): Promise<boolean> => {
+  purchaseFood = async (userId: number, foodId: number, knex = this.knex): Promise<boolean> => {
     const { cost } = await knex<Food>("food").select("cost").where("id", foodId).first();
     if (!cost) throw new BadRequestError();
-    const money = await this.getCurrentMoney(userId, knex);
+    const money = await this.getSavings(userId, knex);
+    if (money - cost < 0) return false;
+    await knex("user")
+      .update({ money: money - cost })
+      .where("id", userId);
+    return true;
+  };
+  purchaseItem = async (userId: number, itemId: number, knex = this.knex): Promise<boolean> => {
+    const { cost } = await knex<Item>("item").select("cost").where("id", itemId).first();
+    if (!cost) throw new BadRequestError();
+    const money = await this.getSavings(userId, knex);
     if (money - cost < 0) return false;
     await knex("user")
       .update({ money: money - cost })
@@ -35,7 +46,11 @@ export default class UserService implements UserServiceHelper {
     const earning_rate = await this.calculateEarningRate(userId);
     const earnedMoney = elapsedSeconds * earning_rate;
     await knex("user")
-      .update({ money: money + earnedMoney, total_money: total_money + earnedMoney })
+      .update({
+        money: money + earnedMoney,
+        total_money: total_money + earnedMoney,
+        updated_at: knex.fn.now(),
+      })
       .where("id", userId);
     return true;
   };
