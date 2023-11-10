@@ -27,7 +27,7 @@ export default class FoodController implements FoodControllerHelper {
         return AppUtils.setServerResponse<string>(`fail to search ${foodName}`, false);
     }
     await this.foodService.insert(
-      req.session.userId,
+      req.session.user.id,
       foodId === -1 ? DbUtils.cnItemToInsertFood(food) : foodId
     );
     return AppUtils.setServerResponse<null>();

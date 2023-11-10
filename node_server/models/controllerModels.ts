@@ -39,9 +39,8 @@ export interface UserControllerHelper {
 export interface SlimeControllerHelper {
   slimeFeed: Controller<number | null>;
   getTotalProtein: Controller;
-  calEarnRate:Controller;
-  getSlimeData:Controller;
-  evolution:Controller;
+  calEarnRate: Controller;
+  getSlimeData: Controller;
+  evolution: Controller;
   //autoMinusCalor:Controller;
-
 }

@@ -1,21 +1,22 @@
 import Knex from "knex";
 import knexConfig from "../../src/db/knexfile";
 import { seed } from "../db/seeds/01-init";
+import { redis } from "../utils/container";
 import { env } from "../utils/env";
+import gameConfig from "../utils/gameConfig";
 import { logger } from "../utils/logger";
 import { idFromInsertingTestUser } from "../utils/testUtils";
 import ShopService from "./shop.service";
-
+//TODO: test redis
 describe("ShopService", () => {
   const knex = Knex(knexConfig[env.NODE_ENV]);
   let shopService: ShopService;
   let testUserId: number;
-  const foodNumAllowed = ShopService.foodNumAllowed;
   beforeAll(async () => {
     await knex.migrate.latest();
   });
   beforeEach(async () => {
-    shopService = new ShopService(knex);
+    shopService = new ShopService(knex, redis);
     const trx = await knex.transaction();
     try {
       await trx("user").del();
@@ -34,21 +35,21 @@ describe("ShopService", () => {
   // TODO: should test universal and user shop
   describe("getShopItems", () => {
     it("get n = foodNumAllowed unique food", async () => {
-      const result = (await shopService.getShopItems(testUserId)).food;
-      expect(result.length).toBe(foodNumAllowed);
+      const result = await shopService.getShopItems(testUserId);
+      expect(result.length).toBe(gameConfig.FOOD_NUM_ALLOWED);
       for (const food of result) {
         expect(food.cost).toBeTruthy();
       }
     });
     it("all food should have a price", async () => {
-      const result = (await shopService.getShopItems(testUserId)).food;
-      expect(result.length).toBe(foodNumAllowed);
+      const result = await shopService.getShopItems(testUserId);
+      expect(result.length).toBe(gameConfig.FOOD_NUM_ALLOWED);
       for (const food of result) {
         expect(food.cost).toBeTruthy();
       }
     });
     it("returns only brief info about the food", async () => {
-      const result = (await shopService.getShopItems(testUserId)).food;
+      const result = await shopService.getShopItems(testUserId);
       for (const food of result) {
         const keys = Object.keys(food);
         expect(keys).toMatchObject(["id", "name", "calories", "cost"]);
@@ -56,7 +57,7 @@ describe("ShopService", () => {
       }
     });
     it("result be ordered by cost", async () => {
-      const result = (await shopService.getShopItems(testUserId)).food;
+      const result = await shopService.getShopItems(testUserId);
       for (let i = 1; i < result.length; i++) {
         expect(result[i].cost).toBeGreaterThanOrEqual(result[i - 1].cost);
       }
