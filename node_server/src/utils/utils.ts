@@ -48,14 +48,17 @@ export class AppUtils {
       }
     };
 
-  private static timeout = async (milliseconds: number) =>
+  private static timeout = async (milliseconds: number): Promise<any> =>
     new Promise((_, reject) => {
       setTimeout(
         () => reject(new InternalServerError(`process ran for > ${milliseconds / 1000} s`)),
         milliseconds
       );
     });
-  static promiseTimeout = async <T>(promise: Promise<T>, milliseconds: number) => {
-    await Promise.race([promise, AppUtils.timeout(milliseconds)]);
+  static rejectTimeoutPromise = async <T>(
+    promise: Promise<T>,
+    milliseconds: number
+  ): Promise<T> => {
+    return Promise.race([promise, AppUtils.timeout(milliseconds)]);
   };
 }
