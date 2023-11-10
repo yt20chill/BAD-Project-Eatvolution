@@ -36,7 +36,7 @@ app.use((_, res) => {
 
 io.on("connection", (socket) => {
   const req = socket.request as express.Request;
-  const userId = req.session.userId;
+  const userId = req.session.user.id;
   userId ? assignSocket(userId, socket) : null;
 });
 

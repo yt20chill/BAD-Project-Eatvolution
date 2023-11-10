@@ -7,9 +7,12 @@ const goo = new GooCursor(cursorEl);
 
 // Easter egg: click anywhere
 
-window.addEventListener('click', () => {
-    gsap.
-        timeline()
+const formBody = document.querySelector('.form-body');
+let clickHandlerEnabled = true;
+
+const clickHandler = () => {
+    gsap
+        .timeline()
         .addLabel('start', 0)
         .to(goo.DOM.cells, {
             duration: 1,
@@ -30,7 +33,24 @@ window.addEventListener('click', () => {
                 each: 0.03,
                 grid: [goo.rows, goo.columns]
             }
-        }, 'start+=0.3')
+        }, 'start+=0.3');
+};
+
+const handleMouseEnter = () => {
+    clickHandlerEnabled = false;
+};
+
+const handleMouseLeave = () => {
+    clickHandlerEnabled = true;
+};
+
+formBody.addEventListener('mouseenter', handleMouseEnter);
+formBody.addEventListener('mouseleave', handleMouseLeave);
+
+window.addEventListener('click', (event) => {
+    if (clickHandlerEnabled && !formBody.contains(event.target)) {
+        clickHandler();
+    }
 });
 
 const leftSlime = document.querySelector('.slime-wrapper-left .slime');
