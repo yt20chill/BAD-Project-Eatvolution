@@ -79,35 +79,35 @@ export default class SlimeService implements SlimeServiceHelper {
         return extraCalories
     }
 
-    calEarnRate = async (slimeId: number): Promise<number> => {
-        //let rate = 1
-        //totalProtein * slimeType.earn_rate_multiplier * rate
-        let constant = 1
-        const multiplierEarnRate = await this.knex('slime')
-            .join('slime_type', 'slime.slime_type_id', '=', 'slime_type.id')
-            .select('earn_rate_multiplier')
-            .where('slime.id', slimeId)
-            .first()
+    // calEarnRate = async (slimeId: number): Promise<number> => {
+    //     //let rate = 1
+    //     //totalProtein * slimeType.earn_rate_multiplier * rate
+    //     let constant = 1
+    //     const multiplierEarnRate = await this.knex('slime')
+    //         .join('slime_type', 'slime.slime_type_id', '=', 'slime_type.id')
+    //         .select('earn_rate_multiplier')
+    //         .where('slime.id', slimeId)
+    //         .first()
 
-        const totalProtein = (await this.totalMacroNutrients(slimeId)).totalProtein
+    //     const totalProtein = (await this.totalMacroNutrients(slimeId)).totalProtein
 
-        const earnRate = totalProtein * multiplierEarnRate * constant
-        return earnRate
-    };
+    //     const earnRate = totalProtein * multiplierEarnRate * constant
+    //     return earnRate
+    // };
 
     slimeData = async (slimeId: number): Promise<{
         id: number,
         calories: number,
         extra_calories: number,
         // protein: number
-        earnRate: number
+        // earnRate: number
     }> => {
         const db_slimeData = await this.knex('slime')
             .join('slime_type', 'slime.slime_type_id', '=', 'slime_type.id')
             .select('slime_type.id', 'calories', ' extra_calories')
             .where('slime.id', slimeId)
 
-        const earnRate = await this.calEarnRate(slimeId)
+        // const earnRate = await this.calEarnRate(slimeId)
         // const protein = await this.getTotalProtein(slimeId)
 
         let slimeDataList: {
@@ -115,10 +115,10 @@ export default class SlimeService implements SlimeServiceHelper {
             calories: number,
             extra_calories: number
             // protein:number
-            earnRate: number
+            // earnRate: number
         } = db_slimeData[0];
 
-        slimeDataList.earnRate = earnRate
+        // slimeDataList.earnRate = earnRate
         // result.protein = protein
 
         return slimeDataList
@@ -141,35 +141,31 @@ export default class SlimeService implements SlimeServiceHelper {
         // - Keto: eat >=10 food && > 50% protein
         // - Skinny fat: eat >= 10 food >  > 60% carbs
         // - Obese: eat >= 10 food, extra calories > 2000
+        
         const countFood = await this.countFood(slimeId)
-
         if (!countFood) {
             return false
         }
         // const slimeDiet = await this.knex('')
         const extra_calories = await this.extraCalories(slimeId)
         if (extra_calories > 2000) {
-
+            return //Obese
         }
 
         const obj = this.totalMacroNutrients(slimeId)
-        const carbs = (await obj).totalCarbs
-        const protein = (await obj).totalProtein
+        const carbs = (await obj).totalCarbs//246
+        const protein = (await obj).totalProtein//124
+        const fat = (await obj).totalFat//548
+        let slimeTotalDiet = carbs + protein + fat //918
 
-
-        let slimeDiet = carbs + protein
-
-        // let calories(50) = listOfSlimeDiet.calories
-        // let extra_calories = listOfSlimeDiet.extra_calories
-        // let protein (200) = listOfSlimeDiet.protein
-        // let slimeDiet = (calories + protein) * 100 %
-
-
-
-
-
-
+        if(protein/slimeTotalDiet > 0.5){
+            return // Keto
+        }
+        if(carbs/slimeTotalDiet > 0.6){
+        return // Skinny fat
+        }
         return
+
     };
 
     // autoMinusCalor = async(): Promise<number> =>{

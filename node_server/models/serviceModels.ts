@@ -35,9 +35,9 @@ export interface SlimeServiceHelper {
     calories: number,
     extra_calories: number,
     // protein: number
-    earnRate: number
+    // earnRate: number
   }>;
-  calEarnRate(slimeId: number): Promise<number>;
+  // calEarnRate(slimeId: number): Promise<number>;
   evolution(slimeId: number): Promise<number>;
 }
 
