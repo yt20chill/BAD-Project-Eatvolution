@@ -9,18 +9,12 @@ export default class SlimeService implements SlimeServiceHelper {
 
     //create slime
 
-
-    slimeFeed = async (foodId: number, slimeId: number, knex: Knex = this.knex): Promise<number> => {
-        //receive food data
-        //insert food in database
-        const insertSlimeFood =
-            await knex("slime_food")
-                .insert({ food_id: foodId, slime_id: slimeId })
-                .returning("id");
-
-        return insertSlimeFood[0].id//slime_food.id
-    };
-
+    private getAllSlimeType = async (): Promise<any> => {
+        const slimeTypes = (await this.knex('slime_type')
+            .select('id', 'name'))
+        return slimeTypes
+        //    return slimeTypes[0].id
+    }
 
     private totalMacroNutrients = async (slimeId: number): Promise<{
         totalProtein: number,
@@ -56,20 +50,6 @@ export default class SlimeService implements SlimeServiceHelper {
         return listMacroNutrients
     };
 
-    // private totalCarbs = async (slimeId: number): Promise<number> => {
-    //     const result = await this.knex('slime_food')
-    //         .join('food', 'slime_food.food_id', '=', 'food.id')
-    //         .join('slime', 'slime_food.slime_id', '=', 'slime.id')
-    //         .sum('food.carbohydrates as total_carbs')
-    //         .where('slime.id', slimeId)
-    //         .groupBy('slime.id')
-    //         .first()
-
-    //     const totalCarbs = parseInt(result.total_carbs)
-
-    //     return totalCarbs
-    // };
-
     private extraCalories = async (slimeId: number): Promise<number> => {
         const result = await this.knex('slime')
             .select('extra_calories')
@@ -96,6 +76,17 @@ export default class SlimeService implements SlimeServiceHelper {
     //     const earnRate = totalProtein * multiplierEarnRate * constant
     //     return earnRate
     // };
+
+    slimeFeed = async (foodId: number, slimeId: number, knex: Knex = this.knex): Promise<number> => {
+        //receive food data
+        //insert food in database
+        const insertSlimeFood =
+            await knex("slime_food")
+                .insert({ food_id: foodId, slime_id: slimeId })
+                .returning("id");
+
+        return insertSlimeFood[0].id//slime_food.id
+    };
 
     slimeData = async (slimeId: number): Promise<{
         id: number,
@@ -139,21 +130,17 @@ export default class SlimeService implements SlimeServiceHelper {
         return true
     }
 
-    getAllSlimeType = async (): Promise<any> => {
-        const slimeTypes = (await this.knex('slime_type')
-            .select('id', 'name'))
-        return slimeTypes
-    }
-    typeOfSlime = async (slimeId: number): Promise<any> => {
-        const slimeType = (await this.knex('slime_type')
-            .select('id', 'name'))
 
-        console.log(slimeType)
-        return slimeType
+    // typeOfSlime = async (slimeId: number): Promise<any> => {
+    //     const slimeType = (await this.knex('slime_type')
+    //         .select('id', 'name'))
 
-        // const slimeType
+    //     console.log(slimeType)
+    //     return slimeType
 
-    }
+    //     // const slimeType
+
+    // }
 
     evolution = async (slimeId: number): Promise<any> => {
         // - Keto: eat >=10 food && > 50% protein
@@ -168,7 +155,10 @@ export default class SlimeService implements SlimeServiceHelper {
         const slimeTypes = await this.getAllSlimeType()
         const extra_calories = await this.extraCalories(slimeId)
         if (extra_calories > 2000) {
-            return slimeTypes[3]//Obese
+            const typeOfExtraCalories = await this.knex("slime")
+                .insert({ slime_type_id: slimeTypes[3].id })
+                .returning("id");
+            return typeOfExtraCalories[0].id//Obese
         }
         const obj = this.totalMacroNutrients(slimeId)
         const carbs = (await obj).totalCarbs//246
@@ -176,14 +166,26 @@ export default class SlimeService implements SlimeServiceHelper {
         const fat = (await obj).totalFat//548
         let slimeTotalDiet = carbs + protein + fat //918
 
-
         if (protein / slimeTotalDiet > 0.5) {
-            return slimeTypes[1]// Keto
+           
+            const typeOfKeto = await this.knex("slime")
+            .insert({ slime_type_id: slimeTypes[1].id })
+            .returning("id");
+            return typeOfKeto[0].id// Keto
+
+
         } else if (carbs / slimeTotalDiet > 0.6) {
-            return slimeTypes[2]// Skinny fat
+            const typeOfSkinnyFat = await this.knex("slime")
+            .insert({ slime_type_id: slimeTypes[2].id })
+            .returning("id");            
+            return typeOfSkinnyFat[0].id// Skinny fat
         }
         return slimeTypes[0]
+
+
     };
+
+
 
     // autoMinusCalor = async(): Promise<number> =>{
     //     return 
