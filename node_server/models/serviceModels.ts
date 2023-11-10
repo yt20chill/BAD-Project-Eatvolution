@@ -22,11 +22,11 @@ export interface FoodServiceHelper {
 
 export interface SlimeServiceHelper {
   slimeFeed(foodId: number, slimeId: number): Promise<number>;
-//   totalMacroNutrients(slimeId: number): Promise<{
-//     totalProtein: number,
-//     totalCarbs: number,
-//     totalFat: number
-// }>
+  //   totalMacroNutrients(slimeId: number): Promise<{
+  //     totalProtein: number,
+  //     totalCarbs: number,
+  //     totalFat: number
+  // }>
   // totalProtein(slimeId: number): Promise<number>;
   // totalCarbs(slimeId: number): Promise<number>;
   // extraCalories(slimeId: number): Promise<number>;
@@ -42,7 +42,7 @@ export interface SlimeServiceHelper {
 }
 
 export interface ShopServiceHelper {
-  getShopItems(userId: number): Promise<{ food: BriefFood[]; isUniversal: boolean }>;
+  getShopItems(userId: number): Promise<BriefFood[]>;
   updateUniversalShop(): Promise<boolean>;
   updateUserShop(userId: number): Promise<boolean>;
 }
@@ -59,9 +59,12 @@ export interface SlimeCollectionServiceHelper {
 }
 
 export interface UserServiceHelper {
-  getSavings(userId: number, knex?: Knex): Promise<number>;
+  getSavings(userId: number): Promise<number>;
+  receiveSalary(userId: number, trx?: Knex.Transaction): Promise<boolean>;
+  // calculateEarningRate(userId: number): Promise<number>;
+}
+
+export interface GameServiceHelper {
   purchaseFood(userId: number, foodId: number, knex?: Knex): Promise<boolean>;
   purchaseItem(userId: number, itemId: number, knex?: Knex): Promise<boolean>;
-  receiveSalary(userId: number, knex?: Knex): Promise<boolean>;
-  calculateEarningRate(userId: number): Promise<number>;
 }

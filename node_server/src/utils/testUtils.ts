@@ -14,6 +14,7 @@ export const mockSocketIO = () => {
 export const mockRequest = () => {
   return {
     session: {
+      user: {},
       grant: {
         response: {},
       },

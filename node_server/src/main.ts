@@ -1,7 +1,6 @@
 import express from "express";
 import path from "path";
 import { apiRoutes } from "./api.routes";
-import { authRoutes } from "./auth/auth.routes";
 import { isLoggedInAPI, isLoggedInClient } from "./auth/guard";
 import { grantExpress } from "./auth/oauth";
 import { app, assignSocket, io, server, socketSession } from "./socket";
@@ -36,7 +35,7 @@ app.use((_, res) => {
 
 io.on("connection", (socket) => {
   const req = socket.request as express.Request;
-  const userId = req.session.userId;
+  const userId = req.session.user.id;
   userId ? assignSocket(userId, socket) : null;
 });
 

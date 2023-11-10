@@ -1,4 +1,0 @@
-dropdb eatvolution
-dropdb eatvolution_test
-createdb eatvolution
-createdb eatvolution_test

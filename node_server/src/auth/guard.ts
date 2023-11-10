@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { UnauthorizedError } from "../utils/error";
 
 export const isLoggedInAPI = (req: Request, res: Response, next: NextFunction) => {
-  if (req.session.userId) {
+  if (req.session?.user?.id) {
     next();
     return;
   }
@@ -11,7 +11,7 @@ export const isLoggedInAPI = (req: Request, res: Response, next: NextFunction) =
 };
 
 export const isLoggedInClient = (req: Request, res: Response, next: NextFunction) => {
-  if (req.session.userId) {
+  if (req.session?.user?.id) {
     next();
     return;
   }

@@ -1,17 +1,16 @@
 import { Knex } from "knex";
-import schedule from "node-schedule";
+import { RedisClientType } from "redis";
 import { Food } from "../../models/dbModels";
 import { BriefFood } from "../../models/models";
 import { ShopServiceHelper } from "../../models/serviceModels";
+import gameConfig from "../utils/gameConfig";
 import { logger } from "../utils/logger";
 
 export default class ShopService implements ShopServiceHelper {
-  private static FOOD_NUM_ALLOWED = 12;
-  private static RULE = new schedule.RecurrenceRule();
-  constructor(private readonly knex: Knex) {
-    //default rule: every 8am, 1pm, 7pm
-    ShopService.RULE.hour = [8, 13, 19];
-  }
+  constructor(
+    private readonly knex: Knex,
+    private readonly redis: RedisClientType
+  ) {}
   private getAllFoodIdsForShop = async (): Promise<number[]> => {
     return (await this.knex<Food>("food").select("id").whereNotNull("cost").orderBy("cost")).map(
       (e) => +e.id
@@ -20,7 +19,7 @@ export default class ShopService implements ShopServiceHelper {
   private drawRandomFood = async (): Promise<number[]> => {
     const availableFoodIds = await this.getAllFoodIdsForShop();
     const randomNumberSet = new Set<number>();
-    while (randomNumberSet.size < ShopService.FOOD_NUM_ALLOWED) {
+    while (randomNumberSet.size < gameConfig.FOOD_NUM_ALLOWED) {
       const randomFoodId = availableFoodIds[Math.floor(Math.random() * availableFoodIds.length)];
       randomNumberSet.add(randomFoodId);
     }
@@ -42,13 +41,22 @@ export default class ShopService implements ShopServiceHelper {
       .where("user_id", userId);
     return userShop;
   };
-  getShopItems = async (userId: number): Promise<{ food: BriefFood[]; isUniversal: boolean }> => {
-    const userShop = await this.getUserShop(userId);
-    if (userShop.length === 0) {
-      const food = await this.getUniversalShop();
-      return { food, isUniversal: true };
+  getShopItems = async (userId: number): Promise<BriefFood[]> => {
+    let food: BriefFood[];
+    if (await this.redis.exists(`shop-${userId}`)) {
+      return JSON.parse(await this.redis.get(`shop-${userId}`));
     }
-    return { food: userShop, isUniversal: false };
+    food = await this.getUserShop(userId);
+    if (food.length !== 0) {
+      this.redis.set(`shop-${userId}`, JSON.stringify(food));
+      return food;
+    }
+    if (await this.redis.exists(`shop`)) {
+      return JSON.parse(await this.redis.get(`shop`));
+    }
+    food = await this.getUniversalShop();
+    this.redis.set(`shop`, JSON.stringify(food));
+    return food;
   };
   updateUniversalShop = async (): Promise<boolean> => {
     const foodIds = await this.drawRandomFood();
@@ -87,13 +95,4 @@ export default class ShopService implements ShopServiceHelper {
       return false;
     }
   };
-  static get foodNumAllowed() {
-    return ShopService.FOOD_NUM_ALLOWED;
-  }
-  static set rule(rule: schedule.RecurrenceRule) {
-    ShopService.RULE = rule;
-  }
-  static get rule() {
-    return ShopService.RULE;
-  }
 }

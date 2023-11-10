@@ -2,7 +2,7 @@
 import { Request } from "express";
 import fetchMock from "jest-fetch-mock";
 import { Knex } from "knex";
-import { BadRequestError, InternalServerError, UnauthorizedError } from "../../src/utils/error";
+import { BadRequestError } from "../../src/utils/error";
 import { mockRequest } from "../utils/testUtils";
 import AuthController from "./auth.controller";
 import AuthService from "./auth.service";
@@ -35,14 +35,14 @@ describe("AuthController", () => {
     it("assign userId for successful login", async () => {
       req.body = { username: "test", password: "test" };
       await authController.login(req);
-      expect(req.session.userId).toBe(1);
+      expect(req.session.user.id).toBe(1);
     });
     it("should invalidate login", async () => {
       req.body = { username: "test", password: "test" };
       authService.login = jest.fn(async (_username: string, _password: string) => -1);
       await expect(authController.login(req)).resolves.toEqual({ success: false, result: null });
       expect(authService.login).toHaveBeenCalledWith("test", "test");
-      expect(req.session.userId).toBeUndefined();
+      expect(req.session.user.id).toBeUndefined();
     });
     it("should throw bad request when missing info", async () => {
       () => expect(async () => await authController.login(req)).toThrow(BadRequestError);
@@ -53,13 +53,13 @@ describe("AuthController", () => {
       req.body = { username: "", password: "" };
       () => expect(async () => await authController.login(req)).toThrow(BadRequestError);
       expect(authService.login).toHaveBeenCalledTimes(0);
-      expect(req.session.userId).toBeUndefined();
+      expect(req.session.user.id).toBeUndefined();
     });
     it("should throw bad request error when input type is invalid", async () => {
       req.body = { username: 1, password: 2 };
       () => expect(async () => await authController.login(req)).toThrow(new BadRequestError());
       expect(authService.login).toHaveBeenCalledTimes(0);
-      expect(req.session.userId).toBeUndefined();
+      expect(req.session.user.id).toBeUndefined();
     });
   });
 
@@ -72,7 +72,7 @@ describe("AuthController", () => {
     it("sign up should assign userId upon successful sign up", async () => {
       req.body = { username: "test", password: "test", confirmPassword: "test" };
       await expect(authController.signUp(req)).resolves.toEqual({ success: true, result: null });
-      expect(req.session.userId).toBe(1);
+      expect(req.session.user.id).toBe(1);
     });
     it("sign up should return { success: false, result: 'password mismatch' } if passwords do not match", async () => {
       req.body = { username: "test", password: "test", confirmPassword: "test1" };
@@ -81,7 +81,7 @@ describe("AuthController", () => {
         result: "password mismatch",
       });
       expect(authService.signUp).toHaveBeenCalledTimes(0);
-      expect(req.session.userId).toBeUndefined();
+      expect(req.session.user.id).toBeUndefined();
     });
     it("sign up return { success: false, result: 'duplicated username' } if username is duplicated", async () => {
       req.body = { username: "test", password: "test", confirmPassword: "test" };
@@ -91,7 +91,7 @@ describe("AuthController", () => {
         result: "duplicated username",
       });
       expect(authService.signUp).toHaveBeenCalledWith("test", "test");
-      expect(req.session.userId).toBeUndefined();
+      expect(req.session.user.id).toBeUndefined();
     });
     it("sign up should throw error when missing info", async () => {
       () => expect(async () => await authController.signUp(req)).rejects.toThrow(BadRequestError);
@@ -108,7 +108,7 @@ describe("AuthController", () => {
       req.body = { password: "test", confirmPassword: "test" };
       () => expect(async () => await authController.signUp(req)).rejects.toThrow(BadRequestError);
       expect(authService.signUp).toHaveBeenCalledTimes(0);
-      expect(req.session.userId).toBeUndefined();
+      expect(req.session.user.id).toBeUndefined();
     });
     it("sign up should throw error when input type is invalid", () => {
       req.body = { username: "test", password: 1, confirmPassword: 1 };
@@ -116,7 +116,7 @@ describe("AuthController", () => {
       req.body = { username: ["test"], password: "test", confirmPassword: "test" };
       expect(authController.signUp(req)).rejects.toThrow(BadRequestError);
       expect(authService.signUp).toHaveBeenCalledTimes(0);
-      expect(req.session.userId).toBeUndefined();
+      expect(req.session.user.id).toBeUndefined();
     });
   });
 
@@ -128,7 +128,7 @@ describe("AuthController", () => {
         success: true,
         result: null,
       });
-      expect(req.session.userId).toBe(1);
+      expect(req.session.user.id).toBe(1);
     });
     it("oauth should invalidate login if oauth login failed", async () => {
       req.session.grant.response.access_token = undefined;
@@ -148,7 +148,7 @@ describe("AuthController", () => {
 
   describe("logout", () => {
     it("should clear session", async () => {
-      req.session.userId = 1;
+      req.session.user.id = 1;
       await authController.logout(req);
       expect(req.session).toBeFalsy();
     });

@@ -13,7 +13,7 @@ export default class FoodCollectionController implements FoodCollectionControlle
   getWholeFoodCollection = async (
     req: Request
   ): Promise<ControllerResult<ExportFoodCollection>> => {
-    const { userId } = req.session;
+    const userId = req.session.user.id;
     const { unlockedIds, lockedIds } = await this.foodCollectionService.getAllFoodIds(userId);
     const unlockedUniversalFood =
       unlockedIds.universal.length > 0

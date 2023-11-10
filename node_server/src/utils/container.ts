@@ -11,23 +11,23 @@ import FoodController from "../food/food.controller";
 import FoodService from "../food/food.service";
 import ShopController from "../shop/shop.controller";
 import ShopService from "../shop/shop.service";
-import UserController from "../user/user.controller";
-import UserService from "../user/user.service";
 import { env } from "./env";
-import SlimeService from "../slime/slime.service";
-import TestController from "../slime/test.controller";
+import SlimeService from "src/slime/slime.service";
+import TestController from "src/slime/test.controller";
+import UserController from "src/user/user.controller";
+import UserService from "src/user/user.service";
 
 export const redis: RedisClientType = createClient();
 export const knex = Knex(knexConfig[env.NODE_ENV]);
 
 export const authService = new AuthService(knex);
-export const authController = new AuthController(authService, redis);
+export const authController = new AuthController(authService);
 
 export const foodService = new FoodService(knex);
 export const foodController = new FoodController(foodService);
 
-export const shopService = new ShopService(knex);
-export const shopController = new ShopController(shopService, redis);
+export const shopService = new ShopService(knex, redis);
+export const shopController = new ShopController(shopService);
 
 export const foodCollectionService = new FoodCollectionService(knex);
 export const foodCollectionController = new FoodCollectionController(
@@ -38,8 +38,7 @@ export const foodCollectionController = new FoodCollectionController(
 export const slimeCollectionService = new SlimeCollectionService(knex);
 export const slimeCollectionController = new SlimeCollectionController(slimeCollectionService);
 
-// export const slimeService = new SlimeService(knex)
-export const testController = new TestController(knex)
-console.log(knex)
-export const userService = new UserService(knex);
-export const userController = new UserController(userService, redis);
+export const slimeService = new SlimeService(knex)
+export const testController = new TestController(knex);
+export const userService = new UserService(knex, redis);
+export const userController = new UserController(userService);

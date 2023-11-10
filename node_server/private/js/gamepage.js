@@ -84,7 +84,7 @@ function hidePopupMenu() {
 var footContainer = document.getElementById('footcontainerID');
 var isFootContainerVisible = false;
 
-document.addEventListener('mousedown', function (event) {
+document.addEventListener('mouseup', function (event) {
     var targetElement = event.target;
     console.log(targetElement)
     // 检查点击事件发生时的目标元素是否为footContainer或其内部元素
@@ -99,10 +99,23 @@ document.addEventListener('mousedown', function (event) {
 
 // 点击food shop按钮时显示footContainer
 document.getElementById('foodShopButton').addEventListener('click', async function () {
-    footContainer.style.display = 'block';
+    footContainer.style.display = 'flex';
     isFootContainerVisible = true;
     await getShopItems()
 });
+
+// document.getElementById('foodShopButton').addEventListener('click', async function () {
+//     var footContainer = document.getElementById('footContainer');
+
+//     if (footContainer.style.display === 'block') {
+//         footContainer.style.display = 'none';
+//         isFootContainerVisible = false;
+//     } else {
+//         footContainer.style.display = 'block';
+//         isFootContainerVisible = true;
+//         await getShopItems();
+//     }
+// });
 
 async function getShopItems() {
     const res = await fetch("/api/shop");
