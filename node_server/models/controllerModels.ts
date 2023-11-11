@@ -21,7 +21,7 @@ export interface AuthControllerHelper {
 }
 
 export interface FoodControllerHelper {
-  insertFood: Controller<string | null>;
+  insertFood: Controller<string | number>;
 }
 
 export interface ShopControllerHelper {

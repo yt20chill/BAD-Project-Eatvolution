@@ -15,7 +15,7 @@ export interface AuthServiceHelper {
 }
 
 export interface FoodServiceHelper {
-  insert(userId: number, food: InsertFood | number): Promise<boolean>;
+  insert(userId: number, food: InsertFood | number): Promise<number>;
   getDetails(...foodIds: Array<number>): Promise<FoodCollection[]>;
   isExisting(options: { id?: number; name?: string }): Promise<number>;
 }
@@ -49,7 +49,6 @@ export interface UserServiceHelper {
 }
 
 export interface GameServiceHelper {
-  updateAllUsers(): Promise<boolean>;
+  updateAllUsers(): Promise<void>;
   purchaseFood(userId: number, foodId: number): Promise<boolean>;
-  purchaseCustomFood(userId: number, itemId: number): Promise<boolean>;
 }

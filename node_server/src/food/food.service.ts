@@ -7,38 +7,44 @@ import { env } from "../utils/env";
 
 export default class FoodService implements FoodServiceHelper {
   constructor(private readonly knex: Knex) {}
-  insert = async (userId: number, food: InsertFood | number): Promise<boolean> => {
+  private createTransaction = async (): Promise<Knex.Transaction> => {
+    const trx = await this.knex.transaction();
+    this.knex.bind(trx);
+    return trx;
+  };
+  insert = async (userId: number, food: InsertFood | number): Promise<number> => {
     if (typeof food === "number") {
-      return await this.insertCustomFood(this.knex, userId, food);
+      await this.insertCustomFood(userId, food);
+      return food;
     }
     const foodCopy = { ...food };
     foodCopy.cost = null;
     foodCopy.name = foodCopy.name.trim().toLowerCase();
     let foodId = await this.isExisting(foodCopy);
-    if (foodId !== -1 && (await this.isCustomFoodDuplicated(userId, foodId))) return false;
-    const trx = await this.knex.transaction();
+    if (foodId !== -1 && (await this.isCustomFoodDuplicated(userId, foodId))) return foodId;
+    const trx = await this.createTransaction();
     try {
       if (foodId === -1) {
         foodCopy.category_id = (await this.getCategory(foodCopy))[0] ?? null;
-        foodId = (await trx("food").insert(foodCopy).returning("id"))[0]["id"];
+        foodId = (await this.knex("food").insert(foodCopy).returning("id"))[0]["id"];
       }
-      await this.insertCustomFood(trx, userId, foodId);
+      await this.insertCustomFood(userId, foodId);
       await trx.commit();
-      return true;
+      return foodId;
     } catch (error) {
       logger.error(error.message);
       await trx.rollback();
-      return false;
+      return -1;
     }
   };
-  private insertCustomFood = async (knex: Knex, userId: number, foodId: number) => {
+  private insertCustomFood = async (userId: number, foodId: number) => {
     if (
       foodId === -1 ||
       (await this.isCustomFood(foodId)) ||
       (await this.isCustomFoodDuplicated(userId, foodId))
     )
       return false;
-    await knex("user_custom_food").insert({ food_id: foodId, user_id: userId });
+    await this.knex("user_custom_food").insert({ food_id: foodId, user_id: userId });
     return true;
   };
   private isCustomFood = async (foodId: number) => {
@@ -129,6 +135,7 @@ export default class FoodService implements FoodServiceHelper {
       return [];
     }
   };
+
   // this is to retrain model based on inserted food
   private scheduleUpdateModel = async () => {};
   // this is to re-categorize food based on updated model
