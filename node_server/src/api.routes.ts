@@ -12,3 +12,4 @@ apiRoutes.use("/shop", shopRoutes);
 apiRoutes.use("/collection", collectionRoutes);
 apiRoutes.use("/slime", slimeRoutes);
 apiRoutes.use("/user", userRoutes);
+apiRoutes.use("/game", gameRoutes);

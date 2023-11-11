@@ -3,7 +3,7 @@ import { RedisClientType } from "redis";
 import { Food } from "../../models/dbModels";
 import { BriefFood } from "../../models/models";
 import { ShopServiceHelper } from "../../models/serviceModels";
-import { InternalServerError } from "../utils/error";
+import { BadRequestError, InternalServerError } from "../utils/error";
 import gameConfig from "../utils/gameConfig";
 import { logger } from "../utils/logger";
 import { AppUtils } from "../utils/utils";
@@ -144,5 +144,23 @@ export default class ShopService implements ShopServiceHelper {
       await trx.rollback();
       return false;
     }
+  };
+
+  /**
+   *
+   * @param userId
+   * @param foodId
+   * @returns food price if food exists in shop, otherwise throw BadRequestError
+   */
+  getFoodCost = async (userId: number, foodId: number): Promise<number> => {
+    const foodShop = await this.getFoodShop(userId);
+    const food = foodShop.find((food) => food.id === foodId);
+    if (!food) throw new BadRequestError();
+    return food.cost;
+  };
+  getItemCost = async (itemId: number): Promise<number> => {
+    const item = await this.knex("item").select("cost").where("id", itemId).first();
+    if (!item) throw new BadRequestError();
+    return item.cost;
   };
 }
