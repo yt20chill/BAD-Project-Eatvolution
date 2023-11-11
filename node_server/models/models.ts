@@ -143,3 +143,25 @@ export type RedisUser = {
 export interface UserFinancialStatus extends RedisUser {
   id: number;
 }
+
+export type SlimeDetails = {
+  owner_id: number;
+  slime_type_id: string;
+  calories: number;
+  max_calories: number;
+  extra_calories: number;
+  bMR_multiplier: number;
+  earn_rate_multiplier: number;
+  food_count: number;
+  total_protein: number;
+  total_carbs: number;
+  total_fat: number;
+};
+
+export type EvolutionInfo = {
+  food_count: number;
+  max_calories: number;
+  total_protein: number;
+  total_fat: number;
+  total_carbs: number;
+};

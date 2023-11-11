@@ -21,24 +21,8 @@ export interface FoodServiceHelper {
 }
 
 export interface SlimeServiceHelper {
-  slimeFeed(foodId: number, slimeId: number): Promise<number>;
-  //   totalMacroNutrients(slimeId: number): Promise<{
-  //     totalProtein: number,
-  //     totalCarbs: number,
-  //     totalFat: number
-  // }>
-  // totalProtein(slimeId: number): Promise<number>;
-  // totalCarbs(slimeId: number): Promise<number>;
-  // extraCalories(slimeId: number): Promise<number>;
-  slimeData(slimeId: number): Promise<{
-    slime_type: string;
-    calories: number;
-    extra_calories: number;
-    // protein: number
-    // earnRate: number
-  }>;
-  // calEarnRate(slimeId: number): Promise<number>;
-  evolution(slimeId: number, userID: number): Promise<any>;
+  create(userId: number): Promise<void>;
+  feed(slimeId: number, foodId: number): Promise<void>;
 }
 
 export interface ShopServiceHelper {
