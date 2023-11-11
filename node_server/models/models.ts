@@ -106,12 +106,12 @@ export interface FoodCollection extends Omit<Food, "cost" | "name" | "created_at
 
 export interface ExportFoodCollection {
   unlocked: { universal: FoodCollection[]; custom: FoodCollection[] };
-  locked: { universal: number[]; custom: number[] };
+  locked: { universal: Set<number>; custom: Set<number> };
 }
 
 export interface FoodCollectionIds {
-  universal: number[];
-  custom: number[];
+  universal: Set<number>;
+  custom: Set<number>;
 }
 
 export interface SlimeCollection {
