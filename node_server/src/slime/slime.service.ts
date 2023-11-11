@@ -1,9 +1,8 @@
 import { Knex } from "knex";
-import { SlimeServiceHelper } from "models/serviceModels";
 import { SlimeType } from "../../models/dbModels";
 import { InternalServerError } from "../utils/error";
 
-export default class SlimeService implements SlimeServiceHelper {
+export default class SlimeService {
   constructor(private readonly knex: Knex) {}
   createSlime = async (userId: number): Promise<void> => {
     const slimeTypes = await this.getAllSlimeType();
@@ -21,7 +20,7 @@ export default class SlimeService implements SlimeServiceHelper {
     }, new Map<string, string>());
   };
 
-  totalMacroNutrients = async (
+  private getTotalMacroNutrients = async (
     slimeId: number
   ): Promise<{
     totalProtein: number;
@@ -38,40 +37,27 @@ export default class SlimeService implements SlimeServiceHelper {
       .groupBy("slime.id")
       .first();
 
-    const protein = parseFloat(result.total_protein);
-    const carbs = parseFloat(result.total_carbs);
-    const fat = parseFloat(result.total_fat);
+    const totalProtein = parseFloat(result.total_protein);
+    const totalCarbs = parseFloat(result.total_carbs);
+    const totalFat = parseFloat(result.total_fat);
 
-    let listMacroNutrients: {
-      totalProtein: number;
-      totalCarbs: number;
-      totalFat: number;
-    } = {
-      totalProtein: protein,
-      totalCarbs: carbs,
-      totalFat: fat,
+    return {
+      totalProtein,
+      totalCarbs,
+      totalFat,
     };
-
-    return listMacroNutrients;
   };
 
-  extraCalories = async (slimeId: number): Promise<number> => {
-    const result = await this.knex("slime")
-      .select("extra_calories")
-      .where("slime.id", slimeId)
-      .first();
+  private getSlimeData = async (slimeId: number) => {};
 
-    const extraCalories = parseInt(result.extra_calories);
-
-    return extraCalories;
-  };
-
-  slimeFeed = async (foodId: number, slimeId: number, knex: Knex = this.knex): Promise<number> => {
-    const insertSlimeFood = await knex("slime_food")
-      .insert({ food_id: foodId, slime_id: slimeId })
-      .returning("id");
-
-    return insertSlimeFood[0].id; //slime_food.id
+  feedSlime = async (foodId: number, slimeId: number): Promise<void> => {
+    const trx = await this.knex.transaction();
+    try {
+      await trx("slime_food").insert({
+        food_id: foodId,
+        slime_id: slimeId,
+      });
+    } catch (error) {}
   };
 
   slimeData = async (
