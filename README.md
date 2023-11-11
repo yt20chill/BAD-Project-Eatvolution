@@ -26,6 +26,18 @@ source {path_to_project_root_folder}/bin/rebuildDb.sh
 
 &nbsp;
 
+## Start node server on Windows
+
+```bash
+wsl
+. {path_to_project_root_folder}/bin/startRedis.sh
+```
+open a new terminal
+```bash
+cd node_server
+npm run start
+```
+
 ## Rules to be observed
 
 1. Make small commits
