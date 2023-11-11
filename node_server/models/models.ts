@@ -156,6 +156,7 @@ export type SlimeDetails = {
   total_protein: number;
   total_carbs: number;
   total_fat: number;
+  updated_at: string;
 };
 
 export type EvolutionInfo = {

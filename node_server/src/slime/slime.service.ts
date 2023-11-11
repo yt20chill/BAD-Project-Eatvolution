@@ -3,7 +3,9 @@ import { SlimeType } from "../../models/dbModels";
 import { EvolutionInfo, SlimeDetails } from "../../models/models";
 import { SlimeServiceHelper } from "../../models/serviceModels";
 import FoodService from "../food/food.service";
+import DbUtils from "../utils/dbUtils";
 import { BadRequestError, InternalServerError } from "../utils/error";
+import GameConfig from "../utils/gameConfig";
 import { logger } from "../utils/logger";
 
 export default class SlimeService implements SlimeServiceHelper {
@@ -59,6 +61,27 @@ export default class SlimeService implements SlimeServiceHelper {
       await trx.rollback();
     }
   };
+  reduceCalories = async (slimeId: number): Promise<void> => {
+    const slimeDetails = await this.getDetails(slimeId);
+    const { calories, extra_calories, bMR_multiplier } = slimeDetails;
+    const updatedSlime = {} as Partial<SlimeDetails>;
+    const calReductionRate = bMR_multiplier * GameConfig.BMR_CONSTANT;
+    const elapsedSeconds = DbUtils.calculateElapsedTimeInSeconds(slimeDetails);
+    const caloriesToReduce = Math.floor(calReductionRate * elapsedSeconds);
+    updatedSlime.calories = calories - caloriesToReduce;
+    if (updatedSlime.calories < 0) {
+      const caloriesDeficit = -updatedSlime.calories; // = caloriesToReduce - calories
+      updatedSlime.extra_calories = Math.max(extra_calories - caloriesDeficit, 0); // min extra calories = 0
+      updatedSlime.calories = 0;
+    }
+    // if slime was obese and is no longer obese, update slime_type
+    if (extra_calories > 2000 && updatedSlime.extra_calories <= 2000) {
+      const evolutionInfo = { ...slimeDetails };
+      evolutionInfo.max_calories = updatedSlime.extra_calories;
+      updatedSlime.slime_type_id = await this.evolve(evolutionInfo);
+    }
+    await this.knex("slime").update(updatedSlime).where("slime.id", slimeId);
+  };
   private getAllTypes = async (): Promise<Map<string, string>> => {
     const slimeTypes = await this.knex<SlimeType>("slime_type").select("id", "name");
     return slimeTypes.reduce((acc, slimeType) => {
@@ -96,7 +119,8 @@ export default class SlimeService implements SlimeServiceHelper {
         "slime.max_calories",
         "slime.extra_calories",
         "slime.bMR_multiplier",
-        "slime.earn_rate_multiplier"
+        "slime.earn_rate_multiplier",
+        "slime.updated_at"
       )
       .where("slime.id", slimeId)
       .first();
