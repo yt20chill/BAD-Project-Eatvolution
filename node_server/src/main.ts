@@ -21,6 +21,10 @@ io.use((socket, next) => {
 });
 redis.connect();
 scheduleUpdateShop();
+app.use((req, _res, next) => {
+  logger.info(`${req.method} ${req.url}`);
+  next();
+});
 //Examples of routes
 app.use("/api", isLoggedInAPI, apiRoutes);
 app.use("/auth", authRoutes);
