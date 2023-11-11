@@ -97,7 +97,7 @@ export default class GameService implements GameServiceHelper {
     const userService = new UserService(trx, this.redis);
     const { money } = await userService.getUserLatestFinancialStatus(userId);
     const moneyAfterPurchase = money - cost;
-    if (moneyAfterPurchase < 0) throw new BadRequestError();
+    if (moneyAfterPurchase < 0) throw new BadRequestError("Insufficient money");
     return moneyAfterPurchase;
   };
 }

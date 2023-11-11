@@ -155,7 +155,7 @@ export default class ShopService implements ShopServiceHelper {
   getFoodCost = async (userId: number, foodId: number): Promise<number> => {
     const foodShop = await this.getFoodShop(userId);
     const food = foodShop.find((food) => food.id === foodId);
-    if (!food) throw new BadRequestError();
+    if (!food) throw new BadRequestError("food doesn't exists in shop");
     return food.cost;
   };
   getItemCost = async (itemId: number): Promise<number> => {
