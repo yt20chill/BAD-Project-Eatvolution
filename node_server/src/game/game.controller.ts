@@ -1,15 +1,14 @@
-import FoodCollectionService from "../collection/foodCollection/foodCollection.service";
-import SlimeCollectionService from "../collection/slimeCollection/slimeCollection.service";
-import FoodService from "../food/food.service";
-import SlimeService from "../slime/slime.service";
-import UserService from "../user/user.service";
-
+import { Request } from "express";
+import { BadRequestError } from "../utils/error";
+import { AppUtils } from "../utils/utils";
+import GameService from "./game.service";
 export default class gameController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly slimeService: SlimeService,
-    private readonly foodCollectionService: FoodCollectionService,
-    private readonly slimeCollectionService: SlimeCollectionService,
-    private readonly foodService: FoodService
-  ) {}
+  constructor(private readonly gameService: GameService) {}
+  purchaseFood = async (req: Request) => {
+    const { foodId } = req.body;
+    const userId = req.session.user.id;
+    if (!foodId) throw new BadRequestError();
+    const isPurchased = await this.gameService.purchaseFood(userId, foodId);
+    return AppUtils.setServerResponse<null>(null, isPurchased);
+  };
 }

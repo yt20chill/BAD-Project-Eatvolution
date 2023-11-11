@@ -46,6 +46,7 @@ export interface ShopServiceHelper {
   getFoodShop(userId: number): Promise<BriefFood[]>;
   updateUniversalShop(): Promise<boolean>;
   updateUserShop(userId: number): Promise<boolean>;
+  getFoodCost(userId: number, foodId: number): Promise<number>;
 }
 
 export interface FoodCollectionServiceHelper {
@@ -65,6 +66,7 @@ export interface UserServiceHelper {
 }
 
 export interface GameServiceHelper {
+  updateAllUsers(): Promise<boolean>;
   purchaseFood(userId: number, foodId: number, knex?: Knex): Promise<boolean>;
   purchaseItem(userId: number, itemId: number, knex?: Knex): Promise<boolean>;
 }
