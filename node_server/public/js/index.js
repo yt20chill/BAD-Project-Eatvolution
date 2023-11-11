@@ -1,7 +1,65 @@
 import { GooCursor } from './cursor.js';
 
-const cursorEl = document.querySelector('.cursor');
+const signupForm = document.querySelector('.the-form');
 
+const loginform = document.getElementById('login_form');
+
+loginform.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const email = e.target.email.value
+    const password = e.target.password.value
+
+    const body = {
+        username: email,
+        password: password,
+    }
+
+    const res = await fetch("/auth/login", {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+            "Content-type": "application/json"
+        }
+    })
+    const data = await res.json() // { success: true, result:null }
+    if (!res.ok) {
+        alert("login fail")
+        return
+    } else {
+        window.location = "/user/index.html"
+    }
+})
+
+signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const email = e.target.email.value
+    const password = e.target.password.value
+    const repassword = e.target.repassword.value
+
+    const body = {
+        username: email,
+        password: password,
+        confirmPassword: repassword
+    }
+
+    const res = await fetch("/auth/signup", {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+            "Content-type": "application/json"
+        }
+    })
+    const data = await res.json() // { success: true, result:null }
+    if (!res.ok) {
+        alert("signup fail")
+        return
+    } else {
+        window.location = "/user/index.html"
+    }
+})
+
+
+const cursorEl = document.querySelector('.cursor');
 // Initialize cursor
 const goo = new GooCursor(cursorEl);
 

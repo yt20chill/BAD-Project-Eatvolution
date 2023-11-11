@@ -145,3 +145,22 @@ async function login(username, password) {
     })
     const { success, result } = await res.json()
 }
+
+// log out api
+
+document.getElementById("logout").addEventListener("click", async function (e) {
+    e.preventDefault();
+
+    const res = await fetch('/logout', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (res.ok) {
+        window.location.href = '/index.html';
+    } else {
+        console.error('Logout failed.');
+    }
+});
