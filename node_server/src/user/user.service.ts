@@ -1,8 +1,9 @@
 import { Knex } from "knex";
 import { RedisClientType } from "redis";
 import { User } from "../../models/dbModels";
+import { RedisUser, UserFinancialStatus } from "../../models/models";
 import { UserServiceHelper } from "../../models/serviceModels";
-import { BadRequestError, UnauthorizedError } from "../utils/error";
+import { InternalServerError, UnauthorizedError } from "../utils/error";
 import gameConfig from "../utils/gameConfig";
 
 export default class UserService implements UserServiceHelper {
@@ -10,48 +11,17 @@ export default class UserService implements UserServiceHelper {
     private readonly knex: Knex,
     private readonly redis: RedisClientType
   ) {}
-  getSavings = async (userId: number): Promise<number> => {
-    await this.receiveSalary(userId);
-    if (await this.redis.exists(`money-${userId}`)) {
-      return +(await this.redis.get(`money-${userId}`));
-    }
-    const { money } = await this.knex<User>("user").select("money").where("id", userId)[0];
-    // will not throw error if money = 0
-    if (money === undefined) throw new BadRequestError();
-    await this.redis.setEx(`money-${userId}`, 60, money);
-    return money;
+  private getRedisUser = async (userId: number): Promise<RedisUser> => {
+    return JSON.parse(await this.redis.get(`${userId}`)) ?? ({} as RedisUser);
   };
-
-  receiveSalary = async (userId: number): Promise<boolean> => {
-    const query = this.knex("user")
-      .select(
-        this.knex.raw(`EXTRACT(EPOCH FROM (NOW() - updated_at)) as "elapsedSeconds"`),
-        "money",
-        "total_money"
-      )
-      .where("id", userId)
-      .first();
-
-    const { elapsedSeconds, total_money, money } = await query;
-
-    if (!elapsedSeconds && elapsedSeconds !== 0) throw new UnauthorizedError();
-    const earning_rate = await this.getEarningRate(userId);
-    const earnedMoney = elapsedSeconds * earning_rate;
-    const updatedSavings = +money + earnedMoney;
-    await this.knex("user")
-      .update({
-        money: updatedSavings,
-        total_money: total_money + earnedMoney,
-        updated_at: this.knex.fn.now(),
-      })
-      .where("id", userId);
-    await this.redis.setEx(`money-${userId}`, 60, updatedSavings + "");
-    return true;
+  private validateRedisUser = async (user: RedisUser): Promise<boolean> => {
+    const { money, totalMoney, earningRate, lastUpdated } = user;
+    // simpler way to except the falsy expression when values === 0
+    return !(money < 0 || totalMoney < 0 || earningRate < 0 || !lastUpdated);
   };
-  getEarningRate = async (userId: number): Promise<number> => {
-    if (await this.redis.exists(`salary-${userId}`)) {
-      return +(await this.redis.get(`salary-${userId}`));
-    }
+  private getEarningRate = async (userId: number): Promise<number> => {
+    const user = await this.getRedisUser(userId);
+    if (user.earningRate) return user.earningRate;
     // select slime id and earn rate multiplier of it's type
     const subquery = this.knex("slime")
       .select("slime.id as slime_id", "slime_type.earn_rate_multiplier")
@@ -72,7 +42,79 @@ export default class UserService implements UserServiceHelper {
       .join("food", "food.id", "slime_food.food_id")
       .join("slime", "slime.id", "slime_food.slime_id")
       .first();
-    await this.redis.setEx(`salary-${userId}`, 30 * 60, (userEarnRate || 1) + "");
-    return +userEarnRate || 1;
+    user.earningRate = +userEarnRate || 1;
+    await this.redis.setEx(`${userId}`, 60, JSON.stringify(user));
+    return user.earningRate;
+  };
+  getUserLatestFinancialStatus = async (userId: number): Promise<UserFinancialStatus> => {
+    await this.updateUserFinancialStatus(userId);
+    let user = await this.getRedisUser(userId);
+    if (this.validateRedisUser(user)) {
+      return { id: userId, ...user };
+    }
+    const { money, total_money, updated_at } = await this.knex<User>("user")
+      .select("money", "total_money", "updated_at")
+      .where("id", userId)
+      .first();
+    if (money < 0 || total_money < 0 || !updated_at) throw new UnauthorizedError();
+    const earningRate = await this.getEarningRate(userId);
+    user = { money, totalMoney: total_money, earningRate, lastUpdated: new Date(updated_at) };
+    this.redis.setEx(`${userId}`, 60, JSON.stringify(user));
+    return { id: userId, ...user };
+  };
+  /**
+   * update user's savings in db and redis based on elapsed time from last update
+   * @param userId
+   * @returns true if successfully updated user's info in db and redis
+   */
+  updateUserFinancialStatus = async (userId: number): Promise<boolean> => {
+    const user = await this.getRedisUser(userId);
+    let totalMoney: number,
+      money: number,
+      earningRate: number,
+      lastUpdated: Date,
+      elapsedSeconds: number;
+    const now = new Date();
+    if (!(await this.validateRedisUser(user))) {
+      // get elapsed seconds, money, and total money from db
+      const query = await this.knex("user")
+        .select(
+          // this.knex.raw(`EXTRACT(EPOCH FROM (NOW() - updated_at)) as "elapsedSeconds"`),
+          "updated_at as lastUpdated",
+          "money",
+          "total_money as totalMoney"
+        )
+        .where("id", userId)
+        .first();
+      ({ totalMoney, money, lastUpdated } = query);
+      if (money < 0 || totalMoney < 0) throw new UnauthorizedError();
+      earningRate = await this.getEarningRate(userId);
+      elapsedSeconds = Math.floor((now.getTime() - new Date(lastUpdated).getTime()) / 1000);
+    } else {
+      ({ totalMoney, money, lastUpdated, earningRate } = user);
+      elapsedSeconds = Math.floor((now.getTime() - new Date(user.lastUpdated).getTime()) / 1000);
+    }
+    // update money
+    if (!(elapsedSeconds >= 0 || money >= 0 || totalMoney >= 0 || earningRate >= 0))
+      throw new InternalServerError();
+
+    const earnedMoney = Math.floor(elapsedSeconds * earningRate);
+    // update db
+    const updateMoney = +money + earnedMoney;
+    const updateTotalMoney = +totalMoney + earnedMoney;
+    await this.knex("user")
+      .update({
+        money: updateMoney,
+        total_money: updateTotalMoney,
+        updated_at: now,
+      })
+      .where("id", userId);
+    // update redis
+    user.money = updateMoney;
+    user.totalMoney = updateTotalMoney;
+    user.earningRate = earningRate;
+    user.lastUpdated = now;
+    await this.redis.setEx(`${userId}`, 60, JSON.stringify(user));
+    return true;
   };
 }

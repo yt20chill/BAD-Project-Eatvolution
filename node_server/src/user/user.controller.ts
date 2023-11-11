@@ -1,19 +1,16 @@
 import { Request } from "express";
 import { ControllerResult, UserControllerHelper } from "../../models/controllerModels";
-import { FinancialData } from "../../models/models";
-import { InternalServerError } from "../utils/error";
+import { UserFinancialStatus } from "../../models/models";
 import { AppUtils } from "../utils/utils";
 import UserService from "./user.service";
 
 export default class UserController implements UserControllerHelper {
   constructor(private readonly userService: UserService) {}
-  getFinancialData = async (req: Request): Promise<ControllerResult<FinancialData | null>> => {
+  getFinancialStatus = async (
+    req: Request
+  ): Promise<ControllerResult<UserFinancialStatus | null>> => {
     const userId = req.session.user.id;
-    const money = await this.userService.getSavings(userId);
-    const salaryPerSecond = await this.userService.getEarningRate(userId);
-    // will not throw error if money or salary = 0
-    if ((!money && money !== 0) || (!salaryPerSecond && salaryPerSecond !== 0))
-      throw new InternalServerError();
-    return AppUtils.setServerResponse({ money, salaryPerSecond });
+    const result = await this.userService.getUserLatestFinancialStatus(userId);
+    return AppUtils.setServerResponse(result);
   };
 }
