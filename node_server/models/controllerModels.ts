@@ -20,7 +20,7 @@ export interface FoodControllerHelper {
 }
 
 export interface ShopControllerHelper {
-  getShopItems: Controller<BriefFood[]>;
+  getFoodShop: Controller<BriefFood[]>;
   refreshShop: Controller<BriefFood[]>;
 }
 

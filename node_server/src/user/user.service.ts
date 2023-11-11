@@ -22,11 +22,10 @@ export default class UserService implements UserServiceHelper {
     return money;
   };
 
-  receiveSalary = async (userId: number, trx?: Knex.Transaction): Promise<boolean> => {
-    const client = trx ?? this.knex;
-    const query = client("user")
+  receiveSalary = async (userId: number): Promise<boolean> => {
+    const query = this.knex("user")
       .select(
-        client.raw("EXTRACT(EPOCH FROM (NOW() - updated_at)) as elapsedSeconds"),
+        this.knex.raw(`EXTRACT(EPOCH FROM (NOW() - updated_at)) as "elapsedSeconds"`),
         "money",
         "total_money"
       )
@@ -39,7 +38,7 @@ export default class UserService implements UserServiceHelper {
     const earning_rate = await this.getEarningRate(userId);
     const earnedMoney = elapsedSeconds * earning_rate;
     const updatedSavings = +money + earnedMoney;
-    await client("user")
+    await this.knex("user")
       .update({
         money: updatedSavings,
         total_money: total_money + earnedMoney,

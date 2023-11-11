@@ -134,14 +134,17 @@ describe("AuthController", () => {
       req.session.grant.response.access_token = undefined;
       expect(await authController.oauthLogin(req)).toMatchObject({ success: false, result: null });
     });
-    it.skip("oauth should invalidate login if fetch fails", async () => {
+    it("oauth should invalidate login if fetch fails", async () => {
       req.session.grant.response.access_token = "foo";
-      // global.fetch = jest.fn(await () => Promise.reject(new Error("123")));
+      fetchMock.mockRejectOnce(new Error("mock error"));
       expect(await authController.oauthLogin(req)).toMatchObject({ success: false, result: null });
     });
-    it.skip("oauth should invalidate login if fetch result is invalid", async () => {
+    it("oauth should invalidate login if fetch result is invalid", async () => {
       req.session.grant.response.access_token = "foo";
-      fetchMock.mockResponseOnce("", { status: 500, statusText: "internal server error" });
+      fetchMock.mockResponseOnce(JSON.stringify(""), {
+        status: 500,
+        statusText: "internal server error",
+      });
       expect(await authController.oauthLogin(req)).toMatchObject({ success: false, result: null });
     });
   });

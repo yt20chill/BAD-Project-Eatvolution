@@ -7,14 +7,14 @@ export const app = express();
 export const server = new http.Server(app);
 export const io = new SocketIO.Server(server);
 
-const socketLog: Map<number, SocketIO.Socket> = new Map();
-
 export const socketSession = expressSession({
   secret: env.SESSION_SECRET,
   resave: true,
   saveUninitialized: true,
   cookie: { secure: false },
 });
+
+const socketLog: Map<number, SocketIO.Socket> = new Map();
 
 export const assignSocket = (userId: number, socket: SocketIO.Socket) => {
   if (socketLog.has(userId)) {
@@ -23,4 +23,12 @@ export const assignSocket = (userId: number, socket: SocketIO.Socket) => {
   }
   socket.join(userId.toString());
   socketLog.set(userId, socket);
+};
+
+export const deleteSocket = (userId: number) => {
+  if (socketLog.has(userId)) {
+    const userSocket = socketLog.get(userId);
+    if (userSocket) userSocket.disconnect();
+    socketLog.delete(userId);
+  }
 };

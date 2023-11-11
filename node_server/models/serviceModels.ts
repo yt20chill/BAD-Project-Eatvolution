@@ -31,18 +31,18 @@ export interface SlimeServiceHelper {
   // totalCarbs(slimeId: number): Promise<number>;
   // extraCalories(slimeId: number): Promise<number>;
   slimeData(slimeId: number): Promise<{
-    slime_type: string,
-    calories: number,
-    extra_calories: number,
+    slime_type: string;
+    calories: number;
+    extra_calories: number;
     // protein: number
     // earnRate: number
   }>;
   // calEarnRate(slimeId: number): Promise<number>;
-  evolution(slimeId: number, userID:number): Promise<any>;
+  evolution(slimeId: number, userID: number): Promise<any>;
 }
 
 export interface ShopServiceHelper {
-  getShopItems(userId: number): Promise<BriefFood[]>;
+  getFoodShop(userId: number): Promise<BriefFood[]>;
   updateUniversalShop(): Promise<boolean>;
   updateUserShop(userId: number): Promise<boolean>;
 }
@@ -60,8 +60,8 @@ export interface SlimeCollectionServiceHelper {
 
 export interface UserServiceHelper {
   getSavings(userId: number): Promise<number>;
-  receiveSalary(userId: number, trx?: Knex.Transaction): Promise<boolean>;
-  // calculateEarningRate(userId: number): Promise<number>;
+  receiveSalary(userId: number): Promise<boolean>;
+  getEarningRate(userId: number): Promise<number>;
 }
 
 export interface GameServiceHelper {

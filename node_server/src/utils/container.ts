@@ -10,6 +10,7 @@ import SlimeCollectionService from "../collection/slimeCollection/slimeCollectio
 import knexConfig from "../db/knexfile";
 import FoodController from "../food/food.controller";
 import FoodService from "../food/food.service";
+import GameService from "../game/game.service";
 import ShopController from "../shop/shop.controller";
 import ShopService from "../shop/shop.service";
 import SlimeService from "../slime/slime.service";
@@ -41,5 +42,8 @@ export const slimeCollectionController = new SlimeCollectionController(slimeColl
 
 export const slimeService = new SlimeService(knex);
 export const testController = new TestController(knex);
+
 export const userService = new UserService(knex, redis);
 export const userController = new UserController(userService);
+
+export const gameService = new GameService(knex, redis);

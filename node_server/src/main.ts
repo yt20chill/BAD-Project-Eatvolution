@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import { apiRoutes } from "./api.routes";
+import { authRoutes } from "./auth/auth.routes";
 import { isLoggedInAPI, isLoggedInClient } from "./auth/guard";
 import { grantExpress } from "./auth/oauth";
 import { app, assignSocket, io, server, socketSession } from "./socket";
@@ -10,7 +11,6 @@ import { ApplicationError } from "./utils/error";
 import { logger } from "./utils/logger";
 import { scheduleUpdateShop } from "./utils/scheduleTask";
 import { AppUtils } from "./utils/utils";
-import { authRoutes } from "./auth/auth.routes";
 app.use(express.json());
 app.use(socketSession);
 app.use(grantExpress);

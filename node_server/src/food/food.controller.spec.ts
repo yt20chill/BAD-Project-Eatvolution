@@ -69,7 +69,7 @@ describe("FoodController", () => {
     jest.clearAllMocks();
     await seed(knex);
     req = mockRequest();
-    req.session.userId = 1;
+    req.session.user.id = 1;
     req.body.foodName = "oranges";
     foodService = new FoodService({} as Knex.Knex);
     foodService.insert = jest.fn(async (_userId, _food) => true);

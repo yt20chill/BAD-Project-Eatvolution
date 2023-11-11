@@ -131,3 +131,17 @@ export type FinancialData = {
   money: number;
   salaryPerSecond: number;
 };
+
+export type UpdateUser = {
+  money: number;
+  total_money: number;
+  updated_at: Date;
+};
+
+export type UserFinanceStatus = {
+  id: number;
+  money: number;
+  total_money: number;
+  elapsedSeconds: number;
+  retrieved_at: Date;
+};

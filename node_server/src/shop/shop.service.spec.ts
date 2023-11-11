@@ -14,6 +14,7 @@ describe("ShopService", () => {
   let testUserId: number;
   beforeAll(async () => {
     await knex.migrate.latest();
+    await redis.connect();
   });
   beforeEach(async () => {
     shopService = new ShopService(knex, redis);
@@ -33,31 +34,31 @@ describe("ShopService", () => {
   });
   beforeEach(async () => {});
   // TODO: should test universal and user shop
-  describe("getShopItems", () => {
+  describe("getFoodShop", () => {
     it("get n = foodNumAllowed unique food", async () => {
-      const result = await shopService.getShopItems(testUserId);
+      const result = await shopService.getFoodShop(testUserId);
       expect(result.length).toBe(gameConfig.FOOD_NUM_ALLOWED);
       for (const food of result) {
         expect(food.cost).toBeTruthy();
       }
     });
     it("all food should have a price", async () => {
-      const result = await shopService.getShopItems(testUserId);
+      const result = await shopService.getFoodShop(testUserId);
       expect(result.length).toBe(gameConfig.FOOD_NUM_ALLOWED);
       for (const food of result) {
         expect(food.cost).toBeTruthy();
       }
     });
     it("returns only brief info about the food", async () => {
-      const result = await shopService.getShopItems(testUserId);
+      const result = await shopService.getFoodShop(testUserId);
       for (const food of result) {
         const keys = Object.keys(food);
-        expect(keys).toMatchObject(["id", "name", "calories", "cost"]);
-        expect(keys.length).toBe(4);
+        expect(keys).toMatchObject(["id", "name", "calories", "cost", "emoji"]);
+        expect(keys.length).toBe(5);
       }
     });
     it("result be ordered by cost", async () => {
-      const result = await shopService.getShopItems(testUserId);
+      const result = await shopService.getFoodShop(testUserId);
       for (let i = 1; i < result.length; i++) {
         expect(result[i].cost).toBeGreaterThanOrEqual(result[i - 1].cost);
       }
@@ -68,5 +69,6 @@ describe("ShopService", () => {
   describe("updateUserShop", () => {});
   afterAll(async () => {
     await knex.destroy();
+    await redis.disconnect();
   });
 });
