@@ -28,7 +28,8 @@ export default class UserService implements UserServiceHelper {
       .select("slime.id as slime_id", "slime_type.earn_rate_multiplier")
       .join("user", "slime.owner_id", "user.id")
       .join("slime_type", "slime.slime_type_id", "slime_type.id")
-      .where("user.id", userId);
+      .where("user.id", userId)
+      .andWhere("slime.calories", ">", 0);
     // apply formula: userEarnRate = (protein * earnRateMultiplier * EARNING_RATE_CONSTANT), sum all for all food.protein
     // knex.sum() only supports summing up a single column
     const { userEarnRate } = await this.knex("slime_food")
@@ -43,6 +44,9 @@ export default class UserService implements UserServiceHelper {
       .join("food", "food.id", "slime_food.food_id")
       .join("slime", "slime.id", "slime_food.slime_id")
       .first();
+    // if all slimes calories = 0, userEarnRate = 0
+    if (userEarnRate === undefined) return 0;
+    // if userEarnRate = 0 (i.e. total_protein = 0), userEarnRate = 1
     user.earningRate = +userEarnRate || 1;
     await this.redis.setEx(`${userId}`, 60, JSON.stringify(user));
     return user.earningRate;
