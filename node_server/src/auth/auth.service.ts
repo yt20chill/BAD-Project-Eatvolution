@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { Knex } from "knex";
 import { User } from "models/dbModels";
 import { AuthServiceHelper } from "models/serviceModels";
+import SlimeService from "../slime/slime.service";
 import { BadRequestError } from "../utils/error";
 
 export default class AuthService implements AuthServiceHelper {
@@ -39,6 +40,8 @@ export default class AuthService implements AuthServiceHelper {
       const createUser = await this.knex("user")
         .insert({ username: username, hash_password: await this.hashPassword(newUser.password) })
         .returning("id");
+      const slimeService = new SlimeService(this.knex);
+      await slimeService.createSlime(createUser[0].id);
       return createUser[0].id;
     }
   };

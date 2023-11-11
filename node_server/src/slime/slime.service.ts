@@ -1,11 +1,20 @@
 import { Knex } from "knex";
 import { SlimeServiceHelper } from "models/serviceModels";
+import { SlimeType } from "../../models/dbModels";
+import { InternalServerError } from "../utils/error";
 
 export default class SlimeService implements SlimeServiceHelper {
   constructor(private readonly knex: Knex) {}
-
-  getAllSlimeType = async (): Promise<any> => {
-    const slimeTypes = await this.knex("slime_type").select("id", "name");
+  createSlime = async (userId: number): Promise<void> => {
+    const slimeTypes = await this.getAllSlimeType();
+    const balanceTypeId = slimeTypes.find((slimeType) => slimeType.name === "Balance")?.id;
+    if (!balanceTypeId) throw new InternalServerError("Balance slime type not found");
+    await this.knex("slime").insert({ owner_id: userId, slime_type_id: balanceTypeId });
+    return;
+  };
+  //TODO: change the output to Map<name, id>
+  getAllSlimeType = async (): Promise<Pick<SlimeType, "id" | "name">[]> => {
+    const slimeTypes = await this.knex<SlimeType>("slime_type").select("id", "name");
     return slimeTypes;
   };
 
