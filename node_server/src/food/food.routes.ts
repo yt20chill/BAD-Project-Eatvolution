@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { foodController } from "../utils/container";
+import { foodController, gameController } from "../utils/container";
 import { AppUtils } from "../utils/utils";
 
 export const foodRoutes = Router();
 
-foodRoutes.post("/food", AppUtils.exceptionWrapper(foodController.insertFood));
+foodRoutes.post("/", AppUtils.exceptionWrapper(foodController.insertFood));
+foodRoutes.put("/", AppUtils.exceptionWrapper(gameController.purchaseFood));
