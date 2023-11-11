@@ -3,6 +3,7 @@ import { RedisClientType } from "redis";
 import { User } from "../../models/dbModels";
 import { RedisUser, UserFinancialStatus } from "../../models/models";
 import { UserServiceHelper } from "../../models/serviceModels";
+import DbUtils from "../utils/dbUtils";
 import { InternalServerError, UnauthorizedError } from "../utils/error";
 import gameConfig from "../utils/gameConfig";
 
@@ -78,21 +79,16 @@ export default class UserService implements UserServiceHelper {
     if (!(await this.validateRedisUser(user))) {
       // get elapsed seconds, money, and total money from db
       const query = await this.knex("user")
-        .select(
-          // this.knex.raw(`EXTRACT(EPOCH FROM (NOW() - updated_at)) as "elapsedSeconds"`),
-          "updated_at as lastUpdated",
-          "money",
-          "total_money as totalMoney"
-        )
+        .select("updated_at", "money", "total_money as totalMoney")
         .where("id", userId)
         .first();
-      ({ totalMoney, money, lastUpdated } = query);
+      ({ totalMoney, money } = query);
       if (money < 0 || totalMoney < 0) throw new UnauthorizedError();
       earningRate = await this.getEarningRate(userId);
-      elapsedSeconds = Math.floor((now.getTime() - new Date(lastUpdated).getTime()) / 1000);
+      elapsedSeconds = DbUtils.calculateElapsedTimeInSeconds(query, now);
     } else {
       ({ totalMoney, money, lastUpdated, earningRate } = user);
-      elapsedSeconds = Math.floor((now.getTime() - new Date(user.lastUpdated).getTime()) / 1000);
+      elapsedSeconds = DbUtils.calculateElapsedTimeInSeconds({ updated_at: lastUpdated }, now);
     }
     // update money
     if (!(elapsedSeconds >= 0 || money >= 0 || totalMoney >= 0 || earningRate >= 0))

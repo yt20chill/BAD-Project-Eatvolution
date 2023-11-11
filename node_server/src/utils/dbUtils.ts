@@ -58,12 +58,16 @@ export default class DbUtils {
   /**
    * calculate elapsed time in seconds from last update
    * @param input Objects that have updated_at field
-   * @returns elapsed time in seconds from last update
+   * @param endDate time of which interval ends. Default to now
+   * @returns elapsed time in seconds from last update to endDate
    */
-  static calculateElapsedTimeInSeconds = (input: Record<"updated_at", string | Date>): number => {
+  static calculateElapsedTimeInSeconds = (
+    input: Record<"updated_at", string | Date>,
+    endTime = new Date()
+  ): number => {
     if (!input.updated_at) throw new Error("updated_at is missing");
     const updatedAt = new Date(input.updated_at);
-    return Math.floor((Date.now() - updatedAt.getTime()) / 1000);
+    return Math.floor((endTime.getTime() - updatedAt.getTime()) / 1000);
   };
 }
 
