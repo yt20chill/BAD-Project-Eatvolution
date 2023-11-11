@@ -46,4 +46,4 @@ export const testController = new TestController(knex);
 export const userService = new UserService(knex, redis);
 export const userController = new UserController(userService);
 
-export const gameService = new GameService(knex, redis);
+export const gameService = new GameService(knex, redis, shopService);
