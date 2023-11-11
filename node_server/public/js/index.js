@@ -1,62 +1,124 @@
 import { GooCursor } from './cursor.js';
 
-const signupForm = document.querySelector('.the-form');
+const signupForm = document.getElementById('signUP_form');
 
 const loginform = document.getElementById('login_form');
+// window.login = async (e) => {
+//     const email = loginform.email.value
+//     const password = loginform.password.value
 
-loginform.addEventListener('submit', async (e) => {
-    e.preventDefault()
-    const email = e.target.email.value
-    const password = e.target.password.value
+//     const body = {
+//         username: email,
+//         password: password,
+//     }
 
-    const body = {
-        username: email,
-        password: password,
-    }
+//     const res = await fetch("/auth/login", {
+//         method: "POST",
+//         body: JSON.stringify(body),
+//         headers: {
+//             "Content-type": "application/json"
+//         }
+//     })
+//     const data = await res.json() // { success: true, result:null }
+//     console.log(data)
+//     if (!res.ok) {
+//         alert("login fail")
+//         return
+//     } else {
+//         window.location = "/user"
+//     }
+// }
+try {
+    loginform.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        const email = e.target.email.value
+        const password = e.target.password.value
 
-    const res = await fetch("/auth/login", {
-        method: "POST",
-        body: JSON.stringify(body),
-        headers: {
-            "Content-type": "application/json"
+        const body = {
+            username: email,
+            password: password,
+        }
+
+        const res = await fetch("/auth/login", {
+            method: "POST",
+            body: JSON.stringify(body),
+            headers: {
+                "Content-type": "application/json"
+            }
+        })
+        const data = await res.json() // { success: true, result:null }
+        console.log(data)
+        if (!res.ok) {
+            alert("login fail")
+            return
+        } else {
+            window.location = "/user"
         }
     })
-    const data = await res.json() // { success: true, result:null }
-    if (!res.ok) {
-        alert("login fail")
-        return
-    } else {
-        window.location = "/user/index.html"
-    }
-})
+} catch (error) {
+    console.error(error)
+}
 
-signupForm.addEventListener('submit', async (e) => {
-    e.preventDefault()
-    const email = e.target.email.value
-    const password = e.target.password.value
-    const repassword = e.target.repassword.value
+// window.signup = async (e) => {
+//     const email = signupForm.email.value
+//     const password = signupForm.password.value
+//     const repassword = signupForm.repassword.value
 
-    const body = {
-        username: email,
-        password: password,
-        confirmPassword: repassword
-    }
+//     const body = {
+//         username: email,
+//         password: password,
+//         confirmPassword: repassword
+//     }
+//     console.dir(body);
+//     const res = await fetch("/auth/signup", {
+//         method: "POST",
+//         body: JSON.stringify(body),
+//         headers: {
+//             "Content-type": "application/json"
+//         }
+//     })
+//     const data = await res.json() // { success: true, result:null }
+//     console.log(data)
+//     if (!res.ok) {
+//         alert("signup fail")
+//         return
+//     } else {
+//         window.location = "/user/index.html"
+//     }
+// }
+try {
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        const email = e.target.email.value
+        const password = e.target.password.value
+        const repassword = e.target.repassword.value
 
-    const res = await fetch("/auth/signup", {
-        method: "POST",
-        body: JSON.stringify(body),
-        headers: {
-            "Content-type": "application/json"
+        const body = {
+            username: email,
+            password: password,
+            confirmPassword: repassword
+        }
+        console.dir(body);
+        const res = await fetch("/auth/signup", {
+            method: "POST",
+            body: JSON.stringify(body),
+            headers: {
+                "Content-type": "application/json"
+            }
+        })
+        const data = await res.json() // { success: true, result:null }
+        console.log(data)
+        if (!res.ok) {
+            alert("signup fail")
+            return
+        } else {
+            window.location = "/user/index.html"
         }
     })
-    const data = await res.json() // { success: true, result:null }
-    if (!res.ok) {
-        alert("signup fail")
-        return
-    } else {
-        window.location = "/user/index.html"
-    }
-})
+} catch (error) {
+    console.error(error)
+}
+
 
 
 const cursorEl = document.querySelector('.cursor');

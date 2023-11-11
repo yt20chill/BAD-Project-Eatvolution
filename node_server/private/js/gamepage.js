@@ -164,3 +164,16 @@ document.getElementById("logout").addEventListener("click", async function (e) {
         console.error('Logout failed.');
     }
 });
+
+
+window.onload = async () => {
+    // get coins
+    const res = await fetch("/api/user/finance");
+    // if (!res.ok) 
+    const { success, result } = await res.json();
+    console.log(result);
+
+    setInterval(addMoneyFunction, 1000) //<< add money each second
+
+    //add money function: change the inner text of where the coin is display
+}
