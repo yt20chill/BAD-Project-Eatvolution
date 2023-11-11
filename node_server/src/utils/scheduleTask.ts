@@ -15,7 +15,7 @@ export const scheduleUpdateShop = async () =>
     }
   });
 
-export const scheduleUpdateUserSavings = async () =>
+export const scheduleUpdateUsers = async () =>
   schedule.scheduleJob(gameConfig.MONEY_UPDATE_SCHEDULE, async () => {
     try {
       await gameService.updateAllUsers();
