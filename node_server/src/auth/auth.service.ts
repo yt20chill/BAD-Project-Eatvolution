@@ -41,7 +41,7 @@ export default class AuthService implements AuthServiceHelper {
         .insert({ username: username, hash_password: await this.hashPassword(newUser.password) })
         .returning("id");
       const slimeService = new SlimeService(this.knex);
-      await slimeService.createSlime(createUser[0].id);
+      await slimeService.create(createUser[0].id);
       return createUser[0].id;
     }
   };

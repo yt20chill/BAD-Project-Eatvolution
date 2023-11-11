@@ -15,7 +15,6 @@ import GameService from "../game/game.service";
 import ShopController from "../shop/shop.controller";
 import ShopService from "../shop/shop.service";
 import SlimeService from "../slime/slime.service";
-import TestController from "../slime/test.controller";
 import UserController from "../user/user.controller";
 import UserService from "../user/user.service";
 import { env } from "./env";
@@ -42,7 +41,6 @@ export const slimeCollectionService = new SlimeCollectionService(knex);
 export const slimeCollectionController = new SlimeCollectionController(slimeCollectionService);
 
 export const slimeService = new SlimeService(knex);
-export const testController = new TestController(knex);
 
 export const userService = new UserService(knex, redis);
 export const userController = new UserController(userService);
