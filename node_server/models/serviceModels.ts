@@ -1,4 +1,3 @@
-import { Knex } from "knex";
 import {
   BriefFood,
   ExportSlimeCollection,
@@ -67,6 +66,6 @@ export interface UserServiceHelper {
 
 export interface GameServiceHelper {
   updateAllUsers(): Promise<boolean>;
-  purchaseFood(userId: number, foodId: number, knex?: Knex): Promise<boolean>;
-  purchaseItem(userId: number, itemId: number, knex?: Knex): Promise<boolean>;
+  purchaseFood(userId: number, foodId: number): Promise<boolean>;
+  purchaseCustomFood(userId: number, itemId: number): Promise<boolean>;
 }
