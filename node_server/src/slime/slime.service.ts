@@ -7,15 +7,18 @@ export default class SlimeService implements SlimeServiceHelper {
   constructor(private readonly knex: Knex) {}
   createSlime = async (userId: number): Promise<void> => {
     const slimeTypes = await this.getAllSlimeType();
-    const balanceTypeId = slimeTypes.find((slimeType) => slimeType.name === "Balance")?.id;
+    const balanceTypeId = slimeTypes.get("Balance");
     if (!balanceTypeId) throw new InternalServerError("Balance slime type not found");
     await this.knex("slime").insert({ owner_id: userId, slime_type_id: balanceTypeId });
     return;
   };
-  //TODO: change the output to Map<name, id>
-  getAllSlimeType = async (): Promise<Pick<SlimeType, "id" | "name">[]> => {
+  getAllSlimeType = async (): Promise<Map<string, string>> => {
     const slimeTypes = await this.knex<SlimeType>("slime_type").select("id", "name");
-    return slimeTypes;
+    return slimeTypes.reduce((acc, slimeType) => {
+      const { name, id } = slimeType;
+      acc.set(name, id);
+      return acc;
+    }, new Map<string, string>());
   };
 
   totalMacroNutrients = async (
