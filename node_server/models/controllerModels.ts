@@ -1,5 +1,10 @@
 import { Request } from "express";
-import { BriefFood, ExportFoodCollection, ExportSlimeCollection, FinancialData } from "./models";
+import {
+  BriefFood,
+  ExportFoodCollection,
+  ExportSlimeCollection,
+  UserFinancialStatus,
+} from "./models";
 
 export type Controller<ResultType = null> = (req: Request) => Promise<ControllerResult<ResultType>>;
 
@@ -33,7 +38,7 @@ export interface SlimeCollectionControllerHelper {
 }
 
 export interface UserControllerHelper {
-  getFinancialData: Controller<FinancialData>;
+  getFinancialStatus: Controller<UserFinancialStatus>;
 }
 
 export interface SlimeControllerHelper {

@@ -2,8 +2,8 @@ import { Food } from "./dbModels";
 
 declare module "express-session" {
   interface SessionData {
-    user: { id: number; username: string };
-    grant: Grant;
+    user?: { id: number; username: string };
+    grant?: Grant;
   }
 }
 
@@ -127,21 +127,19 @@ export interface ExportSlimeCollection {
   locked: SlimeCollection[];
 }
 
-export type FinancialData = {
-  money: number;
-  salaryPerSecond: number;
-};
-
-export type UpdateUser = {
+export type UpdateDbUser = {
   money: number;
   total_money: number;
   updated_at: Date;
 };
 
-export type UserFinanceStatus = {
-  id: number;
+export type RedisUser = {
   money: number;
-  total_money: number;
-  elapsedSeconds: number;
-  retrieved_at: Date;
+  totalMoney: number;
+  earningRate: number;
+  lastUpdated: Date;
 };
+
+export interface UserFinancialStatus extends RedisUser {
+  id: number;
+}

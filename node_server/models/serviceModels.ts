@@ -5,6 +5,7 @@ import {
   FoodCollection,
   FoodCollectionIds,
   InsertFood,
+  UserFinancialStatus,
 } from "./models";
 
 export interface AuthServiceHelper {
@@ -59,9 +60,8 @@ export interface SlimeCollectionServiceHelper {
 }
 
 export interface UserServiceHelper {
-  getSavings(userId: number): Promise<number>;
-  receiveSalary(userId: number): Promise<boolean>;
-  getEarningRate(userId: number): Promise<number>;
+  getUserLatestFinancialStatus(userId: number): Promise<UserFinancialStatus>;
+  updateUserFinancialStatus(userId: number): Promise<boolean>;
 }
 
 export interface GameServiceHelper {
