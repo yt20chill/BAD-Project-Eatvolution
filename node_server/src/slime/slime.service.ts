@@ -14,7 +14,15 @@ export default class SlimeService implements SlimeServiceHelper {
     const slimeTypes = await this.getAllTypes();
     const balanceTypeId = slimeTypes.get("Balance");
     if (!balanceTypeId) throw new InternalServerError("Balance slime type not found");
-    await this.knex("slime").insert({ owner_id: userId, slime_type_id: balanceTypeId });
+    const { max_calories } = await this.knex<SlimeType>("slime_type")
+      .select("max_calories")
+      .where("id", balanceTypeId)
+      .first();
+    await this.knex("slime").insert({
+      owner_id: userId,
+      slime_type_id: balanceTypeId,
+      calories: max_calories,
+    });
     return;
   };
   feed = async (slimeId: number, foodId: number): Promise<void> => {
