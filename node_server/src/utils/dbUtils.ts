@@ -69,6 +69,13 @@ export default class DbUtils {
     const updatedAt = new Date(input.updated_at);
     return Math.floor((endTime.getTime() - updatedAt.getTime()) / 1000);
   };
+  static convertStringToNumber = <T = unknown>(dbObj: Record<string, any>): T => {
+    const result = {} as T;
+    for (const [key, value] of Object.entries(dbObj)) {
+      result[key] = isNaN(+value) ? value : +value;
+    }
+    return result;
+  };
 }
 
 type T = Omit<Food, GeneralOmitFields> | "class";
