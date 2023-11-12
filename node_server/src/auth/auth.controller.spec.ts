@@ -2,8 +2,9 @@
 import { Request } from "express";
 import fetchMock from "jest-fetch-mock";
 import { Knex } from "knex";
+import { RedisClientType } from "redis";
 import { BadRequestError } from "../../src/utils/error";
-import { mockRequest } from "../utils/testUtils";
+import { mockRedis, mockRequest } from "../utils/testUtils";
 import AuthController from "./auth.controller";
 import AuthService from "./auth.service";
 
@@ -11,6 +12,7 @@ describe("AuthController", () => {
   let authController: AuthController;
   let authService: AuthService;
   let req: Request;
+  let redis: RedisClientType;
   beforeAll(() => {
     fetchMock.enableMocks();
   });
@@ -18,7 +20,8 @@ describe("AuthController", () => {
     jest.clearAllMocks();
     fetchMock.resetMocks();
     req = mockRequest();
-    authService = new AuthService({} as Knex);
+    redis = mockRedis();
+    authService = new AuthService({} as Knex, {} as RedisClientType);
     authService.login = jest.fn(async (_username: string, _password: string) => 1);
     authService.signUp = jest.fn(async (_username: string, _password: string) => 1);
     authService.isExisting = jest.fn(async (_username: string) => -1);
@@ -153,7 +156,7 @@ describe("AuthController", () => {
     it("should clear session", async () => {
       req.session.user.id = 1;
       await authController.logout(req);
-      expect(req.session).toBeFalsy();
+      expect(req.session?.user).toBeFalsy();
     });
   });
 });

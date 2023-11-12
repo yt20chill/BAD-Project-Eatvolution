@@ -1,5 +1,6 @@
 import {
   BriefFood,
+  ExportSlime,
   ExportSlimeCollection,
   FoodCollection,
   FoodCollectionIds,
@@ -23,7 +24,7 @@ export interface FoodServiceHelper {
 
 export interface SlimeServiceHelper {
   create(userId: number): Promise<void>;
-  feed(slimeId: number, foodId: number): Promise<void>;
+  feed(userId: number, slimeId: number, foodId: number): Promise<ExportSlime>;
 }
 
 export interface ShopServiceHelper {

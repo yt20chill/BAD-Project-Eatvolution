@@ -193,7 +193,7 @@ export default class FoodService implements FoodServiceHelper {
       .first();
     if (!slime_id) throw new InternalServerError("user has no slime");
     const slimeService = new SlimeService(this.knex, this.redis);
-    await slimeService.feed(slime_id, foodId);
+    await slimeService.feed(userId, slime_id, foodId);
   };
   private unlockFoodCollection = async (userId: number, foodId: number): Promise<void> => {
     const foodCollectionService = new FoodCollectionService(this.knex);

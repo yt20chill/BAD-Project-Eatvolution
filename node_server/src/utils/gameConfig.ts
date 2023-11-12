@@ -12,4 +12,5 @@ export default class GameConfig {
   static readonly CUSTOM_FOOD_PRICE = 100000;
   static readonly INITIAL_MONEY = 10000;
   static readonly INITIAL_CALORIES = 0;
+  static readonly MIN_FOOD_TO_EVOLVE = 10;
 }
