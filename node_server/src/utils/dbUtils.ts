@@ -3,6 +3,7 @@ import fs from "fs";
 import { Food } from "models/dbModels";
 import { CnItem, GeneralOmitFields, InsertFood } from "models/models";
 
+//TODO: change all static methods to normal, and export util in container
 export default class DbUtils {
   /**
    * read csv file and convert the data into seed-able objects
@@ -53,6 +54,20 @@ export default class DbUtils {
       food[key.replace(unitRegex, "")] = item[key] / normalizeFactor;
     }
     return food;
+  };
+  /**
+   * calculate elapsed time in seconds from last update
+   * @param input Objects that have updated_at field
+   * @param endDate time of which interval ends. Default to now
+   * @returns elapsed time in seconds from last update to endDate
+   */
+  static calculateElapsedTimeInSeconds = (
+    input: Record<"updated_at", string | Date>,
+    endTime = new Date()
+  ): number => {
+    if (!input.updated_at) throw new Error("updated_at is missing");
+    const updatedAt = new Date(input.updated_at);
+    return Math.floor((endTime.getTime() - updatedAt.getTime()) / 1000);
   };
 }
 

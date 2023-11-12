@@ -150,17 +150,14 @@ export default class ShopService implements ShopServiceHelper {
    *
    * @param userId
    * @param foodId
-   * @returns food price if food exists in shop, otherwise throw BadRequestError
+   * @returns food price if food exists in shop, custom food price if food is custom, otherwise throw BadRequestError
    */
   getFoodCost = async (userId: number, foodId: number): Promise<number> => {
     const foodShop = await this.getFoodShop(userId);
     const food = foodShop.find((food) => food.id === foodId);
-    if (!food) throw new BadRequestError();
-    return food.cost;
-  };
-  getItemCost = async (itemId: number): Promise<number> => {
-    const item = await this.knex("item").select("cost").where("id", itemId).first();
-    if (!item) throw new BadRequestError();
-    return item.cost;
+    const isCustomFood =
+      (await this.knex<Food>("food").select("cost").where("id", foodId).first()).cost === null;
+    if (!food && !isCustomFood) throw new BadRequestError("food doesn't exists in shop");
+    return isCustomFood ? gameConfig.CUSTOM_FOOD_PRICE : food.cost;
   };
 }

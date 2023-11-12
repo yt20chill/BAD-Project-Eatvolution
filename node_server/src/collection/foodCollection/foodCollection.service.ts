@@ -15,20 +15,20 @@ export default class FoodCollectionService implements FoodCollectionServiceHelpe
     return unlockedFood.reduce(
       (acc: FoodCollectionIds, food) => {
         if (food.isCustom) {
-          acc.custom.push(food.id);
+          acc.custom.add(food.id);
         } else {
-          acc.universal.push(food.id);
+          acc.universal.add(food.id);
         }
         return acc;
       },
-      { universal: [], custom: [] }
+      { universal: new Set<number>(), custom: new Set<number>() }
     );
   };
   getAllFoodIds = async (
     userId: number
   ): Promise<{ unlockedIds: FoodCollectionIds; lockedIds: FoodCollectionIds }> => {
     const unlockedFoodIds = await this.getUnlockedFoodIds(userId);
-    const allUnlockedFoodIds = unlockedFoodIds.universal.concat(unlockedFoodIds.custom);
+    const allUnlockedFoodIds = [...unlockedFoodIds.custom, ...unlockedFoodIds.universal];
     const lockedFood = await this.knex("food")
       .select(
         "id",
@@ -36,16 +36,23 @@ export default class FoodCollectionService implements FoodCollectionServiceHelpe
       )
       .whereNotIn("id", allUnlockedFoodIds);
     const lockedFoodIds = lockedFood.reduce(
-      (acc, food) => {
+      (acc: FoodCollectionIds, food) => {
         if (food.isCustom) {
-          acc.custom.push(food.id);
+          acc.custom.add(food.id);
         } else {
-          acc.universal.push(food.id);
+          acc.universal.add(food.id);
         }
         return acc;
       },
-      { universal: [], custom: [] } as FoodCollectionIds
+      { universal: new Set<number>(), custom: new Set<number>() }
     );
     return { unlockedIds: unlockedFoodIds, lockedIds: lockedFoodIds };
+  };
+  unlock = async (userId: number, foodId: number): Promise<void> => {
+    const { universal, custom } = await this.getUnlockedFoodIds(userId);
+    // if already unlocked
+    if (universal.has(foodId) || custom.has(foodId)) return;
+    await this.knex("user_food_collection").insert({ user_id: userId, food_id: foodId });
+    return;
   };
 }

@@ -1,5 +1,5 @@
 id,name,description,max_calories,bMR_multiplier,earn_rate_multiplier
 dd5ef4d7-af75-4a3a-a300-424061737ef5,Balance,The basic form of slime,500,1,1
 8ada01b2-b723-46ff-8de5-ebaea4f7dd20,Keto,Fat burner,800,1.2,1.5
-acbbe264-875c-48b4-9d0b-b428f55951a5,Skinny Fat,Appear to be thin but has a high proporiton of body fat,400,0.8,0.8
+acbbe264-875c-48b4-9d0b-b428f55951a5,Skinny Fat,Appear to be thin but has a high proportion of body fat,400,0.8,0.8
 4c55de9d-ce14-42ef-bcb1-064bd4f910f9,Obese,Eat too much,500,0.5,0.5

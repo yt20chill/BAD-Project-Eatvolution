@@ -3,6 +3,7 @@ import { RedisClientType } from "redis";
 import { User } from "../../models/dbModels";
 import { RedisUser, UserFinancialStatus } from "../../models/models";
 import { UserServiceHelper } from "../../models/serviceModels";
+import DbUtils from "../utils/dbUtils";
 import { InternalServerError, UnauthorizedError } from "../utils/error";
 import gameConfig from "../utils/gameConfig";
 
@@ -27,7 +28,8 @@ export default class UserService implements UserServiceHelper {
       .select("slime.id as slime_id", "slime_type.earn_rate_multiplier")
       .join("user", "slime.owner_id", "user.id")
       .join("slime_type", "slime.slime_type_id", "slime_type.id")
-      .where("user.id", userId);
+      .where("user.id", userId)
+      .andWhere("slime.calories", ">", 0);
     // apply formula: userEarnRate = (protein * earnRateMultiplier * EARNING_RATE_CONSTANT), sum all for all food.protein
     // knex.sum() only supports summing up a single column
     const { userEarnRate } = await this.knex("slime_food")
@@ -42,6 +44,9 @@ export default class UserService implements UserServiceHelper {
       .join("food", "food.id", "slime_food.food_id")
       .join("slime", "slime.id", "slime_food.slime_id")
       .first();
+    // if all slimes calories = 0, userEarnRate = 0
+    if (userEarnRate === undefined) return 0;
+    // if userEarnRate = 0 (i.e. total_protein = 0), userEarnRate = 1
     user.earningRate = +userEarnRate || 1;
     await this.redis.setEx(`${userId}`, 60, JSON.stringify(user));
     return user.earningRate;
@@ -78,21 +83,16 @@ export default class UserService implements UserServiceHelper {
     if (!(await this.validateRedisUser(user))) {
       // get elapsed seconds, money, and total money from db
       const query = await this.knex("user")
-        .select(
-          // this.knex.raw(`EXTRACT(EPOCH FROM (NOW() - updated_at)) as "elapsedSeconds"`),
-          "updated_at as lastUpdated",
-          "money",
-          "total_money as totalMoney"
-        )
+        .select("updated_at", "money", "total_money as totalMoney")
         .where("id", userId)
         .first();
-      ({ totalMoney, money, lastUpdated } = query);
+      ({ totalMoney, money } = query);
       if (money < 0 || totalMoney < 0) throw new UnauthorizedError();
       earningRate = await this.getEarningRate(userId);
-      elapsedSeconds = Math.floor((now.getTime() - new Date(lastUpdated).getTime()) / 1000);
+      elapsedSeconds = DbUtils.calculateElapsedTimeInSeconds(query, now);
     } else {
       ({ totalMoney, money, lastUpdated, earningRate } = user);
-      elapsedSeconds = Math.floor((now.getTime() - new Date(user.lastUpdated).getTime()) / 1000);
+      elapsedSeconds = DbUtils.calculateElapsedTimeInSeconds({ updated_at: lastUpdated }, now);
     }
     // update money
     if (!(elapsedSeconds >= 0 || money >= 0 || totalMoney >= 0 || earningRate >= 0))

@@ -1,4 +1,4 @@
-import { Request as ExpressRequest } from "express";
+import { Request } from "express";
 import { ControllerResult, FoodControllerHelper } from "models/controllerModels";
 import { CnItem } from "models/models";
 import DbUtils from "../../src/utils/dbUtils";
@@ -10,7 +10,8 @@ import FoodService from "./food.service";
 export default class FoodController implements FoodControllerHelper {
   constructor(private readonly foodService: FoodService) {}
 
-  insertFood = async (req: ExpressRequest): Promise<ControllerResult<string | null>> => {
+  insertFood = async (req: Request): Promise<ControllerResult<string | null>> => {
+    const userId = req.session.user.id;
     const foodName = req.body.foodName?.trim().toLowerCase();
     if (!foodName) throw new BadRequestError();
     const foodId = await this.foodService.isExisting({ name: foodName });
@@ -26,10 +27,18 @@ export default class FoodController implements FoodControllerHelper {
       if (!food?.name.includes(foodName))
         return AppUtils.setServerResponse<string>(`fail to search ${foodName}`, false);
     }
-    await this.foodService.insert(
-      req.session.user.id,
+    const insertedFoodId = await this.foodService.insert(
+      userId,
       foodId === -1 ? DbUtils.cnItemToInsertFood(food) : foodId
     );
-    return AppUtils.setServerResponse<null>();
+    req.foodId = insertedFoodId;
+    return AppUtils.setServerResponse();
+  };
+  purchaseFood = async (req: Request) => {
+    const userId = req.session.user.id;
+    const foodId = req.foodId;
+    if (!foodId || foodId === -1) throw new BadRequestError();
+    await this.foodService.purchaseFood(userId, foodId);
+    return AppUtils.setServerResponse(null);
   };
 }

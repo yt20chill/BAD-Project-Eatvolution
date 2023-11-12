@@ -9,7 +9,7 @@ declare module "express-session" {
 
 declare module "express" {
   interface Request {
-    //key-value pairs you would like to pass in the middleware to the next middleware
+    foodId?: number;
   }
 }
 
@@ -106,12 +106,12 @@ export interface FoodCollection extends Omit<Food, "cost" | "name" | "created_at
 
 export interface ExportFoodCollection {
   unlocked: { universal: FoodCollection[]; custom: FoodCollection[] };
-  locked: { universal: number[]; custom: number[] };
+  locked: { universal: Set<number>; custom: Set<number> };
 }
 
 export interface FoodCollectionIds {
-  universal: number[];
-  custom: number[];
+  universal: Set<number>;
+  custom: Set<number>;
 }
 
 export interface SlimeCollection {
@@ -143,3 +143,36 @@ export type RedisUser = {
 export interface UserFinancialStatus extends RedisUser {
   id: number;
 }
+
+export type SlimeDetails = {
+  owner_id: number;
+  slime_type_id: string;
+  calories: number;
+  max_calories: number;
+  extra_calories: number;
+  bMR_multiplier: number;
+  earn_rate_multiplier: number;
+  food_count: number;
+  total_protein: number;
+  total_carbs: number;
+  total_fat: number;
+  updated_at: string;
+};
+
+export type EvolutionInfo = {
+  food_count: number;
+  max_calories: number;
+  total_protein: number;
+  total_fat: number;
+  total_carbs: number;
+};
+
+export type ExportSlime = {
+  id: number;
+  owner_username: string;
+  slime_type_name: string;
+  current_calories: number;
+  max_calories: number;
+  extra_calories: number;
+  earn_rate: number;
+};

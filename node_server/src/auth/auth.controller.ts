@@ -40,10 +40,8 @@ export default class AuthController implements AuthControllerHelper {
     const { username, password } = req.body;
     if (typeof username !== "string" || typeof password !== "string") throw new BadRequestError();
     const id = await this.authService.login(username, password);
-    console.log({id})
     if (id === -1) return AppUtils.setServerResponse(null, false);
     req.session.user = { id, username };
-    console.log(req.session.user)
     return AppUtils.setServerResponse(); // return {success: true, result: null}
   };
 

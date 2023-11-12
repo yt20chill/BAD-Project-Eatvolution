@@ -3,11 +3,17 @@ import crypto from "crypto";
 import { Knex } from "knex";
 import { User } from "models/dbModels";
 import { AuthServiceHelper } from "models/serviceModels";
+import { RedisClientType } from "redis";
+import SlimeService from "../slime/slime.service";
 import { BadRequestError } from "../utils/error";
+import GameConfig from "../utils/gameConfig";
 
 export default class AuthService implements AuthServiceHelper {
   private SALT_ROUNDS = 10;
-  constructor(private readonly knex: Knex) {}
+  constructor(
+    private readonly knex: Knex,
+    private readonly redis: RedisClientType
+  ) {}
 
   private hashPassword = async (password: string): Promise<string> => {
     return await bcrypt.hash(password, this.SALT_ROUNDS);
@@ -34,12 +40,14 @@ export default class AuthService implements AuthServiceHelper {
     } else {
       const newUser = {
         username: username,
-        password: password,
+        hash_password: await this.hashPassword(password),
+        money: GameConfig.INITIAL_MONEY,
+        total_money: GameConfig.INITIAL_MONEY,
       };
-      const createUser = await this.knex("user")
-        .insert({ username: username, hash_password: await this.hashPassword(newUser.password) })
-        .returning("id");
-      return createUser[0].id;
+      const { id } = await this.knex("user").insert(newUser).returning("id").first();
+      const slimeService = new SlimeService(this.knex, this.redis);
+      await slimeService.create(id);
+      return id;
     }
   };
 
