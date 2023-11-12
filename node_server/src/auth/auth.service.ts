@@ -44,7 +44,7 @@ export default class AuthService implements AuthServiceHelper {
         money: GameConfig.INITIAL_MONEY,
         total_money: GameConfig.INITIAL_MONEY,
       };
-      const { id } = await this.knex("user").insert(newUser).returning("id").first();
+      const { id } = (await this.knex("user").insert(newUser).returning("id"))[0];
       const slimeService = new SlimeService(this.knex, this.redis);
       await slimeService.create(id);
       return id;
