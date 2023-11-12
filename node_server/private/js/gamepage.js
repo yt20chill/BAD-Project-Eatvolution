@@ -173,6 +173,15 @@ window.onload = async () => {
     const { success, result } = await res.json();
     console.log(result);
 
+    // Update coin balance
+    const coinBalanceElement = document.querySelector('.card-text');
+    coinBalanceElement.textContent = `coin：${result.money}`;
+
+    const addMoneyFunction = () => {
+        result.money++; // Increase the money by 1
+        coinBalanceElement.textContent = `coin：${result.money}`; // Update the coin balance
+    };
+
     setInterval(addMoneyFunction, 1000) //<< add money each second
 
     //add money function: change the inner text of where the coin is display

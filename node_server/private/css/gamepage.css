@@ -33,6 +33,35 @@ body {
     /* 使用 0.5 秒的过渡效果，并添加缓动函数 */
 }
 
+@media (max-width:400px) {
+    #popup {
+        position: fixed;
+        top: 0;
+        left: -150%;
+        /* 初始位置在左侧屏幕外 */
+        width: 300px;
+        height: 200px;
+        background-color: #f1f1f1;
+        transition: left 0.5s ease-in-out;
+        z-index: 9999;
+        /* 使用 0.5 秒的过渡效果，并添加缓动函数 */
+    }
+
+    .slimestable {
+        position: absolute;
+        font-size: large;
+        height: 600px;
+        width: 400px;
+        background-color: blueviolet;
+        border: 5px solid #fafafa;
+        border-radius: 5px;
+    }
+
+    .stable_container {
+        font-size: 10PX;
+    }
+}
+
 #popup.show {
     left: 0;
     /* 弹出后的位置在左侧屏幕内 */
@@ -114,6 +143,7 @@ body {
         margin: 0px;
         padding: 0px;
     }
+
 }
 
 .card-body {
