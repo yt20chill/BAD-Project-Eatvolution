@@ -197,7 +197,7 @@ body {
     display: none;
     /* 初始状态下隐藏 */
     position: fixed;
-    top: 50%;
+    top: 60%;
     left: 50%;
     transform: translate(-50%, -50%);
     /* border: 5px solid #ccc; */
@@ -267,6 +267,10 @@ body {
         grid-template-columns: repeat(3, 1fr);
     }
 
+    .popup-menu {
+        top: 60%;
+    }
+
     .footcontainer {
         height: 900px;
         overflow: scroll;
@@ -279,7 +283,7 @@ body {
     }
 
     .footcontainer {
-        height: 700px;
+        height: 800px;
         overflow: scroll;
         top: 60px;
     }
@@ -496,4 +500,23 @@ body {
 /* 新增的 CSS */
 .backSide {
     transform: rotateY(180deg);
+}
+
+.icon {
+    display: flex;
+    font-size: 60px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-shadow: rgba(0, 0, 0, 0.12) 2px 2px 2px;
+}
+
+/* .emoji-container {
+    position: relative;
+    animation: emojiFall 1s linear;
+} */
+
+.emoji {
+    position: absolute;
+    font-size: 80px;
 }
