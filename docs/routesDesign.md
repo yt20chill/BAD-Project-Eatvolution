@@ -19,10 +19,12 @@
 
 ## food
 `/api/food`
+- PUT: buy general food
+	- expect req.body in json `{ foodId: number }`
+	- return `{ success: boolean, result: Slime }`
 - POST: user custom food/recipe
-	- expect req.body in json `{ user_id, slime_id, recipe: string }`
+	- expect req.body in json `{ foodName: string }`
 	- return `{ success: boolean, result: Slime|error.message }`
-
 
 ## collection
 
@@ -45,7 +47,3 @@
 	- return `{success: boolean, result: BriefFood[]}`
 - `PUT`: refresh shop for user
 	- return `{success: boolean, result: BriefFood[]}`
-
-## slime
-`/api/slime`
-**TO BE FILLED**

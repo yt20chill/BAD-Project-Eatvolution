@@ -15,9 +15,12 @@ export async function seed(knex: Knex): Promise<void> {
     // Deletes ALL existing entries
     await trx("shop").del();
     await trx("user_shop").del();
+    await trx("slime_food").del();
+    await trx("user_food_collection").del();
     await trx("food").del();
     await trx("item").del();
     await trx("category").del();
+    await trx("slime").del();
     await trx("slime_type").del();
     await trx.raw("ALTER SEQUENCE food_id_seq RESTART WITH 1");
     await trx.raw("ALTER SEQUENCE item_id_seq RESTART WITH 1");

@@ -7,10 +7,13 @@ import UserService from "../user/user.service";
 import { logger } from "../utils/logger";
 
 export default class GameService implements GameServiceHelper {
+  private readonly originalKnex: Knex;
   constructor(
-    private knex: Knex,
+    private readonly knex: Knex,
     private readonly redis: RedisClientType
-  ) {}
+  ) {
+    this.originalKnex = knex;
+  }
   private createTransaction = async (): Promise<Knex.Transaction> => {
     const trx = await this.knex.transaction();
     this.knex.bind(trx);
@@ -42,6 +45,8 @@ export default class GameService implements GameServiceHelper {
       logger.error(error);
       await trx.rollback();
       throw error;
+    } finally {
+      this.knex.bind(this.originalKnex);
     }
   };
 }

@@ -1,13 +1,14 @@
 import { Knex } from "knex";
 import { FoodServiceHelper } from "models/serviceModels";
 import { RedisClientType } from "redis";
-import { FoodCollection, InsertFood } from "../../models/models";
+import { ExportSlime, FoodCollection, InsertFood } from "../../models/models";
 import { BadRequestError, InternalServerError } from "../../src/utils/error";
 import { logger } from "../../src/utils/logger";
 import FoodCollectionService from "../collection/foodCollection/foodCollection.service";
 import ShopService from "../shop/shop.service";
 import SlimeService from "../slime/slime.service";
 import UserService from "../user/user.service";
+import DbUtils from "../utils/dbUtils";
 import { env } from "../utils/env";
 
 export default class FoodService implements FoodServiceHelper {
@@ -91,7 +92,7 @@ export default class FoodService implements FoodServiceHelper {
       )
     ).filter((id) => id !== null);
     if (validIds.length === 0) throw new BadRequestError();
-    return await this.knex("food")
+    const foodDetails = await this.knex("food")
       .select<FoodCollection[]>(
         "food.id",
         "food.name as food_name",
@@ -105,11 +106,12 @@ export default class FoodService implements FoodServiceHelper {
         "food.sugar",
         "food.sodium",
         "category.name as category_name",
-        this.knex.raw("CASE WHEN food.cost IS NULL THEN true ELSE false END as isCustom")
+        this.knex.raw(`CASE WHEN food.cost IS NULL THEN true ELSE false END as "isCustom"`)
       )
       .leftJoin("category", "category.id", "food.category_id")
       .whereIn("food.id", validIds)
       .orderBy("food.id");
+    return foodDetails.map((food) => DbUtils.convertStringToNumber(food));
   };
 
   isExisting = async (options: { id?: number; name?: string }): Promise<number> => {
@@ -150,7 +152,7 @@ export default class FoodService implements FoodServiceHelper {
   };
 
   // purchase + feed + unlock food collection
-  purchaseFood = async (userId: number, foodId: number): Promise<void> => {
+  purchaseFood = async (userId: number, foodId: number, slimeId?: number): Promise<ExportSlime> => {
     const shopService = new ShopService(this.knex, this.redis);
     const cost = await shopService.getFoodCost(userId, foodId);
     const moneyAfterPurchase = await this.getMoneyAfterPurchase(userId, cost);
@@ -159,11 +161,12 @@ export default class FoodService implements FoodServiceHelper {
       await this.knex("user")
         .update({ money: moneyAfterPurchase, updated_at: this.knex.fn.now() })
         .where("id", userId);
-      await this.feedSlime(userId, foodId);
+      const slime = await this.feedSlime(userId, foodId, slimeId);
       await this.unlockFoodCollection(userId, foodId);
       await trx.commit();
       //delete user financial status from redis to force it to sync from db
       await this.redis.del(`${userId}`);
+      return slime;
     } catch (error) {
       logger.error(error);
       await trx.rollback();
@@ -181,19 +184,18 @@ export default class FoodService implements FoodServiceHelper {
   private getMoneyAfterPurchase = async (userId: number, cost: number): Promise<number> => {
     const userService = new UserService(this.knex, this.redis);
     const { money } = await userService.getUserLatestFinancialStatus(userId);
-    const moneyAfterPurchase = money - cost;
+    const moneyAfterPurchase = +money - cost;
     if (moneyAfterPurchase < 0) throw new BadRequestError("Insufficient money");
     return moneyAfterPurchase;
   };
-  private feedSlime = async (userId: number, foodId: number): Promise<void> => {
-    // feed the first slime
-    const { slime_id } = await this.knex("slime")
-      .select("id as slime_id")
-      .where("owner_id", userId)
-      .first();
-    if (!slime_id) throw new InternalServerError("user has no slime");
+  private feedSlime = async (
+    userId: number,
+    foodId: number,
+    slimeId?: number
+  ): Promise<ExportSlime> => {
     const slimeService = new SlimeService(this.knex, this.redis);
-    await slimeService.feed(slime_id, foodId);
+    const updatedSlime = await slimeService.feed(userId, foodId, slimeId);
+    return updatedSlime;
   };
   private unlockFoodCollection = async (userId: number, foodId: number): Promise<void> => {
     const foodCollectionService = new FoodCollectionService(this.knex);

@@ -1,5 +1,6 @@
 import {
   BriefFood,
+  ExportSlime,
   ExportSlimeCollection,
   FoodCollection,
   FoodCollectionIds,
@@ -18,12 +19,13 @@ export interface FoodServiceHelper {
   insert(userId: number, food: InsertFood | number): Promise<number>;
   getDetails(...foodIds: Array<number>): Promise<FoodCollection[]>;
   isExisting(options: { id?: number; name?: string }): Promise<number>;
-  purchaseFood(userId: number, foodId: number): Promise<void>;
+  purchaseFood(userId: number, foodId: number): Promise<ExportSlime>;
 }
 
 export interface SlimeServiceHelper {
   create(userId: number): Promise<void>;
-  feed(slimeId: number, foodId: number): Promise<void>;
+  feed(userId: number, foodId: number, slimeId?: number): Promise<ExportSlime>;
+  getExportSlime(userId: number, slimeId?: number): Promise<ExportSlime>;
 }
 
 export interface ShopServiceHelper {

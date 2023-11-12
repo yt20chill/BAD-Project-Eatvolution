@@ -1,6 +1,6 @@
 import { Request } from "express";
 import { ControllerResult, FoodControllerHelper } from "models/controllerModels";
-import { CnItem } from "models/models";
+import { CnItem, ExportSlime } from "models/models";
 import DbUtils from "../../src/utils/dbUtils";
 import { ApplicationError, BadRequestError } from "../../src/utils/error";
 import { AppUtils } from "../../src/utils/utils";
@@ -34,11 +34,11 @@ export default class FoodController implements FoodControllerHelper {
     req.foodId = insertedFoodId;
     return AppUtils.setServerResponse();
   };
-  purchaseFood = async (req: Request) => {
+  purchaseFood = async (req: Request): Promise<ControllerResult<ExportSlime>> => {
     const userId = req.session.user.id;
-    const foodId = req.foodId;
+    const foodId = req.foodId ?? req.body.foodId;
     if (!foodId || foodId === -1) throw new BadRequestError();
-    await this.foodService.purchaseFood(userId, foodId);
-    return AppUtils.setServerResponse(null);
+    const slime = await this.foodService.purchaseFood(userId, foodId);
+    return AppUtils.setServerResponse(slime);
   };
 }
