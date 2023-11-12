@@ -3,6 +3,7 @@ import { RedisClientType } from "redis";
 import { Slime, SlimeType } from "../../models/dbModels";
 import { EvolutionInfo, ExportSlime, SlimeDetails } from "../../models/models";
 import { SlimeServiceHelper } from "../../models/serviceModels";
+import SlimeCollectionService from "../collection/slimeCollection/slimeCollection.service";
 import FoodService from "../food/food.service";
 import DbUtils from "../utils/dbUtils";
 import { BadRequestError, ForbiddenError, InternalServerError } from "../utils/error";
@@ -33,7 +34,7 @@ export default class SlimeService implements SlimeServiceHelper {
       return slimeId;
     }
     const { id } = await this.knex<Slime>("slime").select("id").where("owner_id", userId).first();
-    if (id === undefined) throw new BadRequestError("no slime found");
+    if (id === undefined) throw new BadRequestError("no slime was found");
     return id;
   };
 
@@ -162,7 +163,11 @@ export default class SlimeService implements SlimeServiceHelper {
       updatedSlime.slime_type_id = await this.evolve(updatedEvolutionInfo);
     }
     DbUtils.checkNaN(updatedSlime);
-
+    // unlock slime_type collection
+    if (updatedSlime.slime_type_id && updatedSlime.slime_type_id !== slimeDetails.slime_type_id) {
+      const slimeCollectionService = new SlimeCollectionService(this.knex);
+      await slimeCollectionService.unlockSlimeCollection(userId, updatedSlime.slime_type_id);
+    }
     const trx = await this.createTransaction();
     try {
       await this.knex("slime_food").insert({

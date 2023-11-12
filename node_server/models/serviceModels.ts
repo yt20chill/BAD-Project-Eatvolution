@@ -43,7 +43,8 @@ export interface FoodCollectionServiceHelper {
 }
 
 export interface SlimeCollectionServiceHelper {
-  getSlimeType(userId: number): Promise<ExportSlimeCollection>;
+  getSlimeCollection(userId: number): Promise<ExportSlimeCollection>;
+  unlockSlimeCollection(userId: number, slime_type_id: string): Promise<void>;
 }
 
 export interface UserServiceHelper {
