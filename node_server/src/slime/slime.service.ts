@@ -133,7 +133,7 @@ export default class SlimeService implements SlimeServiceHelper {
       .sum("food.carbohydrates as total_carbs")
       .sum("food.fat as total_fat")
       .count("food.id as food_count")
-      .select("slime.extra_calories as extra_calories")
+      .max("slime.extra_calories as extra_calories")
       .where("slime.id", slimeId)
       .first();
 
@@ -160,7 +160,7 @@ export default class SlimeService implements SlimeServiceHelper {
         "slime_type.description as slime_type_description",
         "slime.calories",
         "slime_type.max_calories",
-        this.knex.raw("slime_type.bMR_multiplier * ? as bMR_rate", [GameConfig.BMR_CONSTANT]),
+        this.knex.raw(`slime_type."bMR_multiplier" * ? as bMR_rate`, [GameConfig.BMR_CONSTANT]),
         "slime.updated_at"
       )
       .join("slime_type", "slime.slime_type_id", "slime_type.id")
@@ -168,7 +168,7 @@ export default class SlimeService implements SlimeServiceHelper {
       .where("slime.id", slimeId)
       .first();
     const evolutionInfo = await this.getEvolutionInfo(slimeId);
-    return { ...slime, ...evolutionInfo, earn_rate: earnRate };
+    return DbUtils.convertStringToNumber({ ...slime, ...evolutionInfo, earn_rate: earnRate });
   };
 
   private evolve = async (info: EvolutionInfo): Promise<string> => {
@@ -214,12 +214,12 @@ export default class SlimeService implements SlimeServiceHelper {
         this.knex.raw(`SUM(food.protein * slime_type.earn_rate_multiplier * ?) as "earnRate"`, [
           GameConfig.EARNING_RATE_CONSTANT,
         ]),
-        "slime.id as slime_id"
+        "slime_food.slime_id"
       )
+      .join("slime", "slime.id", "slime_food.slime_id")
       .join("food", "slime_food.food_id", "food.id")
       .join("slime_type", "slime_type.id", "slime.slime_type_id")
-      .join("slime", "slime.id", "slime_food.slime_id")
-      .groupBy("slime.id");
+      .groupBy("slime_food.slime_id");
     return earnRates.reduce((acc, e) => {
       acc.set(e.slime_id, e.earnRate);
       return acc;
