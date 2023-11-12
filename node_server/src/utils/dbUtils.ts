@@ -72,7 +72,7 @@ export default class DbUtils {
   static convertStringToNumber = <T = unknown>(dbObj: Record<string, any>): T => {
     const result = {} as T;
     for (const [key, value] of Object.entries(dbObj)) {
-      result[key] = isNaN(+value) ? value : +value;
+      result[key] = isNaN(+value) || typeof value !== "string" ? value : +value;
     }
     return result;
   };
