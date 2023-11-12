@@ -12,11 +12,11 @@ export class AppUtils {
         res.json(this.setServerResponse(result.result, result.success));
         return;
       } catch (error) {
-        logger.error(error);
         if (error instanceof ApplicationError) {
           next(error);
           return;
         }
+        logger.error(error);
         next(new InternalServerError());
         return;
       }
@@ -48,6 +48,21 @@ export class AppUtils {
       }
     };
 
+  static nextWrapper =
+    <T>(controller: Controller<T>) =>
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const result = await controller(req);
+        if (result.success) {
+          next();
+          return;
+        }
+        res.json(AppUtils.setServerResponse(result.result, result.success));
+        return;
+      } catch (error) {
+        next(error);
+      }
+    };
   private static timeout = async (milliseconds: number): Promise<any> =>
     new Promise((_, reject) => {
       setTimeout(
