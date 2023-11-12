@@ -19,7 +19,7 @@ export interface FoodServiceHelper {
   insert(userId: number, food: InsertFood | number): Promise<number>;
   getDetails(...foodIds: Array<number>): Promise<FoodCollection[]>;
   isExisting(options: { id?: number; name?: string }): Promise<number>;
-  purchaseFood(userId: number, foodId: number): Promise<void>;
+  purchaseFood(userId: number, foodId: number): Promise<ExportSlime>;
 }
 
 export interface SlimeServiceHelper {

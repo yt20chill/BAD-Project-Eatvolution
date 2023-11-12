@@ -9,3 +9,4 @@ foodRoutes.post(
   AppUtils.nextWrapper(foodController.insertFood),
   AppUtils.exceptionWrapper(foodController.purchaseFood)
 );
+foodRoutes.put("/", AppUtils.exceptionWrapper(foodController.purchaseFood));
