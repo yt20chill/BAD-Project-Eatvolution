@@ -119,7 +119,7 @@ export interface SlimeCollection {
   name: string;
   description: string;
   max_calories: number;
-  bMR_multiplier: number;
+  bmr_multiplier: number;
   earn_rate_multiplier: number;
 }
 export interface ExportSlimeCollection {
@@ -161,7 +161,7 @@ export interface ExportSlime {
   max_calories: number;
   extra_calories: number;
   earn_rate: number;
-  bMR_rate: number;
+  bmr_rate: number;
 }
 
 export interface SlimeDetails extends Omit<ExportSlime, "id" | "current_calories"> {
