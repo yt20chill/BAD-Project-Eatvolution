@@ -9,7 +9,7 @@ declare module "express-session" {
 
 declare module "express" {
   interface Request {
-    //key-value pairs you would like to pass in the middleware to the next middleware
+    foodId?: number;
   }
 }
 

@@ -11,10 +11,13 @@ import UserService from "../user/user.service";
 import { env } from "../utils/env";
 
 export default class FoodService implements FoodServiceHelper {
+  private readonly originalKnex: Knex;
   constructor(
     private readonly knex: Knex,
     private readonly redis: RedisClientType
-  ) {}
+  ) {
+    this.originalKnex = knex;
+  }
   private createTransaction = async (): Promise<Knex.Transaction> => {
     const trx = await this.knex.transaction();
     this.knex.bind(trx);
@@ -42,7 +45,9 @@ export default class FoodService implements FoodServiceHelper {
     } catch (error) {
       logger.error(error.message);
       await trx.rollback();
-      return -1;
+      throw new InternalServerError("failed to insert food to food table");
+    } finally {
+      this.knex.bind(this.originalKnex);
     }
   };
   private insertCustomFood = async (userId: number, foodId: number) => {
@@ -51,9 +56,9 @@ export default class FoodService implements FoodServiceHelper {
       (await this.isCustomFood(foodId)) ||
       (await this.isCustomFoodDuplicated(userId, foodId))
     )
-      return false;
+      return;
     await this.knex("user_custom_food").insert({ food_id: foodId, user_id: userId });
-    return true;
+    return;
   };
   private isCustomFood = async (foodId: number) => {
     return (
@@ -145,13 +150,13 @@ export default class FoodService implements FoodServiceHelper {
   };
 
   // purchase + feed + unlock food collection
-  purchaseFood = async (userId: number, foodId: number): Promise<boolean> => {
+  purchaseFood = async (userId: number, foodId: number): Promise<void> => {
     const shopService = new ShopService(this.knex, this.redis);
     const cost = await shopService.getFoodCost(userId, foodId);
     const moneyAfterPurchase = await this.getMoneyAfterPurchase(userId, cost);
     const trx = await this.createTransaction();
     try {
-      await trx("user")
+      await this.knex("user")
         .update({ money: moneyAfterPurchase, updated_at: this.knex.fn.now() })
         .where("id", userId);
       await this.feedSlime(userId, foodId);
@@ -159,11 +164,12 @@ export default class FoodService implements FoodServiceHelper {
       await trx.commit();
       //delete user financial status from redis to force it to sync from db
       await this.redis.del(`${userId}`);
-      return true;
     } catch (error) {
       logger.error(error);
       await trx.rollback();
-      return false;
+      throw new InternalServerError("failed to purchase food");
+    } finally {
+      this.knex.bind(this.originalKnex);
     }
   };
   /**

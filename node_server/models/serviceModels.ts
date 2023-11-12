@@ -18,7 +18,7 @@ export interface FoodServiceHelper {
   insert(userId: number, food: InsertFood | number): Promise<number>;
   getDetails(...foodIds: Array<number>): Promise<FoodCollection[]>;
   isExisting(options: { id?: number; name?: string }): Promise<number>;
-  purchaseFood(userId: number, foodId: number): Promise<boolean>;
+  purchaseFood(userId: number, foodId: number): Promise<void>;
 }
 
 export interface SlimeServiceHelper {

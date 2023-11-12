@@ -10,7 +10,7 @@ import FoodService from "./food.service";
 export default class FoodController implements FoodControllerHelper {
   constructor(private readonly foodService: FoodService) {}
 
-  insertFood = async (req: Request): Promise<ControllerResult<string | number>> => {
+  insertFood = async (req: Request): Promise<ControllerResult<string | null>> => {
     const userId = req.session.user.id;
     const foodName = req.body.foodName?.trim().toLowerCase();
     if (!foodName) throw new BadRequestError();
@@ -31,12 +31,14 @@ export default class FoodController implements FoodControllerHelper {
       userId,
       foodId === -1 ? DbUtils.cnItemToInsertFood(food) : foodId
     );
-    // this.foodService.purchaseFood(userId, insertedFoodId);
-    return AppUtils.setServerResponse(insertedFoodId);
+    req.foodId = insertedFoodId;
+    return AppUtils.setServerResponse();
   };
-  purchaseFood = async (userId: number, foodId: number) => {
+  purchaseFood = async (req: Request) => {
+    const userId = req.session.user.id;
+    const foodId = req.foodId;
     if (!foodId || foodId === -1) throw new BadRequestError();
-    const isPurchased = await this.foodService.purchaseFood(userId, foodId);
-    return AppUtils.setServerResponse<null>(null, isPurchased);
+    await this.foodService.purchaseFood(userId, foodId);
+    return AppUtils.setServerResponse(null);
   };
 }
