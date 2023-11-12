@@ -24,7 +24,8 @@ export interface FoodServiceHelper {
 
 export interface SlimeServiceHelper {
   create(userId: number): Promise<void>;
-  feed(userId: number, slimeId: number, foodId: number): Promise<ExportSlime>;
+  feed(userId: number, foodId: number, slimeId?: number): Promise<ExportSlime>;
+  getExportSlime(userId: number, slimeId?: number): Promise<ExportSlime>;
 }
 
 export interface ShopServiceHelper {

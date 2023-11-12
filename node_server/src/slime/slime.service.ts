@@ -1,6 +1,6 @@
 import { Knex } from "knex";
 import { RedisClientType } from "redis";
-import { SlimeType } from "../../models/dbModels";
+import { Slime, SlimeType } from "../../models/dbModels";
 import { EvolutionInfo, ExportSlime, SlimeDetails } from "../../models/models";
 import { SlimeServiceHelper } from "../../models/serviceModels";
 import FoodService from "../food/food.service";
@@ -27,6 +27,11 @@ export default class SlimeService implements SlimeServiceHelper {
     if (result.length === 0) throw new ForbiddenError("not an owner of this slime");
     return;
   };
+  private getFirstSlimeId = async (userId: number): Promise<number> => {
+    const { id } = await this.knex<Slime>("slime").select("id").where("owner_id", userId).first();
+    if (id === undefined) throw new BadRequestError("no slime found");
+    return id;
+  };
   create = async (userId: number): Promise<void> => {
     const slimeTypes = await this.getAllTypes();
     const balanceTypeId = slimeTypes.get("Balance");
@@ -38,8 +43,9 @@ export default class SlimeService implements SlimeServiceHelper {
     });
     return;
   };
-  feed = async (userId: number, slimeId: number, foodId: number): Promise<ExportSlime> => {
-    await this.isOwner(userId, slimeId);
+  feed = async (userId: number, foodId: number, slimeId?: number): Promise<ExportSlime> => {
+    if (slimeId !== undefined) await this.isOwner(userId, slimeId);
+    else slimeId = await this.getFirstSlimeId(userId);
     const foodService = new FoodService(this.knex, this.redis);
     const foodDetails = (await foodService.getDetails(foodId))[0];
     const slimeDetails = await this.getDetails(slimeId);
@@ -144,7 +150,9 @@ export default class SlimeService implements SlimeServiceHelper {
     return info as EvolutionInfo;
   };
 
-  private getDetails = async (slimeId: number): Promise<SlimeDetails> => {
+  private getDetails = async (userId: number, slimeId?: number): Promise<SlimeDetails> => {
+    if (slimeId !== undefined) await this.isOwner(userId, slimeId);
+    else slimeId = await this.getFirstSlimeId(userId);
     const earnRate = (await this.getAllSlimeEarningRate()).get(slimeId);
     if (earnRate < 0) throw new InternalServerError("failed to get earn rate");
     const slime = await this.knex("slime")
@@ -184,7 +192,7 @@ export default class SlimeService implements SlimeServiceHelper {
     if (totalMacroNutrients * 0.5 < total_protein) return slimeTypes.get("Keto")!;
     return slimeTypes.get("Balance")!;
   };
-  private getExportSlime = async (slimeId: number): Promise<ExportSlime> => {
+  getExportSlime = async (userId: number, slimeId?: number): Promise<ExportSlime> => {
     const {
       slime_id: id,
       owner,
@@ -195,7 +203,7 @@ export default class SlimeService implements SlimeServiceHelper {
       extra_calories,
       earn_rate,
       bMR_rate,
-    } = await this.getDetails(slimeId);
+    } = await this.getDetails(userId, slimeId);
     return {
       id,
       owner,
