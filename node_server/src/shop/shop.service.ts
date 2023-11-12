@@ -3,6 +3,7 @@ import { RedisClientType } from "redis";
 import { Food } from "../../models/dbModels";
 import { BriefFood } from "../../models/models";
 import { ShopServiceHelper } from "../../models/serviceModels";
+import DbUtils from "../utils/dbUtils";
 import { BadRequestError, InternalServerError } from "../utils/error";
 import gameConfig from "../utils/gameConfig";
 import { logger } from "../utils/logger";
@@ -50,11 +51,12 @@ export default class ShopService implements ShopServiceHelper {
       foodShop = JSON.parse(await this.redis.get("foodShop"));
       if (foodShop.universal) return foodShop.universal;
     }
-    const universalShop = await this.knex("shop")
+    let universalShop = await this.knex("shop")
       .select<BriefFood[]>("food.id", "food.name", "food.calories", "food.cost", "food.emoji")
       .join("food", "food_id", "food.id")
       .orderBy([{ column: "food.cost" }, { column: "food.id" }]);
     if (universalShop.length > 0) {
+      universalShop = DbUtils.convertStringToNumber(universalShop);
       foodShop.universal = universalShop;
       await this.redis.set("foodShop", JSON.stringify(foodShop));
       return universalShop;
@@ -68,11 +70,12 @@ export default class ShopService implements ShopServiceHelper {
       foodShop = JSON.parse(await this.redis.get("foodShop"));
       if (foodShop[userId]?.length > 0) return foodShop[userId];
     }
-    const userShop = await this.knex<BriefFood>("user_shop")
+    let userShop = await this.knex<BriefFood>("user_shop")
       .select("food.id", "food.name", "food.calories", "food.cost", "food.emoji")
       .join("food", "food_id", "food.id")
       .where("user_id", userId);
     if (userShop.length > 0) {
+      userShop = DbUtils.convertStringToNumber(userShop);
       foodShop[userId] = userShop;
       await this.redis.set("foodShop", JSON.stringify(foodShop));
     }

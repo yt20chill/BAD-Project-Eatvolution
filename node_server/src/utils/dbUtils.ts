@@ -72,8 +72,12 @@ export default class DbUtils {
   };
   static convertStringToNumber = <T = unknown>(dbObj: Record<string, any>): T => {
     const result = {} as T;
+    if (Array.isArray(dbObj)) {
+      return dbObj.map((obj) => DbUtils.convertStringToNumber(obj)) as unknown as T;
+    }
     for (const [key, value] of Object.entries(dbObj)) {
-      result[key] = isNaN(+value) || typeof value !== "string" ? value : +value;
+      // if value after conversion is not NaN && it was a string, change to number
+      result[key] = !isNaN(+value) && typeof value === "string" ? +value : value;
     }
     return result;
   };
