@@ -166,3 +166,13 @@ export type EvolutionInfo = {
   total_fat: number;
   total_carbs: number;
 };
+
+export type ExportSlime = {
+  id: number;
+  owner_username: string;
+  slime_type_name: string;
+  current_calories: number;
+  max_calories: number;
+  extra_calories: number;
+  earn_rate: number;
+};
