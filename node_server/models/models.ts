@@ -135,9 +135,9 @@ export type UpdateDbUser = {
 
 export type RedisUser = {
   money: number;
-  totalMoney: number;
-  earningRate: number;
-  lastUpdated: Date;
+  total_money: number;
+  earning_rate: number;
+  updated_at: Date;
 };
 
 export interface UserFinancialStatus extends RedisUser {
