@@ -221,7 +221,7 @@ export default class SlimeService implements SlimeServiceHelper {
       max_calories,
       extra_calories,
       earn_rate,
-      bMR_rate,
+      bmr_rate,
     } = await this.getDetails(slimeId);
     return {
       id,
@@ -232,7 +232,7 @@ export default class SlimeService implements SlimeServiceHelper {
       max_calories,
       extra_calories,
       earn_rate,
-      bMR_rate,
+      bmr_rate,
     };
   };
 }

@@ -184,7 +184,7 @@ export default class FoodService implements FoodServiceHelper {
   private getMoneyAfterPurchase = async (userId: number, cost: number): Promise<number> => {
     const userService = new UserService(this.knex, this.redis);
     const { money } = await userService.getUserLatestFinancialStatus(userId);
-    const moneyAfterPurchase = money - cost;
+    const moneyAfterPurchase = +money - cost;
     if (moneyAfterPurchase < 0) throw new BadRequestError("Insufficient money");
     return moneyAfterPurchase;
   };
