@@ -2,6 +2,7 @@ import csvParser from "csv-parser";
 import fs from "fs";
 import { Food } from "models/dbModels";
 import { CnItem, GeneralOmitFields, InsertFood } from "models/models";
+import { InternalServerError } from "./error";
 
 //TODO: change all static methods to normal, and export util in container
 export default class DbUtils {
@@ -75,6 +76,17 @@ export default class DbUtils {
       result[key] = isNaN(+value) || typeof value !== "string" ? value : +value;
     }
     return result;
+  };
+  /**
+   * throw error if any numeric value is NaN
+   * @param dbObj
+   */
+  static checkNaN = (dbObj: Record<string, any>): void => {
+    for (const value of Object.values(dbObj)) {
+      if (typeof value === "number" && isNaN(value)) {
+        throw new InternalServerError(`NaN found`);
+      }
+    }
   };
 }
 
