@@ -4,15 +4,11 @@ import { CnItem } from "models/models";
 import DbUtils from "../../src/utils/dbUtils";
 import { ApplicationError, BadRequestError } from "../../src/utils/error";
 import { AppUtils } from "../../src/utils/utils";
-import GameService from "../game/game.service";
 import { env } from "../utils/env";
 import FoodService from "./food.service";
 
 export default class FoodController implements FoodControllerHelper {
-  constructor(
-    private readonly foodService: FoodService,
-    private readonly gameService: GameService
-  ) {}
+  constructor(private readonly foodService: FoodService) {}
 
   insertFood = async (req: Request): Promise<ControllerResult<string | number>> => {
     const userId = req.session.user.id;
@@ -38,10 +34,9 @@ export default class FoodController implements FoodControllerHelper {
     // this.foodService.purchaseFood(userId, insertedFoodId);
     return AppUtils.setServerResponse(insertedFoodId);
   };
-  //TODO: moved this from gameService to foodService
   purchaseFood = async (userId: number, foodId: number) => {
     if (!foodId || foodId === -1) throw new BadRequestError();
-    const isPurchased = await this.gameService.purchaseFood(userId, foodId);
+    const isPurchased = await this.foodService.purchaseFood(userId, foodId);
     return AppUtils.setServerResponse<null>(null, isPurchased);
   };
 }

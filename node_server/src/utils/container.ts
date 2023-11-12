@@ -21,13 +21,13 @@ import { env } from "./env";
 export const redis: RedisClientType = createClient();
 export const knex = Knex(knexConfig[env.NODE_ENV]);
 
-export const authService = new AuthService(knex);
+export const authService = new AuthService(knex, redis);
 export const authController = new AuthController(authService);
 
 export const gameService = new GameService(knex, redis);
 
-export const foodService = new FoodService(knex);
-export const foodController = new FoodController(foodService, gameService);
+export const foodService = new FoodService(knex, redis);
+export const foodController = new FoodController(foodService);
 
 export const shopService = new ShopService(knex, redis);
 export const shopController = new ShopController(shopService);
@@ -41,7 +41,7 @@ export const foodCollectionController = new FoodCollectionController(
 export const slimeCollectionService = new SlimeCollectionService(knex);
 export const slimeCollectionController = new SlimeCollectionController(slimeCollectionService);
 
-export const slimeService = new SlimeService(knex);
+export const slimeService = new SlimeService(knex, redis);
 
 export const userService = new UserService(knex, redis);
 export const userController = new UserController(userService);
