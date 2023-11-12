@@ -1,4 +1,5 @@
 import { Knex } from "knex";
+import { RedisClientType } from "redis";
 import { SlimeType } from "../../models/dbModels";
 import { EvolutionInfo, SlimeDetails } from "../../models/models";
 import { SlimeServiceHelper } from "../../models/serviceModels";
@@ -9,24 +10,28 @@ import GameConfig from "../utils/gameConfig";
 import { logger } from "../utils/logger";
 
 export default class SlimeService implements SlimeServiceHelper {
-  constructor(private readonly knex: Knex) {}
+  constructor(
+    private readonly knex: Knex,
+    private readonly redis: RedisClientType
+  ) {}
+  private createTransaction = async (): Promise<Knex.Transaction> => {
+    const trx = await this.knex.transaction();
+    this.knex.bind(trx);
+    return trx;
+  };
   create = async (userId: number): Promise<void> => {
     const slimeTypes = await this.getAllTypes();
     const balanceTypeId = slimeTypes.get("Balance");
     if (!balanceTypeId) throw new InternalServerError("Balance slime type not found");
-    const { max_calories } = await this.knex<SlimeType>("slime_type")
-      .select("max_calories")
-      .where("id", balanceTypeId)
-      .first();
     await this.knex("slime").insert({
       owner_id: userId,
       slime_type_id: balanceTypeId,
-      calories: max_calories,
+      calories: GameConfig.INITIAL_CALORIES,
     });
     return;
   };
   feed = async (slimeId: number, foodId: number): Promise<void> => {
-    const foodService = new FoodService(this.knex);
+    const foodService = new FoodService(this.knex, this.redis);
     const foodDetails = (await foodService.getDetails(foodId))[0];
     const slimeDetails = await this.getDetails(slimeId);
     if (!foodDetails || !slimeDetails) throw new BadRequestError("Invalid food or slime id");
