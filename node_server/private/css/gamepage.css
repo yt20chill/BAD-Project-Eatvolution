@@ -539,7 +539,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 35px 0px;
+    padding: 0px 0px;
 }
 
 .dropdown-list {
@@ -551,7 +551,10 @@ body {
     font-size: 30px;
 }
 
-
+.title {
+    margin-top: 20px;
+    color: white;
+}
 
 
 
