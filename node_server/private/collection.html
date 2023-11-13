@@ -11,43 +11,334 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="shortcut icon" href="../public/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" type="text/css" href="css/gamepage.css" />
 </head>
 
 <body>
-    <!----------------------------------------- header ------------------------------------------->
+    <!-- --------------------------------------- header PC ----------------------------------------- -->
     <header class="navbar navbar-expand-lg">
+        <div class="container">
+            <div class="nav-div">
+                <a class="navbar-brand" href="#">
+                    <img id="slimeIcon" src="./img/blue_show_done.gif.gif" alt="Logo" onclick="showPopup()">
+                </a>
+            </div>
+            <div class="nav-item  nav-div nav-link">
+                Food collection
+            </div>
+            <div class="nav-div">
+
+                <div class="btn-group dropstart">
+                    <button type="button" class="btn " data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-bars bar"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-list">
+                        <li><a class="dropdown-item" href="#">Log out</a></li>
+
+                    </ul>
+                </div>
+
+            </div>
+    </header>
+
+
+
+
+
+    <!-- <li class="nav-item  nav-div nav-link">
+        Food collection
+    </li>
+    <div class="nav-div">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Log out</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    </div>
+    </header> -->
+
+
+
+
+
+    <!-- --------------------------------------- header Phone -----------------------------------------
+    <header class="navbar navbar-expand-lg	d-sm-block d-md-none">
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img id="slimeIcon" src="./img/blue_show_done.gif.gif" alt="Logo" onclick="showPopup()">
             </a>
-
-
+            <li class="nav-item">
+                <p>Food Collection</p>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">log out</a>
             </li>
 
 
         </div>
-    </header>
+    </header> -->
+
+
     <!-----------------------------------------  card  ---------------------------------------------->
+    <div class="card-container container">
+        <script>
+            function flipCard(card) {
+                card.classList.toggle('flipped');
+            }
+        </script>
 
-    <script>
-        function flipCard(card) {
-            card.classList.toggle('flipped');
-        }
-    </script>
-
-    <div class="setup_card_container">
-        <div class="myCard">
-            <div class="innerCard" onclick="flipCard(this)">
-                <div class="frontSide">
-                    <p class="title">FRONT SIDE</p>
-                    <p>Click Me</p>
+        <div class="setup_card_container">
+            <div class="myCard">
+                <div class="innerCard" onclick="flipCard(this)">
+                    <div class="frontSide">
+                        <p class="title">FRONT SIDE</p>
+                        <p>Click Me</p>
+                    </div>
+                    <div class="backSide">
+                        <p class="title">BACK SIDE</p>
+                        <p>Leave Me</p>
+                    </div>
                 </div>
-                <div class="backSide">
-                    <p class="title">BACK SIDE</p>
-                    <p>Leave Me</p>
+            </div>
+        </div>
+
+        <script>
+            function flipCard(card) {
+                card.classList.toggle('flipped');
+            }
+        </script>
+
+        <div class="setup_card_container">
+            <div class="myCard">
+                <div class="innerCard" onclick="flipCard(this)">
+                    <div class="frontSide">
+                        <p class="title">FRONT SIDE</p>
+                        <p>Click Me</p>
+                    </div>
+                    <div class="backSide">
+                        <p class="title">BACK SIDE</p>
+                        <p>Leave Me</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function flipCard(card) {
+                card.classList.toggle('flipped');
+            }
+        </script>
+
+        <div class="setup_card_container">
+            <div class="myCard">
+                <div class="innerCard" onclick="flipCard(this)">
+                    <div class="frontSide">
+                        <p class="title">FRONT SIDE</p>
+                        <p>Click Me</p>
+                    </div>
+                    <div class="backSide">
+                        <p class="title">BACK SIDE</p>
+                        <p>Leave Me</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function flipCard(card) {
+                card.classList.toggle('flipped');
+            }
+        </script>
+
+        <div class="setup_card_container">
+            <div class="myCard">
+                <div class="innerCard" onclick="flipCard(this)">
+                    <div class="frontSide">
+                        <p class="title">FRONT SIDE</p>
+                        <p>Click Me</p>
+                    </div>
+                    <div class="backSide">
+                        <p class="title">BACK SIDE</p>
+                        <p>Leave Me</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function flipCard(card) {
+                card.classList.toggle('flipped');
+            }
+        </script>
+
+        <div class="setup_card_container">
+            <div class="myCard">
+                <div class="innerCard" onclick="flipCard(this)">
+                    <div class="frontSide">
+                        <p class="title">FRONT SIDE</p>
+                        <p>Click Me</p>
+                    </div>
+                    <div class="backSide">
+                        <p class="title">BACK SIDE</p>
+                        <p>Leave Me</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            function flipCard(card) {
+                card.classList.toggle('flipped');
+            }
+        </script>
+
+        <div class="setup_card_container">
+            <div class="myCard">
+                <div class="innerCard" onclick="flipCard(this)">
+                    <div class="frontSide">
+                        <p class="title">FRONT SIDE</p>
+                        <p>Click Me</p>
+                    </div>
+                    <div class="backSide">
+                        <p class="title">BACK SIDE</p>
+                        <p>Leave Me</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--2-->
+        <script>
+            function flipCard(card) {
+                card.classList.toggle('flipped');
+            }
+        </script>
+
+        <div class="setup_card_container">
+            <div class="myCard">
+                <div class="innerCard" onclick="flipCard(this)">
+                    <div class="frontSide">
+                        <p class="title">FRONT SIDE</p>
+                        <p>Click Me</p>
+                    </div>
+                    <div class="backSide">
+                        <p class="title">BACK SIDE</p>
+                        <p>Leave Me</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function flipCard(card) {
+                card.classList.toggle('flipped');
+            }
+        </script>
+
+        <div class="setup_card_container">
+            <div class="myCard">
+                <div class="innerCard" onclick="flipCard(this)">
+                    <div class="frontSide">
+                        <p class="title">FRONT SIDE</p>
+                        <p>Click Me</p>
+                    </div>
+                    <div class="backSide">
+                        <p class="title">BACK SIDE</p>
+                        <p>Leave Me</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function flipCard(card) {
+                card.classList.toggle('flipped');
+            }
+        </script>
+
+        <div class="setup_card_container">
+            <div class="myCard">
+                <div class="innerCard" onclick="flipCard(this)">
+                    <div class="frontSide">
+                        <p class="title">FRONT SIDE</p>
+                        <p>Click Me</p>
+                    </div>
+                    <div class="backSide">
+                        <p class="title">BACK SIDE</p>
+                        <p>Leave Me</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function flipCard(card) {
+                card.classList.toggle('flipped');
+            }
+        </script>
+
+        <div class="setup_card_container">
+            <div class="myCard">
+                <div class="innerCard" onclick="flipCard(this)">
+                    <div class="frontSide">
+                        <p class="title">FRONT SIDE</p>
+                        <p>Click Me</p>
+                    </div>
+                    <div class="backSide">
+                        <p class="title">BACK SIDE</p>
+                        <p>Leave Me</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function flipCard(card) {
+                card.classList.toggle('flipped');
+            }
+        </script>
+
+        <div class="setup_card_container">
+            <div class="myCard">
+                <div class="innerCard" onclick="flipCard(this)">
+                    <div class="frontSide">
+                        <p class="title">FRONT SIDE</p>
+                        <p>Click Me</p>
+                    </div>
+                    <div class="backSide">
+                        <p class="title">BACK SIDE</p>
+                        <p>Leave Me</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            function flipCard(card) {
+                card.classList.toggle('flipped');
+            }
+        </script>
+
+        <div class="setup_card_container">
+            <div class="myCard">
+                <div class="innerCard" onclick="flipCard(this)">
+                    <div class="frontSide">
+                        <p class="title">FRONT SIDE</p>
+                        <p>Click Me</p>
+                    </div>
+                    <div class="backSide">
+                        <p class="title">BACK SIDE</p>
+                        <p>Leave Me</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -69,7 +360,7 @@
     <!-- <div class="setup_card_container">
         <div id="cards-container"></div>
     </div> -->
-    <!-----------------------------------------  popup  ---------------------------------------------->
+    --------------------------------------- popup --------------------------------------------
     <div id="popup" class="hidden ">
         <div class="slimestable">
             <img id="slimeStableIcon" src="./img/blue_die (1).gif" alt="Logo">
@@ -81,6 +372,7 @@
             <i class="fas fa-times" id="closeBtn"></i>
         </div>
     </div>
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
