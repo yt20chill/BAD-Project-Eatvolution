@@ -160,56 +160,7 @@ async function login(username, password) {
 
 // log out api
 
-async function getUserFinance() {
-    try {
-        const res = await fetch("/api/user/finance");
-        if (!res.ok) {
-            throw new Error("Failed to get user data");
-        }
-        const { success, result } = await res.json();
-        if (!success) {
-            throw new Error("Failed to get user data");
-        }
-        return result;
-        // console.log(result);
 
-        // 更新货币余额
-
-    } catch (error) {
-        console.error(error);
-        alert("Failed to get user data");
-    }
-}
-function updateCoins(result) {
-    if (!result.money || !result.earningRate) return;
-    result.money += +result.earningRate;
-    document.querySelector('.card-text').textContent = `coin：${result.money}`;
-}
-
-async function getSlimeData() {
-    try {
-        const res = await fetch("/api/slime");
-        if (!res.ok) {
-            throw new Error("Failed to get slime data");
-        }
-        const { result } = await res.json();
-        // console.log(result);
-        slimeType = result.slime_type;
-        console.log(slimeType)
-        const slime_type = document.querySelector('.slime_type');
-        const current_calories = document.querySelector('.current_calories');
-        const extra_calories = document.querySelector('.max_calories');
-
-        slime_type.textContent = `Type :${result.slime_type} `
-        current_calories.textContent = `Calories :${result.current_calories}/${result.max_calories} `
-        extra_calories.textContent = `Extra Calories :${result.extra_calories ?? 0}`
-
-
-    } catch (error) {
-        console.error(error);
-        alert("Failed to get slime data");
-    }
-};
 
 async function getUserFinance() {
     try {
@@ -231,12 +182,6 @@ async function getUserFinance() {
         console.error(error);
         alert("Failed to get user data");
     }
-}
-function updateCoins(result) {
-    let { money, earning_rate: earningRate } = result;
-    if (money < 0 || earningRate < 0) return;
-    money += earningRate;
-    document.querySelector('.card-text').textContent = `coin：${money}`;
 }
 
 async function getSlimeData() {
@@ -263,32 +208,23 @@ async function getSlimeData() {
     }
 }
 
-const updateDataAndRefresh = async () => {
-    // await getUserFinance();
-    // await getSlimeData();
-    setTimeout(updateDataAndRefresh, 1000); //每一秒REFRESH 既CODE , 必要, 遲D 加返
-};
-
+let money;
+let earningRate;
 window.onload = async () => {
     // get coins
     const res = await fetch("/api/user/finance");
-    // if (!res.ok) 
-    const { success, result } = await res.json();
-    console.log(result);
-
-    // Update coin balance
-    const coinBalanceElement = document.querySelector('.card-text');
-    coinBalanceElement.textContent = `coin：${result.money}`;
-
-    const addMoneyFunction = () => {
-        result.money++; // Increase the money by 1
-        coinBalanceElement.textContent = `coin：${result.money}`; // Update the coin balance
-    };
-
-    setInterval(addMoneyFunction, 1000) //<< add money each second
-
-    //add money function: change the inner text of where the coin is display
+    const result = (await res.json()).result;
+    console.log(result)
+    if (result.money >= 0 && result.earning_rate >= 0) {
+        money = result.money;
+        earningRate = result.earning_rate
+    }
+    setInterval(() => updateCoins(), 1000);
 }
+function updateCoins() {
+    money += earningRate;
+    document.querySelector('.card-text').textContent = `coin：${money}`; // Update the coin balance
+};
 // refresh shop bottom function
 
 async function refreshShop() {
