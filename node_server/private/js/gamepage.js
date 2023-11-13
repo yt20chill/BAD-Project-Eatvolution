@@ -207,16 +207,6 @@ async function getSlimeData() {
         console.error(error);
         alert("Failed to get slime data");
     }
-    const { result } = await res.json();
-    // console.log(result);
-
-    const slime_type = document.querySelector('.slime_type');
-    const current_calories = document.querySelector('.current_calories');
-    const extra_calories = document.querySelector('.max_calories');
-
-    slime_type.textContent = `Type :${result.slime_type} `
-    current_calories.textContent = `Calories :${result.current_calories}/${result.max_calories} `
-    extra_calories.textContent = `Extra Calories :${result.extra_calories ?? 0}`
 }
 
 let money;
@@ -415,6 +405,6 @@ for (let i = 1; i < cards.length; i++) {
 document.addEventListener('DOMContentLoaded', async () => {
     await getSlimeData();
     // get slime data per minute
-    setInterval(async () => await getSlimeData(), 60 * 1000)
     moveCharacter();
+    setInterval(async () => await getSlimeData(), 60 * 1000)
 })
