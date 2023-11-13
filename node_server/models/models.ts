@@ -2,14 +2,14 @@ import { Food } from "./dbModels";
 
 declare module "express-session" {
   interface SessionData {
-    user: { id: number; username: string };
-    grant: Grant;
+    user?: { id: number; username: string };
+    grant?: Grant;
   }
 }
 
 declare module "express" {
   interface Request {
-    //key-value pairs you would like to pass in the middleware to the next middleware
+    foodId?: number;
   }
 }
 
@@ -101,7 +101,7 @@ export type BriefFood = {
 export interface FoodCollection extends Omit<Food, "cost" | "name" | "created_at" | "updated_at"> {
   food_name: string;
   category_name: string;
-  isCustom: boolean;
+  is_custom: boolean;
 }
 
 export interface ExportFoodCollection {
@@ -110,8 +110,8 @@ export interface ExportFoodCollection {
 }
 
 export interface FoodCollectionIds {
-  universal: number[];
-  custom: number[];
+  universal: Set<number>;
+  custom: Set<number>;
 }
 
 export interface SlimeCollection {
@@ -119,7 +119,7 @@ export interface SlimeCollection {
   name: string;
   description: string;
   max_calories: number;
-  bMR_multiplier: number;
+  bmr_multiplier: number;
   earn_rate_multiplier: number;
 }
 export interface ExportSlimeCollection {
@@ -127,21 +127,50 @@ export interface ExportSlimeCollection {
   locked: SlimeCollection[];
 }
 
-export type FinancialData = {
-  money: number;
-  salaryPerSecond: number;
-};
-
-export type UpdateUser = {
+export type UpdateDbUser = {
   money: number;
   total_money: number;
   updated_at: Date;
 };
 
-export type UserFinanceStatus = {
-  id: number;
+export type RedisUser = {
   money: number;
   total_money: number;
-  elapsedSeconds: number;
-  retrieved_at: Date;
+  earning_rate: number;
+  updated_at: Date;
 };
+
+export interface UserFinancialStatus extends RedisUser {
+  id: number;
+}
+
+export type EvolutionInfo = {
+  food_count: number;
+  extra_calories: number;
+  total_protein: number;
+  total_fat: number;
+  total_carbs: number;
+};
+
+export interface ExportSlime {
+  id: number;
+  owner: string;
+  slime_type: string;
+  slime_type_description: string;
+  current_calories: number;
+  max_calories: number;
+  extra_calories: number;
+  earn_rate: number;
+  bmr_rate: number;
+}
+
+export interface SlimeDetails extends Omit<ExportSlime, "id" | "current_calories"> {
+  slime_id: number;
+  slime_type_id: string;
+  calories: number;
+  food_count: number;
+  total_protein: number;
+  total_carbs: number;
+  total_fat: number;
+  updated_at: string;
+}

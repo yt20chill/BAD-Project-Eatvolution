@@ -68,9 +68,9 @@ export default class AuthController implements AuthControllerHelper {
   };
 
   logout = async (req: Request) => {
-    if (req.session) {
-      if (req.session?.user?.id) deleteSocket(req.session.user.id);
-      delete req.session;
+    if (req.session?.user) {
+      if (req.session.user.id) deleteSocket(req.session.user.id);
+      delete req.session.user;
     }
     return AppUtils.setServerResponse();
   };

@@ -3,7 +3,8 @@ import { RedisClientType } from "redis";
 import { Food } from "../../models/dbModels";
 import { BriefFood } from "../../models/models";
 import { ShopServiceHelper } from "../../models/serviceModels";
-import { InternalServerError } from "../utils/error";
+import DbUtils from "../utils/dbUtils";
+import { BadRequestError, InternalServerError } from "../utils/error";
 import gameConfig from "../utils/gameConfig";
 import { logger } from "../utils/logger";
 import { AppUtils } from "../utils/utils";
@@ -50,11 +51,12 @@ export default class ShopService implements ShopServiceHelper {
       foodShop = JSON.parse(await this.redis.get("foodShop"));
       if (foodShop.universal) return foodShop.universal;
     }
-    const universalShop = await this.knex("shop")
+    let universalShop = await this.knex("shop")
       .select<BriefFood[]>("food.id", "food.name", "food.calories", "food.cost", "food.emoji")
       .join("food", "food_id", "food.id")
       .orderBy([{ column: "food.cost" }, { column: "food.id" }]);
     if (universalShop.length > 0) {
+      universalShop = DbUtils.convertStringToNumber(universalShop);
       foodShop.universal = universalShop;
       await this.redis.set("foodShop", JSON.stringify(foodShop));
       return universalShop;
@@ -68,11 +70,12 @@ export default class ShopService implements ShopServiceHelper {
       foodShop = JSON.parse(await this.redis.get("foodShop"));
       if (foodShop[userId]?.length > 0) return foodShop[userId];
     }
-    const userShop = await this.knex<BriefFood>("user_shop")
+    let userShop = await this.knex<BriefFood>("user_shop")
       .select("food.id", "food.name", "food.calories", "food.cost", "food.emoji")
       .join("food", "food_id", "food.id")
       .where("user_id", userId);
     if (userShop.length > 0) {
+      userShop = DbUtils.convertStringToNumber(userShop);
       foodShop[userId] = userShop;
       await this.redis.set("foodShop", JSON.stringify(foodShop));
     }
@@ -144,5 +147,20 @@ export default class ShopService implements ShopServiceHelper {
       await trx.rollback();
       return false;
     }
+  };
+
+  /**
+   *
+   * @param userId
+   * @param foodId
+   * @returns food price if food exists in shop, custom food price if food is custom, otherwise throw BadRequestError
+   */
+  getFoodCost = async (userId: number, foodId: number): Promise<number> => {
+    const foodShop = await this.getFoodShop(userId);
+    const food = foodShop.find((food) => food.id === foodId);
+    const isCustomFood =
+      (await this.knex<Food>("food").select("cost").where("id", foodId).first()).cost === null;
+    if (!food && !isCustomFood) throw new BadRequestError("food doesn't exists in shop");
+    return isCustomFood ? gameConfig.CUSTOM_FOOD_PRICE : food.cost;
   };
 }

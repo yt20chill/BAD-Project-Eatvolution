@@ -2,7 +2,9 @@ import csvParser from "csv-parser";
 import fs from "fs";
 import { Food } from "models/dbModels";
 import { CnItem, GeneralOmitFields, InsertFood } from "models/models";
+import { InternalServerError } from "./error";
 
+//TODO: change all static methods to normal, and export util in container
 export default class DbUtils {
   /**
    * read csv file and convert the data into seed-able objects
@@ -53,6 +55,42 @@ export default class DbUtils {
       food[key.replace(unitRegex, "")] = item[key] / normalizeFactor;
     }
     return food;
+  };
+  /**
+   * calculate elapsed time in seconds from last update
+   * @param input Objects that have updated_at field
+   * @param endDate time of which interval ends. Default to now
+   * @returns elapsed time in seconds from last update to endDate
+   */
+  static calculateElapsedTimeInSeconds = (
+    input: Record<"updated_at", string | Date>,
+    endTime = new Date()
+  ): number => {
+    if (!input.updated_at) throw new Error("updated_at is missing");
+    const updatedAt = new Date(input.updated_at);
+    return Math.floor((endTime.getTime() - updatedAt.getTime()) / 1000);
+  };
+  static convertStringToNumber = <T = unknown>(dbObj: Record<string, any>): T => {
+    const result = {} as T;
+    if (Array.isArray(dbObj)) {
+      return dbObj.map((obj) => DbUtils.convertStringToNumber(obj)) as unknown as T;
+    }
+    for (const [key, value] of Object.entries(dbObj)) {
+      // if value after conversion is not NaN && it was a string, change to number
+      result[key] = !isNaN(+value) && typeof value === "string" ? +value : value;
+    }
+    return result;
+  };
+  /**
+   * throw error if any numeric value is NaN
+   * @param dbObj
+   */
+  static checkNaN = (dbObj: Record<string, any>): void => {
+    for (const value of Object.values(dbObj)) {
+      if (typeof value === "number" && isNaN(value)) {
+        throw new InternalServerError(`NaN found`);
+      }
+    }
   };
 }
 

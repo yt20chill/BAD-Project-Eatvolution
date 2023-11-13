@@ -1,10 +1,11 @@
-import { Knex } from "knex";
 import {
   BriefFood,
+  ExportSlime,
   ExportSlimeCollection,
   FoodCollection,
   FoodCollectionIds,
   InsertFood,
+  UserFinancialStatus,
 } from "./models";
 
 export interface AuthServiceHelper {
@@ -15,36 +16,23 @@ export interface AuthServiceHelper {
 }
 
 export interface FoodServiceHelper {
-  insert(userId: number, food: InsertFood | number): Promise<boolean>;
+  insert(userId: number, food: InsertFood | number): Promise<number>;
   getDetails(...foodIds: Array<number>): Promise<FoodCollection[]>;
   isExisting(options: { id?: number; name?: string }): Promise<number>;
+  purchaseFood(userId: number, foodId: number): Promise<ExportSlime>;
 }
 
 export interface SlimeServiceHelper {
-  slimeFeed(foodId: number, slimeId: number): Promise<number>;
-  //   totalMacroNutrients(slimeId: number): Promise<{
-  //     totalProtein: number,
-  //     totalCarbs: number,
-  //     totalFat: number
-  // }>
-  // totalProtein(slimeId: number): Promise<number>;
-  // totalCarbs(slimeId: number): Promise<number>;
-  // extraCalories(slimeId: number): Promise<number>;
-  slimeData(slimeId: number): Promise<{
-    slime_type: string;
-    calories: number;
-    extra_calories: number;
-    // protein: number
-    // earnRate: number
-  }>;
-  // calEarnRate(slimeId: number): Promise<number>;
-  evolution(slimeId: number, userID: number): Promise<any>;
+  create(userId: number): Promise<void>;
+  feed(userId: number, foodId: number, slimeId?: number): Promise<ExportSlime>;
+  getExportSlime(userId: number, slimeId?: number): Promise<ExportSlime>;
 }
 
 export interface ShopServiceHelper {
   getFoodShop(userId: number): Promise<BriefFood[]>;
   updateUniversalShop(): Promise<boolean>;
   updateUserShop(userId: number): Promise<boolean>;
+  getFoodCost(userId: number, foodId: number): Promise<number>;
 }
 
 export interface FoodCollectionServiceHelper {
@@ -55,16 +43,15 @@ export interface FoodCollectionServiceHelper {
 }
 
 export interface SlimeCollectionServiceHelper {
-  getSlimeType(userId: number): Promise<ExportSlimeCollection>;
+  getSlimeCollection(userId: number): Promise<ExportSlimeCollection>;
+  unlockSlimeCollection(userId: number, slime_type_id: string): Promise<void>;
 }
 
 export interface UserServiceHelper {
-  getSavings(userId: number): Promise<number>;
-  receiveSalary(userId: number): Promise<boolean>;
-  getEarningRate(userId: number): Promise<number>;
+  getUserLatestFinancialStatus(userId: number): Promise<UserFinancialStatus>;
+  updateUserFinancialStatus(userId: number): Promise<boolean>;
 }
 
 export interface GameServiceHelper {
-  purchaseFood(userId: number, foodId: number, knex?: Knex): Promise<boolean>;
-  purchaseItem(userId: number, itemId: number, knex?: Knex): Promise<boolean>;
+  updateAllUsers(): Promise<void>;
 }

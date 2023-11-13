@@ -81,6 +81,13 @@ function hidePopupMenu() {
     popup.style.display = "none";
 }
 
+function closeFootContainer() {
+    if (isFootContainerVisible) {
+        footContainer.style.display = 'none';
+        isFootContainerVisible = false;
+    }
+}
+
 var footContainer = document.getElementById('footcontainerID');
 var isFootContainerVisible = false;
 
@@ -104,7 +111,7 @@ document.getElementById('foodShopButton').addEventListener('click', async functi
     await getShopItems()
 });
 
-// document.getElementById('foodShopButton').addEventListener('click', async function () {
+// document.getElementById('foodShopButton').add.EventListener('click', async function () {
 //     var footContainer = document.getElementById('footContainer');
 
 //     if (footContainer.style.display === 'block') {
@@ -124,9 +131,10 @@ async function getShopItems() {
 
     // 更新每个卡片的 HTML 内容
     result.forEach((item, index) => {
-        const { name, calories, cost } = item;
+        const { name, calories, cost, emoji } = item;
         const cardElement = document.getElementById(`card${index + 1}`);
         cardElement.querySelector(".name").textContent = name;
+        cardElement.querySelector(".icon").textContent = emoji;
         cardElement.querySelector(".calories").textContent = `Calories: ${calories}`;
         cardElement.querySelector(".cost").textContent = `Cost: ${cost}`;
     });
@@ -144,4 +152,205 @@ async function login(username, password) {
 
     })
     const { success, result } = await res.json()
+}
+
+// log out api
+
+document.getElementById("logout").addEventListener("click", async function (e) {
+    e.preventDefault();
+
+    const res = await fetch('/logout', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (res.ok) {
+        window.location.href = '/index.html';
+    } else {
+        console.error('Logout failed.');
+    }
+});
+
+
+window.onload = async () => {
+    // get coins
+    const res = await fetch("/api/user/finance");
+    // if (!res.ok) 
+    const { success, result } = await res.json();
+    console.log(result);
+
+    // Update coin balance
+    const coinBalanceElement = document.querySelector('.card-text');
+    coinBalanceElement.textContent = `coin：${result.money}`;
+
+    const addMoneyFunction = () => {
+        result.money++; // Increase the money by 1
+        coinBalanceElement.textContent = `coin：${result.money}`; // Update the coin balance
+    };
+
+    setInterval(addMoneyFunction, 1000) //<< add money each second
+
+    //add money function: change the inner text of where the coin is display
+}
+// refresh shop bottom function
+
+async function refreshShop() {
+    const res = await fetch("/api/shop", {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    const { success, result } = await res.json();
+    if (!success) return alert("something went wrong");
+    console.log(result)
+
+    // 更新每个卡片的 HTML 内容
+    result.forEach((item, index) => {
+        const { name, calories, cost, emoji } = item;
+        const cardElement = document.getElementById(`card${index + 1}`);
+        cardElement.querySelector(".name").textContent = name;
+        cardElement.querySelector(".icon").textContent = emoji;
+        cardElement.querySelector(".calories").textContent = `Calories: ${calories}`;
+        cardElement.querySelector(".cost").textContent = `Cost: ${cost}`;
+    });
+}
+
+// pick the food to eat
+
+// 獲取卡片容器元素
+// const cardContainer = document.getElementById('food_card_containerID');
+
+// // 獲取遊戲容器元素
+// const gameContainer = document.getElementById('gamecontainer');
+
+// // 獲取所有卡片元素
+// const cards = cardContainer.getElementsByClassName('card');
+
+// // 迭代每個卡片元素，添加點擊事件處理程序
+// for (let i = 0; i < cards.length; i++) {
+//     const card = cards[i];
+//     const icon = card.querySelector('.icon');
+
+
+//     card.addEventListener('click', function () {
+//         console.log(123)
+//         console.log(icon)
+//         // 克隆 ICON 元素
+//         const clonedIcon = icon.cloneNode(true);
+
+//         // 設置 ICON 的位置和顯示
+//         clonedIcon.style.display = 'block';
+//         clonedIcon.style.top = '0';
+//         clonedIcon.style.left = '50%';
+//         clonedIcon.style.transform = 'translateX(-50%)';
+
+//         // 將 ICON 添加到遊戲容器中
+//         gameContainer.appendChild(clonedIcon);
+
+//         // 計算 ICON 掉落到 slime_character 位置的距離
+//         const characterRect = gameContainer.querySelector('.slime_character').getBoundingClientRect();
+//         const iconRect = clonedIcon.getBoundingClientRect();
+//         const distance = characterRect.top - iconRect.bottom;
+
+//         // 使用 CSS 動畫使 ICON 掉落
+//         clonedIcon.style.transition = 'top 1s';
+//         clonedIcon.style.top = distance + 'px';
+
+//         // 監聽動畫結束事件，當 ICON 掉落完成後從遊戲容器中移除
+//         clonedIcon.addEventListener('transitionend', function () {
+//             gameContainer.removeChild(clonedIcon);
+//         });
+//     });
+// }
+
+// const cardContainer = document.getElementById('food_card_containerID');
+// const gameContainer = document.getElementById('gamecontainer');
+// const cards = cardContainer.getElementsByClassName('card');
+
+// for (let i = 0; i < cards.length; i++) {
+//     const card = cards[i];
+
+//     card.addEventListener('click', function () {
+//         const emoji = card.querySelector('.icon').innerText;
+
+//         const emojiElement = document.createElement('div');
+//         emojiElement.classList.add('emoji');
+//         emojiElement.innerText = emoji;
+
+//         gameContainer.appendChild(emojiElement);
+
+//         const gameContainerRect = gameContainer.getBoundingClientRect();
+//         const cardRect = card.getBoundingClientRect();
+//         const emojiWidth = emojiElement.offsetWidth;
+//         const emojiHeight = emojiElement.offsetHeight;
+//         const leftOffset = cardRect.left + cardRect.width / 2 - emojiWidth / 2;
+//         const topOffset = gameContainerRect.top - emojiHeight;
+
+//         emojiElement.style.left = leftOffset + 'px';
+//         emojiElement.style.top = topOffset + 'px';
+
+//         setTimeout(function () {
+//             emojiElement.style.transition = 'top 1s';
+//             emojiElement.style.top = gameContainerRect.bottom - emojiHeight + 'px';
+//         }, 0);
+
+//         // emojiElement.addEventListener('transitionend', function () {
+//         //     gameContainer.removeChild(emojiElement);
+//         // });
+//     });
+// }
+
+const cardContainer = document.getElementById('food_card_containerID');
+const gameContainer = document.getElementById('gamecontainer');
+const cards = cardContainer.getElementsByClassName('card');
+
+for (let i = 0; i < cards.length; i++) {
+    const card = cards[i];
+
+    card.addEventListener('click', function () {
+        closeFootContainer();
+        const emoji = card.querySelector('.icon').innerText;
+        const emojiElement = document.createElement('div');
+        emojiElement.classList.add('emoji');
+        emojiElement.innerText = emoji;
+
+        gameContainer.appendChild(emojiElement);
+
+        const gameContainerRect = gameContainer.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        const emojiWidth = emojiElement.offsetWidth;
+        const emojiHeight = emojiElement.offsetHeight;
+        const leftOffset = gameContainerRect.left + gameContainerRect.width / 2 - emojiWidth / 2;
+        const topOffset = cardRect.top - gameContainerRect.top - emojiHeight;
+
+        emojiElement.style.left = leftOffset + 'px';
+        emojiElement.style.top = topOffset + 'px';
+
+        setTimeout(function () {
+            emojiElement.style.transition = 'top 3s';
+            emojiElement.style.left = gameContainerRect.width / 2 - emojiWidth / 2 + 'px';
+            emojiElement.style.top = gameContainerRect.height - emojiHeight - 80 + 'px';
+
+            setTimeout(function () {
+
+                gameContainer.removeChild(emojiElement);
+
+                const slimeCharacter = document.getElementById('slime_character');
+                slimeCharacter.src = './img/blue_eat.gif';
+
+                setTimeout(function () {
+
+                    slimeCharacter.src = './img/blue_jump.gif';
+
+                    setTimeout(function () {
+
+                        slimeCharacter.src = './img/blue_run.gif';
+                    }, 1000); // 3秒後回到最初的圖片
+                }, 2000); // 2秒後換成 'blue_jump.gif'
+            }, 2000); // 4秒後換成 'blue_eat.gif'
+        }, 0);
+    });
 }

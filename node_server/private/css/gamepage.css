@@ -33,6 +33,35 @@ body {
     /* 使用 0.5 秒的过渡效果，并添加缓动函数 */
 }
 
+@media (max-width:400px) {
+    #popup {
+        position: fixed;
+        top: 0;
+        left: -150%;
+        /* 初始位置在左侧屏幕外 */
+        width: 300px;
+        height: 200px;
+        background-color: #f1f1f1;
+        transition: left 0.5s ease-in-out;
+        z-index: 9999;
+        /* 使用 0.5 秒的过渡效果，并添加缓动函数 */
+    }
+
+    .slimestable {
+        position: absolute;
+        font-size: large;
+        height: 600px;
+        width: 400px;
+        background-color: blueviolet;
+        border: 5px solid #fafafa;
+        border-radius: 5px;
+    }
+
+    .stable_container {
+        font-size: 10PX;
+    }
+}
+
 #popup.show {
     left: 0;
     /* 弹出后的位置在左侧屏幕内 */
@@ -116,6 +145,15 @@ body {
 }
 
 
+@media (max-width: 768px) {
+    #coin {
+        width: 100px;
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+    }
+
+}
 
 .card-body {
     display: flex;
@@ -185,7 +223,7 @@ body {
     display: none;
     /* 初始状态下隐藏 */
     position: fixed;
-    top: 50%;
+    top: 60%;
     left: 50%;
     transform: translate(-50%, -50%);
     /* border: 5px solid #ccc; */
@@ -255,6 +293,10 @@ body {
         grid-template-columns: repeat(3, 1fr);
     }
 
+    .popup-menu {
+        top: 60%;
+    }
+
     .footcontainer {
         height: 900px;
         overflow: scroll;
@@ -292,7 +334,7 @@ body {
     }
 
     .footcontainer {
-        height: 700px;
+        height: 800px;
         overflow: scroll;
         top: 60px;
     }
@@ -532,4 +574,23 @@ body {
 /* 新增的 CSS */
 .backSide {
     transform: rotateY(180deg);
+}
+
+.icon {
+    display: flex;
+    font-size: 60px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-shadow: rgba(0, 0, 0, 0.12) 2px 2px 2px;
+}
+
+/* .emoji-container {
+    position: relative;
+    animation: emojiFall 1s linear;
+} */
+
+.emoji {
+    position: absolute;
+    font-size: 80px;
 }

@@ -16,16 +16,16 @@ export default class FoodCollectionController implements FoodCollectionControlle
     const userId = req.session.user.id;
     const { unlockedIds, lockedIds } = await this.foodCollectionService.getAllFoodIds(userId);
     const unlockedUniversalFood =
-      unlockedIds.universal.length > 0
+      unlockedIds.universal.size > 0
         ? await this.getFoodDetails(...unlockedIds.universal)
         : ([] as FoodCollection[]);
     const unlockedCustomFood =
-      unlockedIds.custom.length > 0
+      unlockedIds.custom.size > 0
         ? await this.getFoodDetails(...unlockedIds.custom)
         : ([] as FoodCollection[]);
     return AppUtils.setServerResponse({
       unlocked: { universal: unlockedUniversalFood, custom: unlockedCustomFood },
-      locked: lockedIds,
+      locked: { universal: [...lockedIds.universal], custom: [...lockedIds.custom] },
     });
   };
   private getFoodDetails = async (...foodIds: number[]) => {
