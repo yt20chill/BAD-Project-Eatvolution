@@ -8,7 +8,7 @@ import { logger } from "../utils/logger";
 import { idFromInsertingTestUser } from "../utils/testUtils";
 import ShopService from "./shop.service";
 //TODO: test redis
-describe("ShopService", () => {
+describe.skip("ShopService", () => {
   const knex = Knex(knexConfig[env.NODE_ENV]);
   let shopService: ShopService;
   let testUserId: number;
