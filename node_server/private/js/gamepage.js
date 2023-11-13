@@ -459,17 +459,17 @@ for (let i = 1; i < cards.length; i++) {
           setTimeout(function () {
 
             const slimeCharacter = document.getElementById('slime_character');
-            slimeCharacter.src = `./img/${silmeType}/eat.gif`;
+            slimeCharacter.src = `./img/${slimeType}/eat.gif`;
 
             setTimeout(function () {
 
               //slimeCharacter.src = './img/blue_jump.gif';
-              slimeCharacter.src = `./img/${silmeType}/jump.gif`;
+              slimeCharacter.src = `./img/${slimeType}/jump.gif`;
 
               setTimeout(function () {
 
                 //slimeCharacter.src = './img/blue_run.gif';
-                slimeCharacter.src = `./img/${silmeType}/move.gif`;
+                slimeCharacter.src = `./img/${slimeType}/move.gif`;
               }, 1000); // 1秒後回到最初的圖片
             }, 2000); // 2秒後換成 'blue_jump.gif'
           }, 2000); // 2秒後換成 'blue_eat.gif'
@@ -478,7 +478,7 @@ for (let i = 1; i < cards.length; i++) {
     }
     );
     async function tryMe() {
-      silmeType = data.type
+      slimeType = data.type
       document.getElementById('slime_character').src = `./img/${slimeType}}/move.gif`;
     }
 //food api -PUT , foodId: number ,success: boolean, result: Slime
