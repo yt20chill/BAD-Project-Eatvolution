@@ -8,13 +8,13 @@ export default class FoodCollectionService implements FoodCollectionServiceHelpe
     const unlockedFood = await this.knex("food")
       .select(
         "food.id",
-        this.knex.raw("CASE WHEN food.cost IS NULL THEN true ELSE false END as isCustom")
+        this.knex.raw("CASE WHEN food.cost IS NULL THEN true ELSE false END as is_custom")
       )
       .join("user_food_collection", "user_food_collection.food_id", "food.id")
       .where("user_food_collection.user_id", userId);
     return unlockedFood.reduce(
       (acc: FoodCollectionIds, food) => {
-        if (food.isCustom) {
+        if (food.is_custom) {
           acc.custom.add(food.id);
         } else {
           acc.universal.add(food.id);
@@ -30,14 +30,14 @@ export default class FoodCollectionService implements FoodCollectionServiceHelpe
     const unlockedFoodIds = await this.getUnlockedFoodIds(userId);
     const allUnlockedFoodIds = [...unlockedFoodIds.custom, ...unlockedFoodIds.universal];
     const lockedFood = await this.knex("food")
-      .select(
+      .select<{ id: number; is_custom: boolean }[]>(
         "id",
-        this.knex.raw("CASE WHEN food.cost IS NULL THEN true ELSE false END as isCustom")
+        this.knex.raw("CASE WHEN food.cost IS NULL THEN true ELSE false END as is_custom")
       )
       .whereNotIn("id", allUnlockedFoodIds);
     const lockedFoodIds = lockedFood.reduce(
-      (acc: FoodCollectionIds, food) => {
-        if (food.isCustom) {
+      (acc, food) => {
+        if (food.is_custom) {
           acc.custom.add(food.id);
         } else {
           acc.universal.add(food.id);
