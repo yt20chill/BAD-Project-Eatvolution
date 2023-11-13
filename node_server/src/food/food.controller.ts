@@ -12,8 +12,10 @@ export default class FoodController implements FoodControllerHelper {
 
   insertFood = async (req: Request): Promise<ControllerResult<string | null>> => {
     const userId = req.session.user.id;
-    const foodName = req.body.foodName?.trim().toLowerCase();
-    if (!foodName) throw new BadRequestError();
+    let foodName = req.body.foodName;
+    if (typeof foodName !== "string" || !(foodName = foodName.trim().toLowerCase())) {
+      throw new BadRequestError("invalid food name");
+    }
     const foodId = await this.foodService.isExisting({ name: foodName });
     let food: CnItem;
     if (foodId === -1) {
