@@ -207,20 +207,28 @@ async function getSlimeData() {
         console.error(error);
         alert("Failed to get slime data");
     }
+    const { result } = await res.json();
+    // console.log(result);
+
+    const slime_type = document.querySelector('.slime_type');
+    const current_calories = document.querySelector('.current_calories');
+    const extra_calories = document.querySelector('.max_calories');
+
+    slime_type.textContent = `Type :${result.slime_type} `
+    current_calories.textContent = `Calories :${result.current_calories}/${result.max_calories} `
+    extra_calories.textContent = `Extra Calories :${result.extra_calories ?? 0}`
 }
 
 let money;
 let earningRate;
 window.onload = async () => {
     // get coins
-    const res = await fetch("/api/user/finance");
-    const result = (await res.json()).result;
-    console.log(result)
+    const result = await getUserFinance();
     if (result.money >= 0 && result.earning_rate >= 0) {
         money = result.money;
-        earningRate = result.earning_rate
+        earningRate = result.earning_rate;
     }
-    setInterval(() => updateCoins(), 1000);
+    setInterval(updateCoins, 1000);
 }
 function updateCoins() {
     money += earningRate;
@@ -253,7 +261,8 @@ async function refreshShop() {
 // possible evolve action
 async function postCustomFood() {
     const foodName = document.querySelector(`textarea[name="foodName"]`).value.trim().toLowerCase();
-    if (foodName === "") return;
+    // if food name is empty or is purely number
+    if (foodName === "" || !isNaN(+foodName)) return;
     const res = await fetch("/api/food", {
         method: "POST",
         headers: {
@@ -261,9 +270,8 @@ async function postCustomFood() {
         },
         body: JSON.stringify({ foodName }),
     });
-    const { success, result } = await res.json();
+    const { success } = await res.json();
     if (success) closeFootContainer();
-    slimeType = (result.slime_type.split(' '))[0];
 }
 
 // pick the food to eat
