@@ -71,8 +71,7 @@ function moveCharacter() {
     setTimeout(moveCharacter, 50); // 可根据需要进行调整
 }
 
-// 调用移动函数开始主角图像的移动
-moveCharacter();
+
 
 function showPopupMenu() {
     var popup = document.getElementById("popupMenu");
@@ -191,7 +190,9 @@ async function getSlimeData() {
             throw new Error("Failed to get slime data");
         }
         const { result } = await res.json();
-        // console.log(result);
+        slimeType = (result.slime_type.split(' '))[0];
+        document.getElementById('slime_character').src = `./img/${slimeType}/move.gif`;
+        document.getElementById('slimeStableIcon').src = `./img/${slimeType}/die.gif`;
 
         const slime_type = document.querySelector('.slime_type');
         const current_calories = document.querySelector('.current_calories');
@@ -249,6 +250,7 @@ async function refreshShop() {
     });
 }
 
+// possible evolve action
 async function postCustomFood() {
     const foodName = document.querySelector(`textarea[name="foodName"]`).value.trim().toLowerCase();
     if (foodName === "") return;
@@ -259,8 +261,9 @@ async function postCustomFood() {
         },
         body: JSON.stringify({ foodName }),
     });
-    const { success } = await res.json();
+    const { success, result } = await res.json();
     if (success) closeFootContainer();
+    slimeType = (result.slime_type.split(' '))[0];
 }
 
 // pick the food to eat
@@ -373,49 +376,37 @@ for (let i = 1; i < cards.length; i++) {
         const leftOffset = gameContainerRect.left + gameContainerRect.width / 2 - emojiWidth / 2;
         const topOffset = cardRect.top - gameContainerRect.top - emojiHeight;
 
+        emojiElement.classList.add('emoji');
         emojiElement.style.left = leftOffset + 'px';
         emojiElement.style.top = topOffset + 'px';
-
         setTimeout(function () {
             emojiElement.style.transition = 'top 3s';
             emojiElement.style.left = gameContainerRect.width / 2 - emojiWidth / 2 + 'px';
             emojiElement.style.top = gameContainerRect.height - emojiHeight - 80 + 'px';
+        }, 0)
+        setTimeout(function () {
 
+            const slimeCharacter = document.getElementById('slime_character');
+            slimeCharacter.src = `./img/${slimeType}/eat.gif`;
             setTimeout(function () {
-
                 gameContainer.removeChild(emojiElement);
-
-                const slimeCharacter = document.getElementById('slime_character');
-                slimeCharacter.src = './img/blue_eat.gif';
-
+                slimeCharacter.src = `./img/${slimeType}/jump.gif`;
                 setTimeout(function () {
+                    //slimeCharacter.src = './img/blue_run.gif';
+                    slimeCharacter.src = `./img/${slimeType}/move.gif`;
+                }, 1000); // 1秒後回到最初的圖片
+            }, 500);
+        }, 3000);
 
-                    slimeCharacter.src = './img/blue_jump.gif';
-
-                    setTimeout(function () {
-
-                        const slimeCharacter = document.getElementById('slime_character');
-                        slimeCharacter.src = `./img/${slimeType}/eat.gif`;
-
-                        setTimeout(function () {
-
-                            //slimeCharacter.src = './img/blue_jump.gif';
-                            slimeCharacter.src = `./img/${slimeType}/jump.gif`;
-
-                            setTimeout(function () {
-
-                                //slimeCharacter.src = './img/blue_run.gif';
-                                slimeCharacter.src = `./img/${slimeType}/move.gif`;
-                            }, 1000); // 1秒後回到最初的圖片
-                        }, 2000); // 2秒後換成 'blue_jump.gif'
-                    }, 2000); // 2秒後換成 'blue_eat.gif'
-                }, 0);
-            });
-        }
-        );
-    });
+    }
+    )
 }
-async function tryMe() {
-    slimeType = data.type
-    document.getElementById('slime_character').src = `./img/${slimeType}}/move.gif`;
-}
+
+// 调用移动函数开始主角图像的移动
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await getSlimeData();
+    // get slime data per minute
+    setInterval(async () => await getSlimeData(), 60 * 1000)
+    moveCharacter();
+})
