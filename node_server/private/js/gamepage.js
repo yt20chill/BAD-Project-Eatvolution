@@ -421,8 +421,9 @@ const cards = cardContainer.getElementsByClassName('card');
 for (let i = 1; i < cards.length; i++) {
   const card = cards[i];
 
-  card.addEventListener('click', async function () {
-    closeFootContainer();
+  card.addEventListener('click', function () {
+    // TODO: fetch /api/food
+    // closeFootContainer();
     const emoji = card.querySelector('.icon').innerText;
     const emojiElement = document.createElement('div');
     emojiElement.classList.add('emoji');
@@ -461,23 +462,23 @@ for (let i = 1; i < cards.length; i++) {
             const slimeCharacter = document.getElementById('slime_character');
             slimeCharacter.src = `./img/${silmeType}/eat.gif`;
 
+            slimeCharacter.src = './img/blue_jump.gif';
+
+            //slimeCharacter.src = './img/blue_jump.gif';
+            slimeCharacter.src = `./img/${silmeType}/jump.gif`;
+
             setTimeout(function () {
 
-              //slimeCharacter.src = './img/blue_jump.gif';
-              slimeCharacter.src = `./img/${silmeType}/jump.gif`;
-
-              setTimeout(function () {
-
-                //slimeCharacter.src = './img/blue_run.gif';
-                slimeCharacter.src = `./img/${silmeType}/move.gif`;
-              }, 1000); // 1秒後回到最初的圖片
-            }, 2000); // 2秒後換成 'blue_jump.gif'
-          }, 2000); // 2秒後換成 'blue_eat.gif'
-        }, 0);
-      });
-    }
-
-async function tryMe() {
-        slimeType = data.type
-        document.getElementById('slime_character').src = `./img/${slimeType}}/move.gif`;
-      }
+              //slimeCharacter.src = './img/blue_run.gif';
+              slimeCharacter.src = `./img/${silmeType}/move.gif`;
+            }, 1000); // 1秒後回到最初的圖片
+          }, 2000); // 2秒後換成 'blue_jump.gif'
+        }, 2000); // 2秒後換成 'blue_eat.gif'
+      }, 0);
+    });
+  });
+}
+function tryMe() {
+  slimeType = data.type;
+  document.getElementById('slime_character').src = `./img/${slimeType}/move.gif`;
+}
