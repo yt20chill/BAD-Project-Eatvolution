@@ -460,22 +460,21 @@ for (let i = 1; i < cards.length; i++) {
           setTimeout(function () {
 
             const slimeCharacter = document.getElementById('slime_character');
-            slimeCharacter.src = `./img/${silmeType}/eat.gif`;
+            slimeCharacter.src = `./img/${slimeType}/eat.gif`;
 
             slimeCharacter.src = './img/blue_jump.gif';
 
             //slimeCharacter.src = './img/blue_jump.gif';
-            slimeCharacter.src = `./img/${silmeType}/jump.gif`;
+            slimeCharacter.src = `./img/${slimeType}/jump.gif`;
 
-            setTimeout(function () {
+            slimeCharacter.src = './img/blue_jump.gif';
 
-              //slimeCharacter.src = './img/blue_run.gif';
-              slimeCharacter.src = `./img/${silmeType}/move.gif`;
-            }, 1000); // 1秒後回到最初的圖片
-          }, 2000); // 2秒後換成 'blue_jump.gif'
-        }, 2000); // 2秒後換成 'blue_eat.gif'
-      }, 0);
-    });
+            //slimeCharacter.src = './img/blue_run.gif';
+            slimeCharacter.src = `./img/${slimeType}/move.gif`;
+          }, 1000); // 1秒後回到最初的圖片
+        }, 2000); // 2秒後換成 'blue_jump.gif'
+      }, 2000); // 2秒後換成 'blue_eat.gif'
+    }, 0);
   });
 }
 function tryMe() {
