@@ -101,12 +101,12 @@ export type BriefFood = {
 export interface FoodCollection extends Omit<Food, "cost" | "name" | "created_at" | "updated_at"> {
   food_name: string;
   category_name: string;
-  isCustom: boolean;
+  is_custom: boolean;
 }
 
 export interface ExportFoodCollection {
   unlocked: { universal: FoodCollection[]; custom: FoodCollection[] };
-  locked: { universal: Set<number>; custom: Set<number> };
+  locked: { universal: number[]; custom: number[] };
 }
 
 export interface FoodCollectionIds {

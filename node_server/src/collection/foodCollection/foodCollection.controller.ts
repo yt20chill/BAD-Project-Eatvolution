@@ -25,7 +25,7 @@ export default class FoodCollectionController implements FoodCollectionControlle
         : ([] as FoodCollection[]);
     return AppUtils.setServerResponse({
       unlocked: { universal: unlockedUniversalFood, custom: unlockedCustomFood },
-      locked: lockedIds,
+      locked: { universal: [...lockedIds.universal], custom: [...lockedIds.custom] },
     });
   };
   private getFoodDetails = async (...foodIds: number[]) => {
