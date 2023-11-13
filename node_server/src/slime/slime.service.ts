@@ -63,8 +63,8 @@ export default class SlimeService implements SlimeServiceHelper {
   };
 
   private getDetails = async (slimeId: number): Promise<SlimeDetails> => {
-    const earnRate = (await this.getAllSlimeEarningRate()).get(slimeId);
-    if (earnRate < 0) throw new InternalServerError("failed to get earn rate");
+    // if a slime has no calories, earn rate = 0
+    const earnRate = (await this.getAllSlimeEarningRate()).get(slimeId) ?? 0;
     const slime = await this.knex("slime")
       .select<
         Omit<
@@ -98,25 +98,26 @@ export default class SlimeService implements SlimeServiceHelper {
     if (info.extra_calories > 2000) return slimeTypes.get("Obese")!;
     const { total_carbs, total_fat, total_protein } = info;
     const totalMacroNutrients = total_carbs + total_fat + total_protein;
-    if (totalMacroNutrients * 0.6 < total_carbs) return slimeTypes.get("Skinny fat")!;
+    if (totalMacroNutrients * 0.6 < total_carbs) return slimeTypes.get("Skinny Fat")!;
     if (totalMacroNutrients * 0.5 < total_protein) return slimeTypes.get("Keto")!;
     return slimeTypes.get("Balance")!;
   };
 
   private getAllSlimeEarningRate = async (): Promise<Map<number, number>> => {
     const earnRates = await this.knex("slime_food")
-      .select<{ earnRate: number; slime_id: number }[]>(
-        this.knex.raw(`SUM(food.protein * slime_type.earn_rate_multiplier * ?) as "earnRate"`, [
+      .select<{ earn_rate: number; slime_id: number }[]>(
+        this.knex.raw(`SUM(food.protein * slime_type.earn_rate_multiplier * ?) as "earn_rate"`, [
           GameConfig.EARNING_RATE_CONSTANT,
         ]),
-        "slime_food.slime_id"
+        "slime.id"
       )
       .join("slime", "slime.id", "slime_food.slime_id")
       .join("food", "slime_food.food_id", "food.id")
       .join("slime_type", "slime_type.id", "slime.slime_type_id")
-      .groupBy("slime_food.slime_id");
+      .groupBy("slime.id")
+      .where("slime.calories", ">", 0);
     return earnRates.reduce((acc, e) => {
-      acc.set(+e.slime_id, +e.earnRate);
+      acc.set(+e.slime_id, +e.earn_rate);
       return acc;
     }, new Map<number, number>());
   };
@@ -131,6 +132,7 @@ export default class SlimeService implements SlimeServiceHelper {
     });
     return;
   };
+  // TODO: redis
   feed = async (userId: number, foodId: number, slimeId?: number): Promise<ExportSlime> => {
     slimeId = await this.getValidSlimeId(userId, slimeId);
     const foodService = new FoodService(this.knex, this.redis);
@@ -151,7 +153,6 @@ export default class SlimeService implements SlimeServiceHelper {
       updatedSlime.extra_calories = slimeExtraCalories + extraCalories;
       updatedSlime.calories = slimeMaxCalories;
     }
-
     // determine slime_type
     const updatedEvolutionInfo = {} as EvolutionInfo;
     updatedEvolutionInfo.food_count = slimeDetails.food_count + 1;
@@ -185,6 +186,7 @@ export default class SlimeService implements SlimeServiceHelper {
     return await this.getExportSlime(slimeId);
   };
   reduceCalories = async (slimeId: number): Promise<void> => {
+    const now = new Date().toISOString();
     const slimeDetails = await this.getDetails(slimeId);
     const {
       calories,
@@ -200,9 +202,10 @@ export default class SlimeService implements SlimeServiceHelper {
     const elapsedSeconds = DbUtils.calculateElapsedTimeInSeconds(slimeDetails);
     const caloriesToReduce = Math.floor(bmr_rate * elapsedSeconds);
     updatedSlime.calories = calories - caloriesToReduce;
+    updatedSlime.updated_at = now;
     if (updatedSlime.calories < 0) {
-      updatedSlime.calories = 0;
       const caloriesDeficit = -updatedSlime.calories; // = caloriesToReduce - calories
+      updatedSlime.calories = 0;
       updatedSlime.extra_calories = Math.max(extra_calories - caloriesDeficit, 0); // min extra calories = 0
     }
     // if slime was obese and is no longer obese, update slime_type

@@ -26,11 +26,12 @@ export default class UserService implements UserServiceHelper {
     const user = await this.getRedisUser(userId);
     if (user.earning_rate) return user.earning_rate;
     // select slime id and earn rate multiplier of it's type
-    const { userEarnRate } = await this.knex("slime_food")
-      .select<{ userEarnRate: string }>(
-        this.knex.raw(`SUM(food.protein * slime_type.earn_rate_multiplier * ?) as "userEarnRate"`, [
-          GameConfig.EARNING_RATE_CONSTANT,
-        ])
+    const result = await this.knex("slime_food")
+      .select<{ user_earn_rate: string }>(
+        this.knex.raw(
+          `SUM(food.protein * slime_type.earn_rate_multiplier * ?) as "user_earn_rate"`,
+          [GameConfig.EARNING_RATE_CONSTANT]
+        )
       )
       .join("slime", "slime.id", "slime_food.slime_id")
       .join("food", "slime_food.food_id", "food.id")
@@ -40,8 +41,8 @@ export default class UserService implements UserServiceHelper {
       .having("slime.owner_id", "=", userId)
       .first();
     // if all slimes calories = 0, userEarnRate = 0
-    if (userEarnRate === undefined) return 0;
-    user.earning_rate = Math.max(1, +userEarnRate);
+    if (!result) return 0;
+    user.earning_rate = Math.max(1, +result.user_earn_rate);
     await this.redis.setEx(`${userId}`, 60, JSON.stringify(user));
     return user.earning_rate;
   };
