@@ -477,8 +477,9 @@ for (let i = 1; i < cards.length; i++) {
       });
     }
     );
-    async function tryMe() {
-      slimeType = data.type
-      document.getElementById('slime_character').src = `./img/${slimeType}}/move.gif`;
-    }
-//food api -PUT , foodId: number ,success: boolean, result: Slime
+  });
+}
+async function tryMe() {
+  slimeType = data.type
+  document.getElementById('slime_character').src = `./img/${slimeType}}/move.gif`;
+}
