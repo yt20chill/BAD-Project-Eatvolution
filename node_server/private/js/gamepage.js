@@ -1,6 +1,8 @@
 var closeBtn = document.getElementById('closeBtn');
 var popup = document.getElementById('popup');
-var silmeType = "normal";
+let slimeType = "Balance";
+
+
 
 closeBtn.addEventListener('click', function () {
     popup.classList.remove('show'); // 移除 show 类，使其回到初始位置
@@ -178,6 +180,7 @@ async function getUserFinance() {
     }
 }
 function updateCoins(result) {
+    if (!result.money || !result.earningRate) return;
     result.money += +result.earningRate;
     document.querySelector('.card-text').textContent = `coin：${result.money}`;
 }
@@ -190,7 +193,8 @@ async function getSlimeData() {
         }
         const { result } = await res.json();
         // console.log(result);
-
+        slimeType = result.slime_type;
+        console.log(slimeType)
         const slime_type = document.querySelector('.slime_type');
         const current_calories = document.querySelector('.current_calories');
         const extra_calories = document.querySelector('.max_calories');
@@ -216,6 +220,7 @@ async function getUserFinance() {
         if (!success) {
             throw new Error("Failed to get user data");
         }
+
         return result;
         // console.log(result);
 
@@ -227,8 +232,10 @@ async function getUserFinance() {
     }
 }
 function updateCoins(result) {
-    result.money += +result.earningRate;
-    document.querySelector('.card-text').textContent = `coin：${result.money}`;
+    let { money, earning_rate: earningRate } = result;
+    if (money < 0 || earningRate < 0) return;
+    money += earningRate;
+    document.querySelector('.card-text').textContent = `coin：${money}`;
 }
 
 async function getSlimeData() {
@@ -265,7 +272,7 @@ window.onload = async () => {
     // get coins
     const finance = await getUserFinance();
     setInterval(function () { updateCoins(finance) }, 1000)
-    // await getSlimeData();
+    await getSlimeData();
     await updateDataAndRefresh();
     // await updateType()
 }
