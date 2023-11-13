@@ -31,21 +31,21 @@
                     <div id="popupMenu" class="popup-menu">
                         <div class="footcontainer" id="footcontainerID">
                             <span class="nav-link" id="refresh_shop" onclick="refreshShop()" type="button">
-                                <img src="./img/refresh.png" alt="Refresh Button">
+                                <img src="/user/img/refresh.png" alt="Refresh Button">
                             </span>
                             <div class="food_card_container" id="food_card_containerID">
-                                <div class="card" id="card1">
+                                <!-- card for custom food -->
+                                <div class="card" id="custom-card">
                                     <div class="content card-button" type="button">
                                         <div class="top">
-                                            <p class="name"></p>
+                                            <p class="name">Custom Food</p>
                                             <div class="color"></div>
                                         </div>
-                                        <div class="middle">
-                                            <p class="icon"></p>
-                                        </div>
+                                        <textarea name="foodName" class="middle" placeholder="Milkshakes">
+                                        </textarea>
                                         <div class="bottom">
-                                            <div class="calories"></div>
-                                            <div class="cost"></div>
+                                            <button id="custom-food-btn" onclick="postCustomFood()">Submit</button>
+
                                         </div>
                                     </div>
                                 </div>

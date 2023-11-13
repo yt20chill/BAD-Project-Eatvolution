@@ -47,10 +47,11 @@ export default class DbUtils {
     const unitRegex = /(_g$|_mg$|_total_g$)/;
     const food = {} as InsertFood;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { name, potassium_mg, serving_size_g, fat_saturated_g, ...rest } = item;
+    const { name, potassium_mg, serving_size_g, fat_saturated_g, fiber_g, ...rest } = item;
     const normalizeFactor = serving_size_g / 100;
     food.name = name;
     food.saturated_fat = fat_saturated_g / normalizeFactor;
+    food.fibre = fiber_g / normalizeFactor;
     for (const key of Object.keys(rest)) {
       food[key.replace(unitRegex, "")] = item[key] / normalizeFactor;
     }
