@@ -476,9 +476,9 @@ for (let i = 1; i < cards.length; i++) {
         }, 0);
       });
     }
-
-async function tryMe() {
-        silmeType = data.type
-        document.getElementById('slime_character').src = `./img/${slimeType}}/move.gif`;
-      }
+    );
+    async function tryMe() {
+      silmeType = data.type
+      document.getElementById('slime_character').src = `./img/${slimeType}}/move.gif`;
+    }
 //food api -PUT , foodId: number ,success: boolean, result: Slime
