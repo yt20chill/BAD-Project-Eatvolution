@@ -1,5 +1,6 @@
 var closeBtn = document.getElementById('closeBtn');
 var popup = document.getElementById('popup');
+var silmeType = "normal";
 
 closeBtn.addEventListener('click', function () {
     popup.classList.remove('show'); // 移除 show 类，使其回到初始位置
@@ -156,26 +157,117 @@ async function login(username, password) {
 
 // log out api
 
+async function getUserFinance() {
+    try {
+        const res = await fetch("/api/user/finance");
+        if (!res.ok) {
+            throw new Error("Failed to get user data");
+        }
+        const { success, result } = await res.json();
+        if (!success) {
+            throw new Error("Failed to get user data");
+        }
+        return result;
+        // console.log(result);
+
+        // 更新货币余额
+
+    } catch (error) {
+        console.error(error);
+        alert("Failed to get user data");
+    }
+}
+function updateCoins(result) {
+    result.money += +result.earningRate;
+    document.querySelector('.card-text').textContent = `coin：${result.money}`;
+}
+
+async function getSlimeData() {
+    try {
+        const res = await fetch("/api/slime");
+        if (!res.ok) {
+            throw new Error("Failed to get slime data");
+        }
+        const { result } = await res.json();
+        // console.log(result);
+
+        const slime_type = document.querySelector('.slime_type');
+        const current_calories = document.querySelector('.current_calories');
+        const extra_calories = document.querySelector('.max_calories');
+
+        slime_type.textContent = `Type :${result.slime_type} `
+        current_calories.textContent = `Calories :${result.current_calories}/${result.max_calories} `
+        extra_calories.textContent = `Extra Calories :${result.extra_calories ?? 0}`
+
+
+    } catch (error) {
+        console.error(error);
+        alert("Failed to get slime data");
+    }
+};
+
+async function getUserFinance() {
+    try {
+        const res = await fetch("/api/user/finance");
+        if (!res.ok) {
+            throw new Error("Failed to get user data");
+        }
+        const { success, result } = await res.json();
+        if (!success) {
+            throw new Error("Failed to get user data");
+        }
+        return result;
+        // console.log(result);
+
+        // 更新货币余额
+
+    } catch (error) {
+        console.error(error);
+        alert("Failed to get user data");
+    }
+}
+function updateCoins(result) {
+    result.money += +result.earningRate;
+    document.querySelector('.card-text').textContent = `coin：${result.money}`;
+}
+
+async function getSlimeData() {
+    try {
+        const res = await fetch("/api/slime");
+        if (!res.ok) {
+            throw new Error("Failed to get slime data");
+        }
+        const { result } = await res.json();
+        // console.log(result);
+
+        const slime_type = document.querySelector('.slime_type');
+        const current_calories = document.querySelector('.current_calories');
+        const extra_calories = document.querySelector('.max_calories');
+
+        slime_type.textContent = `Type :${result.slime_type} `
+        current_calories.textContent = `Calories :${result.current_calories}/${result.max_calories} `
+        extra_calories.textContent = `Extra Calories :${result.extra_calories ?? 0}`
+
+
+    } catch (error) {
+        console.error(error);
+        alert("Failed to get slime data");
+    }
+}
+
+const updateDataAndRefresh = async () => {
+    // await getUserFinance();
+    // await getSlimeData();
+    setTimeout(updateDataAndRefresh, 1000); //每一秒REFRESH 既CODE , 必要, 遲D 加返
+};
 
 window.onload = async () => {
     // get coins
-    const res = await fetch("/api/user/finance");
-    // if (!res.ok) 
-    const { success, result } = await res.json();
-    console.log(result);
-
-    // Update coin balance
-    const coinBalanceElement = document.querySelector('.card-text');
-    coinBalanceElement.textContent = `coin：${result.money}`;
-
-    const addMoneyFunction = () => {
-        result.money++; // Increase the money by 1
-        coinBalanceElement.textContent = `coin：${result.money}`; // Update the coin balance
-    };
-
-    setInterval(addMoneyFunction, 1000) //<< add money each second
-
-    //add money function: change the inner text of where the coin is display
+    const finance = await getUserFinance();
+    setInterval(function () { updateCoins(finance) }, 1000)
+    // await getSlimeData();
+    await updateDataAndRefresh();
+    // await updateType()
 }
 // refresh shop bottom function
 
@@ -286,6 +378,8 @@ async function refreshShop() {
 //     });
 // }
 
+// eat function
+
 const cardContainer = document.getElementById('food_card_containerID');
 const gameContainer = document.getElementById('gamecontainer');
 const cards = cardContainer.getElementsByClassName('card');
@@ -293,7 +387,7 @@ const cards = cardContainer.getElementsByClassName('card');
 for (let i = 0; i < cards.length; i++) {
     const card = cards[i];
 
-    card.addEventListener('click', function () {
+    card.addEventListener('click', async function () {
         closeFootContainer();
         const emoji = card.querySelector('.icon').innerText;
         const emojiElement = document.createElement('div');
@@ -322,18 +416,26 @@ for (let i = 0; i < cards.length; i++) {
                 gameContainer.removeChild(emojiElement);
 
                 const slimeCharacter = document.getElementById('slime_character');
-                slimeCharacter.src = './img/blue_eat.gif';
+                slimeCharacter.src = `./img/${silmeType}/eat.gif`;
 
                 setTimeout(function () {
 
-                    slimeCharacter.src = './img/blue_jump.gif';
+                    //slimeCharacter.src = './img/blue_jump.gif';
+                    slimeCharacter.src = `./img/${silmeType}/jump.gif`;
 
                     setTimeout(function () {
 
-                        slimeCharacter.src = './img/blue_run.gif';
-                    }, 1000); // 3秒後回到最初的圖片
+                        //slimeCharacter.src = './img/blue_run.gif';
+                        slimeCharacter.src = `./img/${silmeType}/move.gif`;
+                    }, 1000); // 1秒後回到最初的圖片
                 }, 2000); // 2秒後換成 'blue_jump.gif'
-            }, 2000); // 4秒後換成 'blue_eat.gif'
+            }, 2000); // 2秒後換成 'blue_eat.gif'
         }, 0);
     });
 }
+
+async function tryMe() {
+    silmeType = data.type
+    document.getElementById('slime_character').src = `./img/${slimeType}}/move.gif`;
+}
+//food api -PUT , foodId: number ,success: boolean, result: Slime

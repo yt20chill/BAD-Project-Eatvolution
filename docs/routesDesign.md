@@ -50,5 +50,5 @@
 
 ## slime
 `/api/slime`
-- `GET`: slime data
+- `GET`: get slime data
 	- return `{success: boolean, result: ExportSlime}`

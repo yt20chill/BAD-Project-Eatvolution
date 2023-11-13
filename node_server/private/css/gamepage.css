@@ -165,13 +165,19 @@ body {
     position: relative;
     left: 50%;
     transform: translateX(-50%);
-    height: 700px;
-    width: 40%;
+    height: 800px;
+    width: 60%;
     margin-top: 60px;
     border: solid 5px;
     border-radius: 10px;
     border-color: #f1f1f1;
     overflow: hidden
+}
+
+@media (max-width: 1800px) {
+    .game_container {
+        width: 95%;
+    }
 }
 
 @media (max-width: 768px) {
@@ -595,4 +601,8 @@ body {
 .emoji {
     position: absolute;
     font-size: 80px;
+}
+
+#slimeStableIcon {
+    content: var(--run)
 }
