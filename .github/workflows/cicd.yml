@@ -42,7 +42,7 @@ jobs:
         with:
           script: |
             cd ~/BAD-Project-Eatvolution
-            git pull origin main
+            git pull origin production
             cd ./node_server
             npm i
             npm run knex migrate:latest
