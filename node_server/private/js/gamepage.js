@@ -1,32 +1,30 @@
-var closeBtn = document.getElementById('closeBtn');
-var popup = document.getElementById('popup');
+var closeBtn = document.getElementById("closeBtn");
+var popup = document.getElementById("popup");
 let slimeType = "Balance";
 
-
-
-closeBtn.addEventListener('click', function () {
-  popup.classList.remove('show'); // 移除 show 类，使其回到初始位置
+closeBtn.addEventListener("click", function () {
+  popup.classList.remove("show"); // 移除 show 类，使其回到初始位置
 });
 
 // 显示 popup 元素
 function showPopup() {
-  popup.classList.add('show'); // 添加 show 类，使其从左侧弹出
+  popup.classList.add("show"); // 添加 show 类，使其从左侧弹出
 }
 
 function hidePopup() {
-  popup.classList.remove('show'); // 移除 show 类，使其回到初始位置
+  popup.classList.remove("show"); // 移除 show 类，使其回到初始位置
 }
 
 // 移除初始的 hidden 类
-window.addEventListener('load', function () {
-  popup.classList.remove('hidden');
+window.addEventListener("load", function () {
+  popup.classList.remove("hidden");
 });
 
 // 史來姆我行為 //
 
 // 获取游戏容器和主角图像元素
-var container = document.querySelector('.game_container');
-var character = document.querySelector('.slime_character');
+var container = document.querySelector(".game_container");
+var character = document.querySelector(".slime_character");
 
 // 定义容器的宽度和主角图像的宽度
 var containerWidth = container.offsetWidth;
@@ -36,7 +34,7 @@ var characterWidth = character.offsetWidth;
 var randomLeft = Math.floor(Math.random() * (containerWidth - characterWidth));
 
 // 设置主角图像的初始位置
-character.style.left = randomLeft + 'px';
+character.style.left = randomLeft + "px";
 
 // 定义主角图像的移动范围
 var minLeft = 0;
@@ -51,9 +49,9 @@ var moveDirection = 1; // 1 表示向右移动，-1 表示向左移动
 // 定义主角图像的移动函数
 function moveCharacter() {
   if (moveDirection == 1) {
-    character.classList.remove('face_left')
+    character.classList.remove("face_left");
   } else {
-    character.classList.add('face_left')
+    character.classList.add("face_left");
   }
   // 获取主角图像的当前左边距
   var currentLeft = parseInt(character.style.left);
@@ -65,14 +63,11 @@ function moveCharacter() {
 
   // 根据移动方向更新主角图像的左边距
   var newLeft = currentLeft + moveSpeed * moveDirection;
-  character.style.left = newLeft + 'px';
+  character.style.left = newLeft + "px";
 
   // 每隔一段时间执行一次移动函数，实现连续移动效果
   setTimeout(moveCharacter, 50); // 可根据需要进行调整
 }
-
-// 调用移动函数开始主角图像的移动
-moveCharacter();
 
 function showPopupMenu() {
   var popup = document.getElementById("popupMenu");
@@ -86,30 +81,30 @@ function hidePopupMenu() {
 
 function closeFootContainer() {
   if (isFootContainerVisible) {
-    footContainer.style.display = 'none';
+    footContainer.style.display = "none";
     isFootContainerVisible = false;
   }
 }
 
-var footContainer = document.getElementById('footcontainerID');
+var footContainer = document.getElementById("footcontainerID");
 var isFootContainerVisible = false;
 
-document.addEventListener('mouseup', function (event) {
+document.addEventListener("mouseup", function (event) {
   var targetElement = event.target;
-  console.log(targetElement)
+  console.log(targetElement);
   // 检查点击事件发生时的目标元素是否为footContainer或其内部元素
   var isClickInsideFootContainer = footContainer.contains(targetElement);
 
   if (!isClickInsideFootContainer && isFootContainerVisible) {
     // 点击了footContainer以外的地方且footContainer可见
-    footContainer.style.display = 'none';
+    footContainer.style.display = "none";
     isFootContainerVisible = false;
   }
 });
 
 // 点击food shop按钮时显示footContainer
-document.getElementById('foodShopButton').addEventListener('click', async function () {
-  footContainer.style.display = 'flex';
+document.getElementById("foodShopButton").addEventListener("click", async function () {
+  footContainer.style.display = "flex";
   isFootContainerVisible = true;
   await getShopItems();
 });
@@ -149,13 +144,12 @@ async function login(username, password) {
   const res = await fetch("/auth/login", {
     method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
     // body: JSON.stringify({username: username, password:password}) equals below
-    body: JSON.stringify({ username, password })
-
-  })
-  const { success, result } = await res.json()
+    body: JSON.stringify({ username, password }),
+  });
+  const { success, result } = await res.json();
 }
 
 // log out api
@@ -170,73 +164,22 @@ async function getUserFinance() {
     if (!success) {
       throw new Error("Failed to get user data");
     }
-    return result;
-    // console.log(result);
-
-    // 更新货币余额
-
-  } catch (error) {
-    console.error(error);
-    alert("Failed to get user data");
-  }
-}
-function updateCoins(result) {
-  if (!result.money || !result.earningRate) return;
-  result.money += +result.earningRate;
-  document.querySelector('.card-text').textContent = `coin：${result.money}`;
-}
-
-async function getSlimeData() {
-  try {
-    const res = await fetch("/api/slime");
-    if (!res.ok) {
-      throw new Error("Failed to get slime data");
-    }
-    const { result } = await res.json();
-    // console.log(result);
-    slimeType = result.slime_type;
-    console.log(slimeType)
-    const slime_type = document.querySelector('.slime_type');
-    const current_calories = document.querySelector('.current_calories');
-    const extra_calories = document.querySelector('.max_calories');
-
-    slime_type.textContent = `Type :${result.slime_type} `
-    current_calories.textContent = `Calories :${result.current_calories}/${result.max_calories} `
-    extra_calories.textContent = `Extra Calories :${result.extra_calories ?? 0}`
-
-
-  } catch (error) {
-    console.error(error);
-    alert("Failed to get slime data");
-  }
-};
-
-async function getUserFinance() {
-  try {
-    const res = await fetch("/api/user/finance");
-    if (!res.ok) {
-      throw new Error("Failed to get user data");
-    }
-    const { success, result } = await res.json();
-    if (!success) {
-      throw new Error("Failed to get user data");
-    }
 
     return result;
     // console.log(result);
 
     // 更新货币余额
-
   } catch (error) {
     console.error(error);
     alert("Failed to get user data");
   }
 }
+
 function updateCoins(result) {
   let { money, earning_rate: earningRate } = result;
   if (money < 0 || earningRate < 0) return;
   money += earningRate;
-  document.querySelector('.card-text').textContent = `coin：${money}`;
+  document.querySelector(".card-text").textContent = `coin：${money}`;
 }
 
 async function getSlimeData() {
@@ -246,48 +189,38 @@ async function getSlimeData() {
       throw new Error("Failed to get slime data");
     }
     const { result } = await res.json();
-    // console.log(result);
+    slimeType = result.slime_type.split(" ")[0];
+    document.getElementById("slime_character").src = `./img/${slimeType}/move.gif`;
+    document.getElementById("slimeStableIcon").src = `./img/${slimeType}/die.gif`;
 
-    const slime_type = document.querySelector('.slime_type');
-    const current_calories = document.querySelector('.current_calories');
-    const extra_calories = document.querySelector('.max_calories');
+    const slime_type = document.querySelector(".slime_type");
+    const current_calories = document.querySelector(".current_calories");
+    const extra_calories = document.querySelector(".max_calories");
 
-    slime_type.textContent = `Type :${result.slime_type} `
-    current_calories.textContent = `Calories :${result.current_calories}/${result.max_calories} `
-    extra_calories.textContent = `Extra Calories :${result.extra_calories ?? 0}`
-
-
+    slime_type.textContent = `Type :${result.slime_type} `;
+    current_calories.textContent = `Calories :${result.current_calories}/${result.max_calories} `;
+    extra_calories.textContent = `Extra Calories :${result.extra_calories ?? 0}`;
   } catch (error) {
     console.error(error);
     alert("Failed to get slime data");
   }
 }
 
-const updateDataAndRefresh = async () => {
-  // await getUserFinance();
-  // await getSlimeData();
-  setTimeout(updateDataAndRefresh, 1000); //每一秒REFRESH 既CODE , 必要, 遲D 加返
-};
-
+let money;
+let earningRate;
 window.onload = async () => {
   // get coins
-  const res = await fetch("/api/user/finance");
-  // if (!res.ok) 
-  const { success, result } = await res.json();
-  console.log(result);
+  const result = await getUserFinance();
+  if (result.money >= 0 && result.earning_rate >= 0) {
+    money = result.money;
+    earningRate = result.earning_rate;
+  }
+  setInterval(updateCoins, 1000);
+};
 
-  // Update coin balance
-  const coinBalanceElement = document.querySelector('.card-text');
-  coinBalanceElement.textContent = `coin：${result.money}`;
-
-  const addMoneyFunction = () => {
-    result.money++; // Increase the money by 1
-    coinBalanceElement.textContent = `coin：${result.money}`; // Update the coin balance
-  };
-
-  setInterval(addMoneyFunction, 1000) //<< add money each second
-
-  //add money function: change the inner text of where the coin is display
+function updateCoins() {
+  money += earningRate;
+  document.querySelector(".card-text").textContent = `coin：${money}`; // Update the coin balance
 }
 // refresh shop bottom function
 
@@ -295,8 +228,8 @@ async function refreshShop() {
   const res = await fetch("/api/shop", {
     method: "PUT",
     headers: {
-      'Content-Type': 'application/json'
-    }
+      "Content-Type": "application/json",
+    },
   });
   const { success, result } = await res.json();
   if (!success) return alert(result);
@@ -327,6 +260,22 @@ async function postCustomFood() {
   if (success) closeFootContainer();
 }
 
+// possible evolve action
+async function postCustomFood() {
+  const foodName = document.querySelector(`textarea[name="foodName"]`).value.trim().toLowerCase();
+  // if food name is empty or is purely number
+  if (foodName === "" || !isNaN(+foodName)) return;
+  const res = await fetch("/api/food", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ foodName }),
+  });
+  const { success } = await res.json();
+  if (success) closeFootContainer();
+}
+
 // pick the food to eat
 
 // 獲取卡片容器元素
@@ -342,7 +291,6 @@ async function postCustomFood() {
 // for (let i = 0; i < cards.length; i++) {
 //     const card = cards[i];
 //     const icon = card.querySelector('.icon');
-
 
 //     card.addEventListener('click', function () {
 //         console.log(123)
@@ -414,19 +362,19 @@ async function postCustomFood() {
 
 // eat function
 
-const cardContainer = document.getElementById('food_card_containerID');
-const gameContainer = document.getElementById('gamecontainer');
-const cards = cardContainer.getElementsByClassName('card');
+const cardContainer = document.getElementById("food_card_containerID");
+const gameContainer = document.getElementById("gamecontainer");
+const cards = cardContainer.getElementsByClassName("card");
 
 for (let i = 1; i < cards.length; i++) {
   const card = cards[i];
 
-  card.addEventListener('click', function () {
+  card.addEventListener("click", function () {
     // TODO: fetch /api/food
     // closeFootContainer();
-    const emoji = card.querySelector('.icon').innerText;
-    const emojiElement = document.createElement('div');
-    emojiElement.classList.add('emoji');
+    const emoji = card.querySelector(".icon").innerText;
+    const emojiElement = document.createElement("div");
+    emojiElement.classList.add("emoji");
     emojiElement.innerText = emoji;
 
     gameContainer.appendChild(emojiElement);
@@ -438,46 +386,34 @@ for (let i = 1; i < cards.length; i++) {
     const leftOffset = gameContainerRect.left + gameContainerRect.width / 2 - emojiWidth / 2;
     const topOffset = cardRect.top - gameContainerRect.top - emojiHeight;
 
-    emojiElement.style.left = leftOffset + 'px';
-    emojiElement.style.top = topOffset + 'px';
-
+    emojiElement.classList.add("emoji");
+    emojiElement.style.left = leftOffset + "px";
+    emojiElement.style.top = topOffset + "px";
     setTimeout(function () {
-      emojiElement.style.transition = 'top 3s';
-      emojiElement.style.left = gameContainerRect.width / 2 - emojiWidth / 2 + 'px';
-      emojiElement.style.top = gameContainerRect.height - emojiHeight - 80 + 'px';
-
-      setTimeout(function () {
-
-        gameContainer.removeChild(emojiElement);
-
-        const slimeCharacter = document.getElementById('slime_character');
-        slimeCharacter.src = './img/blue_eat.gif';
-
-        setTimeout(function () {
-
-          slimeCharacter.src = './img/blue_jump.gif';
-
-          setTimeout(function () {
-
-            const slimeCharacter = document.getElementById('slime_character');
-            slimeCharacter.src = `./img/${slimeType}/eat.gif`;
-
-            slimeCharacter.src = './img/blue_jump.gif';
-
-            //slimeCharacter.src = './img/blue_jump.gif';
-            slimeCharacter.src = `./img/${slimeType}/jump.gif`;
-
-            slimeCharacter.src = './img/blue_jump.gif';
-
-            //slimeCharacter.src = './img/blue_run.gif';
-            slimeCharacter.src = `./img/${slimeType}/move.gif`;
-          }, 1000); // 1秒後回到最初的圖片
-        }, 2000); // 2秒後換成 'blue_jump.gif'
-      }, 2000); // 2秒後換成 'blue_eat.gif'
+      emojiElement.style.transition = "top 3s";
+      emojiElement.style.left = gameContainerRect.width / 2 - emojiWidth / 2 + "px";
+      emojiElement.style.top = gameContainerRect.height - emojiHeight - 80 + "px";
     }, 0);
+    setTimeout(function () {
+      const slimeCharacter = document.getElementById("slime_character");
+      slimeCharacter.src = `./img/${slimeType}/eat.gif`;
+      setTimeout(function () {
+        gameContainer.removeChild(emojiElement);
+        slimeCharacter.src = `./img/${slimeType}/jump.gif`;
+        setTimeout(function () {
+          //slimeCharacter.src = './img/blue_run.gif';
+          slimeCharacter.src = `./img/${slimeType}/move.gif`;
+        }, 1000); // 1秒後回到最初的圖片
+      }, 500);
+    }, 3000);
   });
 }
-function tryMe() {
-  slimeType = data.type;
-  document.getElementById('slime_character').src = `./img/${slimeType}/move.gif`;
-}
+
+// 调用移动函数开始主角图像的移动
+
+document.addEventListener("DOMContentLoaded", async () => {
+  await getSlimeData();
+  // get slime data per minute
+  moveCharacter();
+  setInterval(async () => await getSlimeData(), 60 * 1000);
+});

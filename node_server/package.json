@@ -9,6 +9,7 @@
     "start": "ts-node ./src/main.ts",
     "dev": "ts-node-dev ./src/main.ts",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format:js": "prettier --write \"**/*.js\"",
     "env:dummy": "cp .env.dummy .env",
     "test": "jest --runInBand --forceExit",
     "test:watch": "jest --watch",
