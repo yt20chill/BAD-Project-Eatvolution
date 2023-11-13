@@ -319,11 +319,10 @@ body {
         width: 1000px;
     } */
 
-    /* 
-    .nav-div {
-        padding: 20px;
 
-    } */
+    .nav-text {
+        color: black !important;
+    }
 
 
 }
