@@ -1,11 +1,24 @@
 import { Knex } from "knex";
-import { ExportSlimeCollection } from "../../../models/models";
+import { UserSlimeTypeCollection } from "../../../models/dbModels";
+import { SlimeCollection } from "../../../models/models";
 import { SlimeCollectionServiceHelper } from "../../../models/serviceModels";
+import DbUtils from "../../utils/dbUtils";
 
 export default class SlimeCollectionService implements SlimeCollectionServiceHelper {
   constructor(private readonly knex: Knex) {}
-  getSlimeCollection = async (userId: number): Promise<ExportSlimeCollection> => {
-    throw new Error("Method not implemented.");
+  getSlimeCollection = async (userId: number): Promise<SlimeCollection[]> => {
+    const slimeCollection = await this.knex<UserSlimeTypeCollection>("slime_type")
+      .select(
+        "t.slime_type_id",
+        "slime_type.name",
+        "slime_type.description",
+        "slime_type.max_calories",
+        "slime_type.bmr_multiplier",
+        "slime_type.earn_rate_multiplier"
+      )
+      .join("user_slime_type_collection as t", "t.slime_type_id", "slime_type.id")
+      .where("t.user_id", userId);
+    return DbUtils.convertStringToNumber(slimeCollection);
   };
   unlockSlimeCollection = async (userId: number, slime_type_id: string): Promise<void> => {
     const isDuplicated =
