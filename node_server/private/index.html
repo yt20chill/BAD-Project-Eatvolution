@@ -15,6 +15,7 @@
 </head>
 
 <body>
+    <div onclick="tryMe()" style="background-color: aqua;color:red">TRY</div>
     <!----------------------------------------- header ------------------------------------------->
     <header class="navbar navbar-expand-lg">
         <div class="container">
@@ -221,7 +222,7 @@
                         <a class="nav-link" href="collection.html">collection</a>
                     </li>
                     <li class="nav-item" id="logout">
-                        <a class="nav-link" href="/logout">log out</a>
+                        <div class="nav-link">log out</div>
                     </li>
                 </ul>
             </div>
@@ -229,11 +230,12 @@
     </header>
     <div id="popup" class="hidden ">
         <div class="slimestable">
-            <img id="slimeStableIcon" src="./img/blue_die (1).gif" alt="Logo">
+            <!-- <img id="slimeStableIcon" src="./img/blue_die (1).gif" alt="Logo"> -->
+            <img id="slimeStableIcon" src="" alt="Logo">
             <div class="stable_container">
-                <div class="name">佢個TYPE</div>
-                <div class="calories">佢個卡路里</div>
-                <div class="extra_calories">佢個EX卡路里</div>
+                <div class="slime_type"></div>
+                <div class="current_calories"></div>
+                <div class="max_calories"></div>
             </div>
             <i class="fas fa-times" id="closeBtn"></i>
         </div>
@@ -265,6 +267,8 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
     <script src="js/gamepage.js"></script>
+    <script src="./js/auth.js"></script>
+
 </body>
 
 </html>

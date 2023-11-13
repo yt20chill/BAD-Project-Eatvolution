@@ -47,3 +47,8 @@
 	- return `{success: boolean, result: BriefFood[]}`
 - `PUT`: refresh shop for user
 	- return `{success: boolean, result: BriefFood[]}`
+
+## slime
+`/api/slime`
+- `GET`: get slime data
+	- return `{success: boolean, result: ExportSlime}`
