@@ -1,31 +1,8 @@
-// collection page js
-// const title = document.getElementById('title');
-// const slideFirst = document.getElementById('slideFirst');
-// const slideSecond = document.getElementById('slideSecond');
-// const slideThird = document.getElementById('slideThird');
-
-// window.onload = async () => {
-
-//   slideFirst = document.querySelector('.slideFirst');
-//   slideSecond = document.querySelector('.slideSecond');
-//   slideThird = document.querySelector('.slideThird');
-//   prev = document.querySelector('#prev');
-//   next = document.querySelector('#next');
-
-//   getFoodCollection()
-// }
-
-// let inner = document.querySelector('.carousel-inner')
-
-// inner.addEventListener("DOMContentLoaded", async () => {
-//   await getFoodCollection()
-// })
-
 window.onload = async () => {
 
   await changePage();
   await getFoodCollection();
-  await getCustomCollection()
+  await getSlimeTypeCollection()
 
 }
 
@@ -64,18 +41,6 @@ async function changePage() {
     }
     console.log({ page });
   });
-
-  // indicators.style.setProperty('width','100%')
-  // indicators.style.setProperty('margin-left','0','!important')
-  // indicators.style.setProperty('top','0')
-  // indicators.style.setProperty('height','100%')
-
-  // slideFirst.innerHTML = `  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="${page}"
-  // class="active slide-btn slideFirst" aria-current="true" aria-label="Slide 1"></button>`
-  // slideSecond.innerHTML = ` <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="${page}" aria-label="Slide 2"
-  // class="slide-btn slideSecond"></button>`
-  // slideThird.innerHTML = ` <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="${page}" aria-label="Slide 3"
-  // class="slide-btn slideThird"></button>`
 }
 
 
@@ -185,15 +150,13 @@ async function getFoodCollection() {
   // console.log(foodCollectionData)
 }
 
-async function getCustomCollection() {
+async function getSlimeTypeCollection() {
   const res = await fetch("/api/collection/slime");
   const result = await res.json();
   console.log({ result })
   const userSlimeType = result.result
   const cardSlimeType = document.querySelector('.slimeType')
   let totalType = 4 - userSlimeType.length
-
-
 
   for (let i = 0; i < userSlimeType.length; i++) {
     const cardTemplateSlimeType = `  <script>
@@ -224,8 +187,6 @@ async function getCustomCollection() {
     cardSlimeType.innerHTML += cardTemplateSlimeType
   }
 
-
-
   for (let j = 0; j < totalType; j++) {
 
     const cardTemplateTypeLock = `   
@@ -243,11 +204,7 @@ async function getCustomCollection() {
     </div>`
 
     cardSlimeType.innerHTML += cardTemplateTypeLock
-
-
   }
-
-
 }
 
 
