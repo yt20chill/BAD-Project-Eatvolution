@@ -34,7 +34,6 @@ export default class SlimeService implements SlimeServiceHelper {
       await this.isOwner(userId, slimeId);
       return slimeId;
     }
-    console.log({ userId });
     const result = await this.knex<Slime>("slime").select("id").where("owner_id", userId).first();
     if (result === undefined) throw new BadRequestError("no slime was found");
     return result.id;
