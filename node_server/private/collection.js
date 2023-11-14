@@ -22,37 +22,45 @@
 // })
 
 window.onload = async () => {
-  let title;
-  await getFoodCollection()
+
+  await changePage();
+  await getFoodCollection();
   await getCustomCollection()
+
 }
 
 
-function changePage() {
+async function changePage() {
   const next = document.querySelector("#next");
   const prev = document.querySelector("#prev");
-  const slideFirst = document.querySelector(".slideFirst");
-  const slideSecond = document.querySelector(".slideSecond");
-  const slideThird = document.querySelector(".slideThird");
-  const indicators = document.querySelector(".carousel-indicators");
+  const title = document.querySelector('#title');
 
   let page = 0;
   next.addEventListener("click", async (e) => {
     if (page < 2) {
-      document.getElementById(`collection-${++page}`).click();
+      const nextBtn = document.getElementById(`collection-${++page}`)
+      title.textContent = nextBtn.dataset.title
+      nextBtn.click();
     } else {
       page = 0;
-      document.getElementById(`collection-${page}`).click();
+      const nextBtn = document.getElementById(`collection-${page}`)
+      title.textContent = nextBtn.dataset.title
+      nextBtn.click();
     }
     console.log({ page });
   });
 
   prev.addEventListener("click", async (e) => {
+
     if (page > 0) {
-      document.getElementById(`collection-${--page}`).click();
+      const prevBtn = document.getElementById(`collection-${--page}`)
+      title.textContent = prevBtn.dataset.title
+      prevBtn.click();
     } else {
       page = 2;
-      document.getElementById(`collection-${page}`).click();
+      const prevBtn = document.getElementById(`collection-${page}`)
+      title.textContent = prevBtn.dataset.title
+      prevBtn.click();
     }
     console.log({ page });
   });
@@ -70,7 +78,7 @@ function changePage() {
   // class="slide-btn slideThird"></button>`
 }
 
-changePage();
+
 
 async function getFoodCollection() {
   const res = await fetch("/api/collection/food");
@@ -242,12 +250,4 @@ async function getCustomCollection() {
 
 }
 
-title = document.getElementById("title");
-// getFoodCollection()
-// if (slideFirst) {
-title.innerHTML = ` <h2>${"123"}</h2>`;
-// } else if (slideSecond) {
-//   title.innerHTML = ` <h2>${'456'}</h2>`
-// } else if (slideThird) {
-//   title.innerHTML = ` <h2>${'789'}</h2>`
-// }
+
