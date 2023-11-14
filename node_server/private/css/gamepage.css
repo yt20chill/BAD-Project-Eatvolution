@@ -564,6 +564,10 @@ body {
     opacity: 1;
     visibility: visible;
     transition: opacity 0.8s, visibility 0.8s;
+    align-items: flex-start;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 10px;
 }
 
 .flipped .backSide {
@@ -634,7 +638,9 @@ body {
     font-size: 120px;
 }
 
-
+.backSide::before>p>.list {
+    margin: 0 0 5px 0;
+}
 
 
 @keyframes animate {
