@@ -3,11 +3,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 body * {
-    font-family: 'Pixelify Sans', sans-serif;
+    /* font-family: 'Pixelify Sans', sans-serif; */
+    font-family: 'Press Start 2P', sans-serif;
 }
 
 body {
     background-image: url(../img/background.svg);
+    font-size: 14px;
 }
 
 .navbar {
@@ -21,31 +23,31 @@ body {
 }
 
 #popup {
+    display: none;
     position: fixed;
     top: 0;
-    left: -100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
     /* 初始位置在左侧屏幕外 */
-    width: 300px;
-    height: 200px;
-    background-color: #f1f1f1;
     transition: left 0.5s ease-in-out;
     z-index: 9999;
     /* 使用 0.5 秒的过渡效果，并添加缓动函数 */
 }
 
 @media (max-width:400px) {
-    #popup {
+    /* #popup {
         position: fixed;
         top: 0;
         left: -150%;
         /* 初始位置在左侧屏幕外 */
-        width: 300px;
-        height: 200px;
-        background-color: #f1f1f1;
-        transition: left 0.5s ease-in-out;
-        z-index: 9999;
-        /* 使用 0.5 秒的过渡效果，并添加缓动函数 */
-    }
+    /* width: 300px;
+    height: 200px;
+    background-color: #f1f1f1;
+    transition: left 0.5s ease-in-out;
+    z-index: 9999; */
+    /* 使用 0.5 秒的过渡效果，并添加缓动函数 */
+    /* } */
 
     .slimestable {
         position: absolute;
@@ -55,16 +57,51 @@ body {
         background-color: blueviolet;
         border: 5px solid #fafafa;
         border-radius: 5px;
+        box-shadow: 0 0 0.3em rgba(255, 255, 255, 0.5);
     }
 
-    .stable_container {
-        font-size: 10PX;
-    }
+}
+
+.stable_container {
+    padding-left: 20px;
+
+}
+
+.stable_container>div {
+    display: flex;
+    flex-direction: column;
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.stable_container>div>span {
+    font-size: 1.5rem;
+    letter-spacing: -1px;
 }
 
 #popup.show {
-    left: 0;
-    /* 弹出后的位置在左侧屏幕内 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation-name: fade-in-popup;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-out;
+}
+
+@keyframes fade-in-popup {
+    from {
+        transform: translateY(150px);
+        opacity: 0;
+        filter: blur(20px);
+    }
+
+    to {
+        transform: translateY(0px);
+        opacity: 1;
+        filter: blur(0px);
+    }
 }
 
 .dropdown,
@@ -101,15 +138,11 @@ body {
     margin-bottom: 100px;
 }
 
-.stable_container {
-    font-size: 50PX;
-}
-
 .nav-item {
     display: flex;
     justify-self: center;
     /* margin-right: 80px; */
-    font-size: 30px;
+    font-size: 1.8rem;
     align-items: center;
 }
 
@@ -119,7 +152,7 @@ body {
         align-items: center; */
         margin-right: 0px;
         /* padding: 25px; */
-        font-size: 20px;
+        font-size: 1.2rem;
         /* background-color: rgb(196, 152, 206); */
     }
 
@@ -158,20 +191,26 @@ body {
 .card-body {
     display: flex;
     justify-content: center;
-    font-size: 25px;
+    font-size: 1.5rem;
 }
 
 .game_container {
     position: relative;
     left: 50%;
     transform: translateX(-50%);
-    height: 700px;
-    width: 40%;
+    height: 800px;
+    width: 60%;
     margin-top: 60px;
     border: solid 5px;
     border-radius: 10px;
     border-color: #f1f1f1;
     overflow: hidden
+}
+
+@media (max-width: 1800px) {
+    .game_container {
+        width: 95%;
+    }
 }
 
 @media (max-width: 768px) {
@@ -210,6 +249,7 @@ body {
 
 .slime_character {
     position: relative;
+    cursor: po;
     top: 80%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -223,9 +263,11 @@ body {
     display: none;
     /* 初始状态下隐藏 */
     position: fixed;
-    top: 60%;
+    overflow: hidden;
+    top: 120px;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, 0%);
+    max-height: calc(100vh - 150px);
     /* border: 5px solid #ccc; */
     border-radius: 10px;
     z-index: 999;
@@ -257,7 +299,7 @@ body {
     position: absolute;
     top: 5px;
     right: 5px;
-    font-size: 16px;
+    font-size: 1rem;
     color: #888;
     background: none;
     border: none;
@@ -266,14 +308,17 @@ body {
 
 .footcontainer {
     display: flex;
+    min-width: 90vw;
     position: relative;
+    overflow: hidden;
     padding: 65px;
     background-color: #333;
     border: solid 5px;
     border-color: #f1f1f1;
     border-radius: 10px;
-    height: auto;
+    height: calc(100vh - 150px);
     width: auto;
+    z-index: 1;
 }
 
 /* .footcontainer_header {
@@ -284,6 +329,7 @@ body {
 
 .food_card_container {
     display: grid;
+    padding-top: 115px;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 35px;
 }
@@ -293,14 +339,14 @@ body {
         grid-template-columns: repeat(3, 1fr);
     }
 
-    .popup-menu {
+    /* .popup-menu {
         top: 60%;
-    }
+    } */
 
-    .footcontainer {
+    /* .footcontainer {
         height: 900px;
         overflow: scroll;
-    }
+    } */
 
     /* .card-container {
         padding-left: 30px;
@@ -332,16 +378,20 @@ body {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .footcontainer {
+    /* .footcontainer {
         height: 800px;
         overflow: scroll;
         top: 60px;
-    }
+    } */
 }
 
 @media (max-width: 680px) {
     .food_card_container {
         grid-template-columns: 1fr;
+    }
+
+    .food_card_container>div {
+        justify-self: center;
     }
 }
 
@@ -376,14 +426,14 @@ body {
 .content>.top {
     display: flex;
     justify-content: center;
-    font-size: 25px;
+    font-size: 1.5rem;
     align-items: center;
     height: 20%;
     background-color: white;
 
     p {
         font-weight: bold;
-        font-size: 12px;
+        font-size: 0.75rem;
     }
 
     .color {
@@ -411,7 +461,7 @@ body {
 
     div>p:first-child {
         margin-bottom: 5px;
-        font-size: 12px;
+        font-size: 0.75rem;
     }
 
     div>p:last-child {
@@ -422,9 +472,10 @@ body {
 
 .content>.bottom {
     display: flex;
+    letter-spacing: -1px;
     justify-content: space-between;
     align-items: center;
-    font-size: 20px;
+    font-size: 1rem;
     height: 40%;
     padding-left: 15px;
     padding-right: 0px;
@@ -441,9 +492,9 @@ body {
 }
 
 #refresh_shop img {
-    position: absolute;
+    /* position: absolute;
     left: 16px;
-    top: 16px;
+    top: 16px; */
     width: 50px;
     height: 50px;
 }
@@ -548,7 +599,7 @@ body {
 }
 
 .bar {
-    font-size: 30px;
+    font-size: 2rem;
 }
 
 .title {
@@ -594,7 +645,7 @@ body {
 
 .icon {
     display: flex;
-    font-size: 60px;
+    font-size: 3.8rem;
     width: 100%;
     justify-content: center;
     align-items: center;
@@ -608,5 +659,76 @@ body {
 
 .emoji {
     position: absolute;
-    font-size: 80px;
+    font-size: 5rem;
+}
+
+#slimeStableIcon {
+    content: var(--run)
+}
+
+#shop-util-bar {
+    position: fixed;
+    top: 5px;
+    right: 0;
+    left: 0;
+    margin: 0 15px 0 15px;
+    border-bottom: 5px solid gray;
+    height: 100px;
+    width: calc(100% - 30px);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #333;
+    z-index: 5;
+}
+
+#shop-util-bar img {
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+}
+
+#shop-coin-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: white;
+    font-weight: bold;
+}
+
+
+.shop-timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: white;
+    font-weight: bold;
+}
+
+.shop-timer p {
+    margin-left: 15px;
+    margin-bottom: 0;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px
+}
+
+.nav-link span {
+    font-size: 3rem;
+    margin-right: 15px;
+}
+
+.nav-link b {
+    font-size: 1.5rem;
+}
+
+.blur {
+    transition: all 1s ease;
+    filter: blur(10px);
 }

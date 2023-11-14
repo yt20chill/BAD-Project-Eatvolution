@@ -106,7 +106,8 @@ export default class FoodService implements FoodServiceHelper {
         "food.sugar",
         "food.sodium",
         "category.name as category_name",
-        this.knex.raw(`CASE WHEN food.cost IS NULL THEN true ELSE false END as "isCustom"`)
+        "food.emoji",
+        this.knex.raw(`CASE WHEN food.cost IS NULL THEN true ELSE false END as is_custom`)
       )
       .leftJoin("category", "category.id", "food.category_id")
       .whereIn("food.id", validIds)

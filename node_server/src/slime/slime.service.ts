@@ -33,9 +33,10 @@ export default class SlimeService implements SlimeServiceHelper {
       await this.isOwner(userId, slimeId);
       return slimeId;
     }
-    const { id } = await this.knex<Slime>("slime").select("id").where("owner_id", userId).first();
-    if (id === undefined) throw new BadRequestError("no slime was found");
-    return id;
+    console.log({ userId });
+    const result = await this.knex<Slime>("slime").select("id").where("owner_id", userId).first();
+    if (result === undefined) throw new BadRequestError("no slime was found");
+    return result.id;
   };
 
   private getAllTypes = async (): Promise<Map<string, string>> => {
@@ -217,6 +218,7 @@ export default class SlimeService implements SlimeServiceHelper {
     await this.knex("slime").update(updatedSlime).where("slime.id", slimeId);
     return;
   };
+  //TODO: fix the put /api/food route
   getExportSlime = async (userId: number, slimeId?: number): Promise<ExportSlime> => {
     slimeId = await this.getValidSlimeId(userId, slimeId);
     await this.reduceCalories(slimeId);

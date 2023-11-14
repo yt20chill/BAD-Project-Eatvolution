@@ -8,7 +8,7 @@ import { logger } from "../utils/logger";
 import { idFromInsertingTestUser } from "../utils/testUtils";
 import ShopService from "./shop.service";
 //TODO: test redis
-describe("ShopService", () => {
+describe.only("ShopService", () => {
   const knex = Knex(knexConfig[env.NODE_ENV]);
   let shopService: ShopService;
   let testUserId: number;
@@ -38,13 +38,9 @@ describe("ShopService", () => {
     it("get n = foodNumAllowed unique food", async () => {
       const result = await shopService.getFoodShop(testUserId);
       expect(result.length).toBe(gameConfig.FOOD_NUM_ALLOWED);
-      for (const food of result) {
-        expect(food.cost).toBeTruthy();
-      }
     });
     it("all food should have a price", async () => {
       const result = await shopService.getFoodShop(testUserId);
-      expect(result.length).toBe(gameConfig.FOOD_NUM_ALLOWED);
       for (const food of result) {
         expect(food.cost).toBeTruthy();
       }
@@ -62,6 +58,14 @@ describe("ShopService", () => {
       for (let i = 1; i < result.length; i++) {
         expect(result[i].cost).toBeGreaterThanOrEqual(result[i - 1].cost);
       }
+    });
+    it.only("should add food to redis if not exists", async () => {
+      await redis.del("foodShop");
+      expect(redis.exists("foodShop")).toBeFalsy();
+      const result = await shopService.getFoodShop(testUserId);
+      expect(redis.exists("foodShop")).toBeTruthy();
+      const redisFoodShop = JSON.parse(await redis.get("foodShop"));
+      expect(redisFoodShop.universal).toMatchObject(result);
     });
   });
 

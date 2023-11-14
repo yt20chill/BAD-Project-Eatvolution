@@ -122,10 +122,6 @@ export interface SlimeCollection {
   bmr_multiplier: number;
   earn_rate_multiplier: number;
 }
-export interface ExportSlimeCollection {
-  unlocked: SlimeCollection[];
-  locked: SlimeCollection[];
-}
 
 export type UpdateDbUser = {
   money: number;

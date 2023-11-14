@@ -3,12 +3,14 @@ import {
   ControllerResult,
   SlimeCollectionControllerHelper,
 } from "../../../models/controllerModels";
-import { ExportSlimeCollection } from "../../../models/models";
+import { SlimeCollection } from "../../../models/models";
+import { AppUtils } from "../../utils/utils";
 import SlimeCollectionService from "./slimeCollection.service";
 
 export default class SlimeCollectionController implements SlimeCollectionControllerHelper {
   constructor(private readonly slimeCollectionService: SlimeCollectionService) {}
-  getWholeSlimeCollection = (req: Request): Promise<ControllerResult<ExportSlimeCollection>> => {
-    throw new Error("not implemented");
+  getWholeSlimeCollection = async (req: Request): Promise<ControllerResult<SlimeCollection[]>> => {
+    const userId = req.session.user.id;
+    return AppUtils.setServerResponse(await this.slimeCollectionService.getSlimeCollection(userId));
   };
 }

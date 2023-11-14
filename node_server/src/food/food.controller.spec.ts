@@ -2,6 +2,7 @@
 import { Request } from "express";
 import fetchMock from "jest-fetch-mock";
 import Knex from "knex";
+import { RedisClientType } from "redis";
 import knexConfig from "../../src/db/knexfile";
 import { ApplicationError, BadRequestError } from "../../src/utils/error";
 import { mockRequest } from "../../src/utils/testUtils";
@@ -71,8 +72,8 @@ describe("FoodController", () => {
     req = mockRequest();
     req.session.user.id = 1;
     req.body.foodName = "oranges";
-    foodService = new FoodService({} as Knex.Knex);
-    foodService.insert = jest.fn(async (_userId, _food) => true);
+    foodService = new FoodService({} as Knex.Knex, {} as RedisClientType);
+    foodService.insert = jest.fn(async (_userId, _food) => 1);
     foodService.isExisting = jest.fn(async ({}) => -1);
     foodController = new FoodController(foodService);
   });
