@@ -91,16 +91,25 @@ async function getShopItems() {
 }
 
 async function refreshShop() {
-  const res = await fetch("/api/shop", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const { success, result } = await res.json();
-  if (!success) return alert(result);
-  updateShopCoins();
-  displayFood(result);
+  // 彈出確認提示
+  const confirmed = confirm("Do you want to spend money to refresh?");
+
+  // 根據使用者的確認狀態執行相應的操作
+  if (confirmed) {
+    const res = await fetch("/api/shop", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const { success, result } = await res.json();
+    if (!success) return alert(result);
+    updateShopCoins();
+    displayFood(result);
+  } else {
+    // 使用者取消，不執行任何操作
+    // 可以根據需要進行其他處理
+  }
 }
 
 async function postCustomFood() {
