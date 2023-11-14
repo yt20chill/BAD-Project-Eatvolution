@@ -4,8 +4,6 @@
 // const slideSecond = document.getElementById('slideSecond');
 // const slideThird = document.getElementById('slideThird');
 
-
-
 // window.onload = async () => {
 
 //   slideFirst = document.querySelector('.slideFirst');
@@ -25,44 +23,42 @@
 
 window.onload = async () => {
   let title;
-  await getFoodCollection()
-}
-
+  await getFoodCollection();
+};
 
 function changePage() {
-  const next = document.querySelector('#next')
-  const prev = document.querySelector('#prev')
-  const slideFirst = document.querySelector('.slideFirst')
-  const slideSecond = document.querySelector('.slideSecond')
-  const slideThird = document.querySelector('.slideThird')
-  const indicators = document.querySelector('.carousel-indicators')
+  const next = document.querySelector("#next");
+  const prev = document.querySelector("#prev");
+  const slideFirst = document.querySelector(".slideFirst");
+  const slideSecond = document.querySelector(".slideSecond");
+  const slideThird = document.querySelector(".slideThird");
+  const indicators = document.querySelector(".carousel-indicators");
 
   let page = 0;
-  next.addEventListener('click', async (e) => {
+  next.addEventListener("click", async (e) => {
     if (page < 2) {
-      document.getElementById(`collection-${++page}`).click()
+      document.getElementById(`collection-${++page}`).click();
     } else {
-      page = 0
-      document.getElementById(`collection-${page}`).click()
+      page = 0;
+      document.getElementById(`collection-${page}`).click();
     }
-    console.log({ page })
-  })
+    console.log({ page });
+  });
 
-  prev.addEventListener('click', async (e) => {
+  prev.addEventListener("click", async (e) => {
     if (page > 0) {
-      document.getElementById(`collection-${--page}`).click()
+      document.getElementById(`collection-${--page}`).click();
     } else {
-      page = 2
-      document.getElementById(`collection-${page}`).click()
+      page = 2;
+      document.getElementById(`collection-${page}`).click();
     }
-    console.log({ page })
-  })
+    console.log({ page });
+  });
 
   // indicators.style.setProperty('width','100%')
   // indicators.style.setProperty('margin-left','0','!important')
   // indicators.style.setProperty('top','0')
   // indicators.style.setProperty('height','100%')
-
 
   // slideFirst.innerHTML = `  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="${page}"
   // class="active slide-btn slideFirst" aria-current="true" aria-label="Slide 1"></button>`
@@ -70,30 +66,25 @@ function changePage() {
   // class="slide-btn slideSecond"></button>`
   // slideThird.innerHTML = ` <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="${page}" aria-label="Slide 3"
   // class="slide-btn slideThird"></button>`
-
-
 }
 
-changePage()
-
+changePage();
 
 async function getFoodCollection() {
-
   const res = await fetch("/api/collection/food");
   const result = await res.json();
-  const foodCollectionListLock = result.result.locked.universal
-  const foodCollectionListUnlock = result.result.unlocked.universal
-  const foodCollectionListCustom = result.result.unlocked.custom
-  console.log(foodCollectionListLock)
-  console.log(foodCollectionListUnlock)
-  console.log(`L7${foodCollectionListLock[7]}`)
+  const foodCollectionListLock = result.result.locked.universal;
+  const foodCollectionListUnlock = result.result.unlocked.universal;
+  const foodCollectionListCustom = result.result.unlocked.custom;
+  console.log(foodCollectionListLock);
+  console.log(foodCollectionListUnlock);
+  console.log(`L7${foodCollectionListLock[7]}`);
   // console.log(result.result.unlocked.universal[0].food_name
   // )
   // console.log(foodCollectionListUnlock[0].emoji)
 
-
-  const cardUniversal = document.querySelector('.universal')
-  const cardCustom = document.querySelector('.custom')
+  const cardUniversal = document.querySelector(".universal");
+  const cardCustom = document.querySelector(".custom");
 
   for (let x = 0; x < foodCollectionListCustom.length; x++) {
     const cardTemplateCustom = `  <script>
@@ -124,13 +115,9 @@ async function getFoodCollection() {
             </div>
         </div>
     </div>
-</div>`
-    cardCustom.innerHTML += cardTemplateCustom
-
-
+</div>`;
+    cardCustom.innerHTML += cardTemplateCustom;
   }
-
-
 
   for (let j = 0; j < foodCollectionListUnlock.length; j++) {
     const cardTemplateUnLock = `  <script>
@@ -161,15 +148,12 @@ async function getFoodCollection() {
             </div>
         </div>
     </div>
-</div>`
+</div>`;
 
     cardUniversal.innerHTML += cardTemplateUnLock;
-
   }
 
-
   for (let i = 0; i < foodCollectionListLock.length; i++) {
-
     const cardTemplateLock = `   
 <div class="setup_card_container">
     <div class="myCard">
@@ -182,18 +166,12 @@ async function getFoodCollection() {
             </div>
         </div>
     </div>
-</div>`
+</div>`;
     cardUniversal.innerHTML += cardTemplateLock;
   }
 
-
-
-
-
   // const foodCollectionData = foodCollectionList.result
   // console.log(foodCollectionData)
-
-
 }
 
 async function getCustomCollection() {
@@ -201,22 +179,12 @@ async function getCustomCollection() {
   const result = await res.json();
 }
 
-
-
-
-title = document.getElementById('title');
+title = document.getElementById("title");
 // getFoodCollection()
 // if (slideFirst) {
-title.innerHTML = ` <h2>${'123'}</h2>`
+title.innerHTML = ` <h2>${"123"}</h2>`;
 // } else if (slideSecond) {
 //   title.innerHTML = ` <h2>${'456'}</h2>`
 // } else if (slideThird) {
 //   title.innerHTML = ` <h2>${'789'}</h2>`
 // }
-
-
-
-
-
-
-

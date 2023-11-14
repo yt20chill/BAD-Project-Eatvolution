@@ -1,11 +1,9 @@
 var closeBtn = document.getElementById("closeBtn");
 var popup = document.getElementById("popup");
 
-
 closeBtn.addEventListener("click", function () {
   popup.classList.remove("show"); // 移除 show 类，使其回到初始位置
 });
-
 
 // 显示 popup 元素
 async function showPopup() {
@@ -129,13 +127,19 @@ function displaySlimeData() {
   document.getElementById("slimeStableIcon").src = `./img/${slime.type}/die.gif`;
   const displayType = slime.type === "Skinny" ? "Skinny Fat" : slime.type;
   document.querySelector(".slime_type").innerHTML = `<span>Type</span> <b>${displayType}</b>`;
-  document.querySelector(".current_calories").innerHTML = `<span> Calories </span> <b>${slime.cal}/${slime.maxCal} </b>`;
-  document.querySelector(".max_calories").innerHTML = `<span> Extra Calories</span> <b>${slime.extraCal ?? 0}</b>`;
+  document.querySelector(
+    ".current_calories"
+  ).innerHTML = `<span> Calories </span> <b>${slime.cal}/${slime.maxCal} </b>`;
+  document.querySelector(".max_calories").innerHTML = `<span> Extra Calories</span> <b>${
+    slime.extraCal ?? 0
+  }</b>`;
 }
 function updateSlimeCal() {
   if (slime.cal <= 0 || slime.bmr < 0) return;
   slime.cal -= slime.bmr;
-  document.querySelector(".current_calories b").innerText = `${Math.round(slime.cal)} /${slime.maxCal}`;
+  document.querySelector(".current_calories b").innerText = `${Math.round(slime.cal)} /${
+    slime.maxCal
+  }`;
 }
 
 function updateCoins() {

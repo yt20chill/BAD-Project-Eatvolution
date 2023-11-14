@@ -1,6 +1,20 @@
-const slime = { type: undefined, bmr: undefined, cal: undefined, maxCal: undefined, extraCal: undefined, isEvolving: false, updateIntervalId: undefined };
+const slime = {
+  type: undefined,
+  bmr: undefined,
+  cal: undefined,
+  maxCal: undefined,
+  extraCal: undefined,
+  isEvolving: false,
+  updateIntervalId: undefined,
+};
 const user = { money: undefined, earningRate: undefined };
-const foodShop = { isVisible: false, updateCoinIntervalId: undefined, remainingTime: undefined, remainingTimeIntervalId: undefined, scheduleUpdateHour: [8, 13, 19] }
+const foodShop = {
+  isVisible: false,
+  updateCoinIntervalId: undefined,
+  remainingTime: undefined,
+  remainingTimeIntervalId: undefined,
+  scheduleUpdateHour: [8, 13, 19],
+};
 
 function updateShopCoins() {
   if (foodShop.updateCoinIntervalId) clearInterval(foodShop.updateCoinIntervalId);
@@ -10,7 +24,8 @@ function updateShopCoins() {
   );
 }
 function updateRemainingTime() {
-  if (foodShop.remainingTime === undefined) foodShop.remainingTime = calculateRemainingTime(foodShop.scheduleUpdateHour);
+  if (foodShop.remainingTime === undefined)
+    foodShop.remainingTime = calculateRemainingTime(foodShop.scheduleUpdateHour);
   if (foodShop.remainingTimeIntervalId) clearInterval(foodShop.remainingTimeIntervalId);
   foodShop.remainingTimeIntervalId = setInterval(() => {
     foodShop.remainingTime -= 1000;
