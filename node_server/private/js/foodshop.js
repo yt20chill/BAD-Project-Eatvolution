@@ -150,8 +150,8 @@ const purchaseFood = async (foodId, emoji, cost, calories) => {
 };
 
 // implement evolve animation
-function evolveAnimation() {
-  slime.isEvolving = false;
+async function evolveAnimation() {
+  slime.isEvolving = true;
   console.log("evolve");
 }
 function addCalories(calories) {
