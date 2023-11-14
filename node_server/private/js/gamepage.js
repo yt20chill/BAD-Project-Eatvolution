@@ -130,21 +130,21 @@ function displaySlimeData() {
   document.querySelector(
     ".current_calories"
   ).innerHTML = `<span> Calories </span> <b>${slime.cal}/${slime.maxCal} </b>`;
-  document.querySelector(".max_calories").innerHTML = `<span> Extra Calories</span> <b>${
-    slime.extraCal ?? 0
-  }</b>`;
+  document.querySelector(".max_calories").innerHTML = `<span> Extra Calories</span> <b>${slime.extraCal ?? 0
+    }</b>`;
 }
 function updateSlimeCal() {
-  if (slime.cal <= 0 || slime.bmr < 0) return;
-  slime.cal -= slime.bmr;
-  document.querySelector(".current_calories b").innerText = `${Math.round(slime.cal)} /${
-    slime.maxCal
-  }`;
+  if (slime.cal < 0 || slime.bmr < 0) return;
+  if (slime.cal === 0 && slime.extraCal > 0) slime.extraCal -= slime.bmr;
+  slime.cal = Math.max(0, slime.cal - slime.bmr);
+  if (slime.cal === 0) user.earningRate = 0;
+  document.querySelector(".current_calories b").innerText = `${Math.round(slime.cal)}/${slime.maxCal}`;
+  document.querySelector(".max_calories b").innerText = `${Math.round(slime.extraCal) ?? 0}`;
 }
 
 function updateCoins() {
   if (user.money < 0 || user.earningRate < 0) return;
-  user.money += user.earningRate;
+  user.money = Math.floor(user.money + user.earningRate);
   document.querySelector(".card-text").textContent = `coin：${user.money} `; // Update the coin balance
 }
 // refresh shop bottom function

@@ -36,7 +36,7 @@ function displayFood(result) {
   result.forEach((item, index) => {
     const { name, calories, cost, emoji, id: foodId } = item;
     const cardElement = document.getElementById(`card${index + 2}`);
-    cardElement.setAttribute("onclick", `purchaseFood(${foodId},"${emoji}", ${cost})`);
+    cardElement.setAttribute("onclick", `purchaseFood(${foodId},"${emoji}", ${cost}, ${calories})`);
     cardElement.querySelector(".name").textContent = name;
     cardElement.querySelector(".icon").textContent = emoji;
     cardElement.querySelector(".calories").textContent = `Calories: ${calories}`;
@@ -117,12 +117,14 @@ async function postCustomFood() {
   });
   const { success } = await res.json();
   if (!success) return;
+  if (result.slime_type !== slime.type) slime.isEvolving = true;
+  if (slime.isEvolving) evolveAnimation();
   await getUserFinance();
   closeFootContainer();
   eatAnimation(emoji);
 }
 
-const purchaseFood = async (foodId, emoji, cost) => {
+const purchaseFood = async (foodId, emoji, cost, calories) => {
   if (user.money - cost < 0) return alert("Not enough money");
   const res = await fetch("/api/food", {
     method: "PUT",
@@ -135,6 +137,8 @@ const purchaseFood = async (foodId, emoji, cost) => {
   const { success, result } = await res.json();
   if (!success) return;
   if (result.slime_type !== slime.type) slime.isEvolving = true;
+  addCalories(calories);
+  if (slime.isEvolving) evolveAnimation();
   await getUserFinance();
   closeFootContainer();
   eatAnimation(emoji);
@@ -145,7 +149,15 @@ function evolveAnimation() {
   slime.isEvolving = false;
   console.log("evolve");
 }
-
+function addCalories(calories) {
+  if (slime.cal + calories <= slime.maxCal) {
+    slime.cal += calories;
+    return;
+  }
+  slime.extraCal = slime.cal + calories - slime.maxCal;
+  slime.cal = slime.maxCal;
+  return;
+}
 function closeFootContainer() {
   if (foodShop.isVisible) {
     if (foodShop.updateCoinIntervalId) clearInterval(foodShop.updateCoinIntervalId);
