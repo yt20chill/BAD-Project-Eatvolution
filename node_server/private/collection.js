@@ -26,6 +26,7 @@
 window.onload = async () => {
   let title;
   await getFoodCollection()
+  await getCustomCollection()
 }
 
 
@@ -90,10 +91,11 @@ async function getFoodCollection() {
   // console.log(result.result.unlocked.universal[0].food_name
   // )
   // console.log(foodCollectionListUnlock[0].emoji)
-
+  console.log({ result })
 
   const cardUniversal = document.querySelector('.universal')
   const cardCustom = document.querySelector('.custom')
+
 
   for (let x = 0; x < foodCollectionListCustom.length; x++) {
     const cardTemplateCustom = `  <script>
@@ -149,7 +151,7 @@ async function getFoodCollection() {
                 <p style="margin-top: 15px;">Click Me</p>
             </div>
             <div class="backSide">
-                <p class="list">${foodCollectionListUnlock[j].category_name}</p>
+                <p class="list-title">${foodCollectionListUnlock[j].category_name}</p>
                 <p class="list">Calories:${foodCollectionListUnlock[j].calories}</p>
                 <p class="list">Protein:${foodCollectionListUnlock[j].protein}</p>
                 <p class="list">Fat:${foodCollectionListUnlock[j].fat}</p>
@@ -157,7 +159,7 @@ async function getFoodCollection() {
                 <p class="list">Fibre:${foodCollectionListUnlock[j].fibre}</p>
                 <p class="list">Sugar:${foodCollectionListUnlock[j].sugar}</p>
                 <p class="list">Sodium:${foodCollectionListUnlock[j].sodium}</p>
-                <p>Leave Me</p>
+               
             </div>
         </div>
     </div>
@@ -197,8 +199,68 @@ async function getFoodCollection() {
 }
 
 async function getCustomCollection() {
-  const res = await fetch("/api/collection/food");
+  const res = await fetch("/api/collection/slime");
   const result = await res.json();
+  console.log({ result })
+  const userSlimeType = result.result
+  const cardSlimeType = document.querySelector('.slimeType')
+  let totalType = 4 - userSlimeType.length
+
+
+
+  for (let i = 0; i < userSlimeType.length; i++) {
+    const cardTemplateSlimeType = `  <script>
+    function flipCard(card) {
+        card.classList.toggle('flipped');
+    }
+</script>
+
+<div class="setup_card_container">
+    <div class="myCard">
+        <div class="innerCard" onclick="flipCard(this)">
+            <div class="frontSide">
+                <p class="title" style="font-size: 20px;">${userSlimeType[i].name}</p>
+                <p style="margin-top: 15px;">Click Me</p>
+            </div>
+            <div class="backSide">
+                <p class="list-title">${userSlimeType[i].name}</p>
+                <p class="list">Description: ${userSlimeType[i].description}</p>
+                <p class="list">Calories(Max): ${userSlimeType[i].max_calories}</p>
+                <p class="list">BMR: ${userSlimeType[i].bmr_multiplier}</p>
+                <p class="list">Earn Rate: ${userSlimeType[i].earn_rate_multiplier}</p>
+               
+            </div>
+        </div>
+    </div>
+</div>`
+
+    cardSlimeType.innerHTML += cardTemplateSlimeType
+  }
+
+
+
+  for (let j = 0; j < totalType; j++) {
+
+    const cardTemplateTypeLock = `   
+    <div class="setup_card_container">
+        <div class="myCard">
+            <div class="innerCard" >
+                <div class="frontSide">
+                    <p class="title"><i class="fa-solid fa-question" style="font-size: 120px;"></i></p>
+                    <p style="font-size: 20px;margin-top: 5px;"><i class="fa-solid fa-question"></i><i
+                            class="fa-solid fa-question"></i><i class="fa-solid fa-question"></i><i
+                            class="fa-solid fa-question"></i><i class="fa-solid fa-question"></i></p>
+                </div>
+            </div>
+        </div>
+    </div>`
+
+    cardSlimeType.innerHTML += cardTemplateTypeLock
+
+
+  }
+
+
 }
 
 
