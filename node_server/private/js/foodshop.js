@@ -68,14 +68,14 @@ function eatAnimation(emoji) {
   }, 10);
   setTimeout(function () {
     const slimeCharacter = document.getElementById("slime_character");
-    slimeCharacter.src = `./img/${slime.type}/eat.gif`;
+    slimeCharacter.src = `./img/${(slime.type.split(' '))[0]}/eat.gif`;
 
     setTimeout(function () {
       gameContainer.removeChild(emojiElement);
-      slimeCharacter.src = `./img/${slime.type}/jump.gif`;
+      slimeCharacter.src = `./img/${(slime.type.split(' '))[0]}/jump.gif`;
       setTimeout(function () {
         //slimeCharacter.src = './img/blue_run.gif';
-        slimeCharacter.src = `./img/${slime.type}/move.gif`;
+        slimeCharacter.src = `./img/${(slime.type.split(' '))[0]}/move.gif`;
         if (slime.isEvolving) evolveAnimation();
       }, 1000); // 1秒後回到最初的圖片
     }, 500);
@@ -153,12 +153,38 @@ const purchaseFood = async (foodId, emoji, cost, calories) => {
 async function evolveAnimation(newType) {
   slime.isEvolving = false;
   slime.type = newType;
+
   // animation
+  const evolveText = document.createElement("div");
+  evolveText.classList.add("evolve-text");
+  evolveText.style.opacity = "0";
+  evolveText.innerText = "EVOLVEANIMATION!!";
+
+  const slimeCharacter = document.getElementById("gamecontainer");
+  slimeCharacter.appendChild(evolveText);
 
   // change character to slime type
-  slimeCharacter.src = `./img/${slime.type}/move.gif`;
+  slimeCharacter.src = `./img/${slime.type.split(' ')[0]}/move.gif`;
+
   console.log("evolve");
+
+  // 使用 GSAP 庫創建動畫
+  gsap.to(evolveText, {
+    duration: 5, // 動畫持續時間（秒）
+    opacity: 1, // 目標透明度
+    y: -50, // 在 y 軸上的移動距離
+    ease: "power2.out", // 動畫緩動函式
+    delay: 3, // 延遲 3 秒後開始動畫
+    onComplete: function () {
+      // 動畫完成時的回調函式
+      // 在這裡可以執行其他操作或觸發其他事件
+      console.log("Animation complete!");
+      evolveText.remove();
+    }
+  });
 }
+
+
 function addCalories(calories) {
   if (slime.cal + calories <= slime.maxCal) {
     slime.cal += calories;
