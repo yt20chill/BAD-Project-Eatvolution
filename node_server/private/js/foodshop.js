@@ -123,7 +123,7 @@ async function postCustomFood() {
   slime.maxCal = max_calories;
   slime.extraCal = extra_calories;
   slime.bmr = bmr_rate;
-  if (slime.isEvolving) evolveAnimation();
+  if (slime.isEvolving) evolveAnimation(result.slime_type);
   await getUserFinance();
   closeFootContainer();
   eatAnimation(emoji);
@@ -143,15 +143,20 @@ const purchaseFood = async (foodId, emoji, cost, calories) => {
   if (!success) return;
   if (result.slime_type !== slime.type) slime.isEvolving = true;
   addCalories(calories);
-  if (slime.isEvolving) evolveAnimation();
+  if (slime.isEvolving) evolveAnimation(result.slime_type);
   await getUserFinance();
   closeFootContainer();
   eatAnimation(emoji);
 };
 
 // implement evolve animation
-async function evolveAnimation() {
-  slime.isEvolving = true;
+async function evolveAnimation(newType) {
+  slime.isEvolving = false;
+  slime.type = newType;
+  // animation
+
+  // change character to slime type
+  slimeCharacter.src = `./img/${slime.type}/move.gif`;
   console.log("evolve");
 }
 function addCalories(calories) {
