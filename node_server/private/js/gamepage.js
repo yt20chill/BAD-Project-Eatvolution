@@ -146,7 +146,7 @@ function updateSlimeCal() {
 function updateCoins() {
     if (user.money < 0 || user.earningRate < 0) return;
     user.money = Math.floor(user.money + user.earningRate);
-    document.querySelector(".card-text").textContent = `coin：${user.money} `; // Update the coin balance
+    document.querySelector(".card-text").textContent = `${user.money} `; // Update the coin balance
 }
 // refresh shop bottom function
 
