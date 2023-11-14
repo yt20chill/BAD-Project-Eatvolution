@@ -10,6 +10,8 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="shortcut icon" href="../public/favicon.ico">
     <link rel="stylesheet" type="text/css" href="css/gamepage.css" />
 </head>
@@ -22,196 +24,215 @@
             <a class="navbar-brand" href="#" onclick="getSlimeData()">
                 <img id="slimeIcon" src="./img/blue_show_done.gif.gif" alt="Logo" onclick="showPopup()">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <button class="nav-link nav-item" id="foodShopButton" onclick="showPopupMenu()">food shop</button>
+            </button> -->
+            <div class="" id="navbarNav">
+                <ul class="navbar-nav ms-auto flex-row">
+                    <button class="nav-link nav-item" id="foodShopButton" onclick="showPopupMenu()">
+                        <span class="material-symbols-outlined">
+                            lunch_dining
+                        </span><b>SHOP</b>
+                    </button>
                     <div id="popupMenu" class="popup-menu">
-                        <div class="footcontainer" id="footcontainerID">
-                            <span class="nav-link" id="refresh_shop" onclick="refreshShop()" type="button">
-                                <img src="/user/img/refresh.png" alt="Refresh Button">
-                            </span>
-                            <div class="food_card_container" id="food_card_containerID">
-                                <!-- card for custom food -->
-                                <div class="card" id="custom-card">
-                                    <div class="content card-button" type="button">
-                                        <div class="top">
-                                            <p class="name">Custom Food</p>
-                                            <div class="color"></div>
+                        <div class="footcontainer overflow-y-scroll" id="footcontainerID">
+                            <div class="container-fluid position-relative">
+                                <div id="shop-util-bar" class="row">
+                                    <div class="nav-link col-auto shop-timer" id="refresh_shop" onclick="refreshShop()"
+                                        type="button">
+                                        <img src="/user/img/refresh.png" alt="Refresh Button">
+                                        <p>02:59:00</p>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div id="shop-coin-display">
+                                            <img src="/user/img/01coin (1).gif" alt="Coin Icon">
+                                            <p id="shop-coin" class="mb-0">$6128361287</p>
                                         </div>
-                                        <textarea name="foodName" class="middle" placeholder="Milkshakes">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="food_card_container" id="food_card_containerID">
+                                        <!-- card for custom food -->
+                                        <div class="card" id="custom-card">
+                                            <div class="content card-button" type="button">
+                                                <div class="top">
+                                                    <p class="name">Custom Food</p>
+                                                    <div class="color"></div>
+                                                </div>
+                                                <textarea name="foodName" class="middle" placeholder="Milkshakes">
                                         </textarea>
-                                        <div class="bottom">
-                                            <button id="custom-food-btn" onclick="postCustomFood()">Submit</button>
+                                                <div class="bottom">
+                                                    <button id="custom-food-btn"
+                                                        onclick="postCustomFood()">Submit</button>
 
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="card" id="card2">
-                                    <div class="content card-button" type="button">
-                                        <div class="top">
-                                            <p class="name"></p>
-                                            <div class="color"></div>
+                                        <div class="card" id="card2">
+                                            <div class="content card-button" type="button">
+                                                <div class="top">
+                                                    <p class="name"></p>
+                                                    <div class="color"></div>
+                                                </div>
+                                                <div class="middle">
+                                                    <p class="icon"></p>
+                                                </div>
+                                                <div class="bottom">
+                                                    <div class="calories"></div>
+                                                    <div class="cost"></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="middle">
-                                            <p class="icon"></p>
+                                        <div class="card" id="card3">
+                                            <div class="content card-button" type="button">
+                                                <div class="top">
+                                                    <p class="name"></p>
+                                                    <div class="color"></div>
+                                                </div>
+                                                <div class="middle">
+                                                    <p class="icon"></p>
+                                                </div>
+                                                <div class="bottom">
+                                                    <div class="calories"></div>
+                                                    <div class="cost"></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="bottom">
-                                            <div class="calories"></div>
-                                            <div class="cost"></div>
+                                        <div class="card" id="card4">
+                                            <div class="content card-button" type="button">
+                                                <div class="top">
+                                                    <p class="name"></p>
+                                                    <div class="color"></div>
+                                                </div>
+                                                <div class="middle">
+                                                    <p class="icon"></p>
+                                                </div>
+                                                <div class="bottom">
+                                                    <div class="calories"></div>
+                                                    <div class="cost"></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="card" id="card3">
-                                    <div class="content card-button" type="button">
-                                        <div class="top">
-                                            <p class="name"></p>
-                                            <div class="color"></div>
+                                        <div class="card" id="card5">
+                                            <div class="content card-button" type="button">
+                                                <div class="top">
+                                                    <p class="name"></p>
+                                                    <div class="color"></div>
+                                                </div>
+                                                <div class="middle">
+                                                    <p class="icon"></p>
+                                                </div>
+                                                <div class="bottom">
+                                                    <div class="calories"></div>
+                                                    <div class="cost"></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="middle">
-                                            <p class="icon"></p>
+                                        <div class="card" id="card6">
+                                            <div class="content card-button" type="button">
+                                                <div class="top">
+                                                    <p class="name"></p>
+                                                    <div class="color"></div>
+                                                </div>
+                                                <div class="middle">
+                                                    <p class="icon"></p>
+                                                </div>
+                                                <div class="bottom">
+                                                    <div class="calories"></div>
+                                                    <div class="cost"></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="bottom">
-                                            <div class="calories"></div>
-                                            <div class="cost"></div>
+                                        <div class="card" id="card7">
+                                            <div class="content card-button" type="button">
+                                                <div class="top">
+                                                    <p class="name"></p>
+                                                    <div class="color"></div>
+                                                </div>
+                                                <div class="middle">
+                                                    <p class="icon"></p>
+                                                </div>
+                                                <div class="bottom">
+                                                    <div class="calories"></div>
+                                                    <div class="cost"></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="card" id="card4">
-                                    <div class="content card-button" type="button">
-                                        <div class="top">
-                                            <p class="name"></p>
-                                            <div class="color"></div>
+                                        <div class="card" id="card8">
+                                            <div class="content card-button" type="button">
+                                                <div class="top">
+                                                    <p class="name"></p>
+                                                    <div class="color"></div>
+                                                </div>
+                                                <div class="middle">
+                                                    <p class="icon"></p>
+                                                </div>
+                                                <div class="bottom">
+                                                    <div class="calories"></div>
+                                                    <div class="cost"></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="middle">
-                                            <p class="icon"></p>
+                                        <div class="card" id="card9">
+                                            <div class="content card-button" type="button">
+                                                <div class="top">
+                                                    <p class="name"></p>
+                                                    <div class="color"></div>
+                                                </div>
+                                                <div class="middle">
+                                                    <p class="icon"></p>
+                                                </div>
+                                                <div class="bottom">
+                                                    <div class="calories"></div>
+                                                    <div class="cost"></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="bottom">
-                                            <div class="calories"></div>
-                                            <div class="cost"></div>
+                                        <div class="card" id="card10">
+                                            <div class="content card-button" type="button">
+                                                <div class="top">
+                                                    <p class="name"></p>
+                                                    <div class="color"></div>
+                                                </div>
+                                                <div class="middle">
+                                                    <p class="icon"></p>
+                                                </div>
+                                                <div class="bottom">
+                                                    <div class="calories"></div>
+                                                    <div class="cost"></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="card" id="card5">
-                                    <div class="content card-button" type="button">
-                                        <div class="top">
-                                            <p class="name"></p>
-                                            <div class="color"></div>
+                                        <div class="card" id="card11">
+                                            <div class="content card-button" type="button">
+                                                <div class="top">
+                                                    <p class="name"></p>
+                                                    <div class="color"></div>
+                                                </div>
+                                                <div class="middle">
+                                                    <p class="icon"></p>
+                                                </div>
+                                                <div class="bottom">
+                                                    <div class="calories"></div>
+                                                    <div class="cost"></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="middle">
-                                            <p class="icon"></p>
-                                        </div>
-                                        <div class="bottom">
-                                            <div class="calories"></div>
-                                            <div class="cost"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card" id="card6">
-                                    <div class="content card-button" type="button">
-                                        <div class="top">
-                                            <p class="name"></p>
-                                            <div class="color"></div>
-                                        </div>
-                                        <div class="middle">
-                                            <p class="icon"></p>
-                                        </div>
-                                        <div class="bottom">
-                                            <div class="calories"></div>
-                                            <div class="cost"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card" id="card7">
-                                    <div class="content card-button" type="button">
-                                        <div class="top">
-                                            <p class="name"></p>
-                                            <div class="color"></div>
-                                        </div>
-                                        <div class="middle">
-                                            <p class="icon"></p>
-                                        </div>
-                                        <div class="bottom">
-                                            <div class="calories"></div>
-                                            <div class="cost"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card" id="card8">
-                                    <div class="content card-button" type="button">
-                                        <div class="top">
-                                            <p class="name"></p>
-                                            <div class="color"></div>
-                                        </div>
-                                        <div class="middle">
-                                            <p class="icon"></p>
-                                        </div>
-                                        <div class="bottom">
-                                            <div class="calories"></div>
-                                            <div class="cost"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card" id="card9">
-                                    <div class="content card-button" type="button">
-                                        <div class="top">
-                                            <p class="name"></p>
-                                            <div class="color"></div>
-                                        </div>
-                                        <div class="middle">
-                                            <p class="icon"></p>
-                                        </div>
-                                        <div class="bottom">
-                                            <div class="calories"></div>
-                                            <div class="cost"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card" id="card10">
-                                    <div class="content card-button" type="button">
-                                        <div class="top">
-                                            <p class="name"></p>
-                                            <div class="color"></div>
-                                        </div>
-                                        <div class="middle">
-                                            <p class="icon"></p>
-                                        </div>
-                                        <div class="bottom">
-                                            <div class="calories"></div>
-                                            <div class="cost"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card" id="card11">
-                                    <div class="content card-button" type="button">
-                                        <div class="top">
-                                            <p class="name"></p>
-                                            <div class="color"></div>
-                                        </div>
-                                        <div class="middle">
-                                            <p class="icon"></p>
-                                        </div>
-                                        <div class="bottom">
-                                            <div class="calories"></div>
-                                            <div class="cost"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card" id="card12">
-                                    <div class="content card-button" type="button">
-                                        <div class="top">
-                                            <p class="name"></p>
-                                            <div class="color"></div>
-                                        </div>
-                                        <div class="middle">
-                                            <p class="icon"></p>
-                                        </div>
-                                        <div class="bottom">
-                                            <div class="calories"></div>
-                                            <div class="cost"></div>
+                                        <div class="card" id="card12">
+                                            <div class="content card-button" type="button">
+                                                <div class="top">
+                                                    <p class="name"></p>
+                                                    <div class="color"></div>
+                                                </div>
+                                                <div class="middle">
+                                                    <p class="icon"></p>
+                                                </div>
+                                                <div class="bottom">
+                                                    <div class="calories"></div>
+                                                    <div class="cost"></div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -219,11 +240,15 @@
                         </div>
                     </div>
                     <li class="nav-item" id="collection_page">
-                        <a class="nav-link" href="collection.html">collection</a>
+                        <a class="nav-link" href="collection.html">
+                            <span class="material-symbols-outlined">
+                                note_stack
+                            </span><b>DEX</b>
+                        </a>
                     </li>
-                    <li class="nav-item" id="logout">
+                    <!-- <li class="nav-item" id="logout">
                         <div class="nav-link">log out</div>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>
