@@ -154,7 +154,6 @@ async function login(username, password) {
     const { success, result } = await res.json()
 }
 
-// log out api
 
 
 window.onload = async () => {

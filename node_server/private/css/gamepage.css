@@ -554,9 +554,23 @@ body {
 .title {
     margin-top: 20px;
     color: white;
+
+}
+
+.carousel-indicators {
+    width: 100%;
+    margin-left: 0 !important;
+    top: 0;
+    height: fit-content;
 }
 
 
+.carousel-control-next,
+.carousel-control-prev {
+    bottom: unset;
+    align-items: unset;
+    top: -2.5rem
+}
 
 
 @keyframes animate {

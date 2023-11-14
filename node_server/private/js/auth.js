@@ -9,3 +9,4 @@ document.getElementById("logout").addEventListener("click", async function (e) {
         console.error('Logout failed.');
     }
 });
+

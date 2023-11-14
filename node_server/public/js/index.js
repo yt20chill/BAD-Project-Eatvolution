@@ -108,11 +108,13 @@ try {
         })
         const data = await res.json() // { success: true, result:null }
         console.log(data)
-        if (!res.ok) {
-            alert("signup fail")
+        if (!data.success) {
+            alert(data.result)
+
             return
         } else {
             window.location = "/user/index.html"
+
         }
     })
 } catch (error) {
