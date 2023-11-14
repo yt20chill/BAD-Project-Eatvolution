@@ -7,12 +7,15 @@ closeBtn.addEventListener("click", function () {
 });
 
 // 显示 popup 元素
-function showPopup() {
+async function showPopup() {
   popup.classList.add("show"); // 添加 show 类，使其从左侧弹出
+  document.querySelector('#gamecontainer').classList.add('blur');
+  await getSlimeData();
 }
 
 function hidePopup() {
   popup.classList.remove("show"); // 移除 show 类，使其回到初始位置
+  document.querySelector('#gamecontainer').classList.remove('blur');
 }
 
 // 移除初始的 hidden 类
@@ -197,9 +200,9 @@ async function getSlimeData() {
     const current_calories = document.querySelector(".current_calories");
     const extra_calories = document.querySelector(".max_calories");
 
-    slime_type.textContent = `Type :${result.slime_type} `;
-    current_calories.textContent = `Calories :${result.current_calories}/${result.max_calories} `;
-    extra_calories.textContent = `Extra Calories :${result.extra_calories ?? 0}`;
+    slime_type.innerHTML = `<span>Type</span> <b>${result.slime_type}</b> `;
+    current_calories.innerHTML = `<span>Calories</span> <b>${result.current_calories}/${result.max_calories} </b>`;
+    extra_calories.innerHTML = `<span>Extra Calories</span> <b>${result.extra_calories ?? 0}</b>`;
   } catch (error) {
     console.error(error);
     alert("Failed to get slime data");
@@ -224,57 +227,7 @@ function updateCoins() {
 }
 // refresh shop bottom function
 
-async function refreshShop() {
-  const res = await fetch("/api/shop", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const { success, result } = await res.json();
-  if (!success) return alert(result);
 
-  // 更新每个卡片的 HTML 内容
-  result.forEach((item, index) => {
-    const { name, calories, cost, emoji, id: foodId } = item;
-    const cardElement = document.getElementById(`card${index + 2}`);
-    cardElement.setAttribute("food-id", foodId);
-    cardElement.querySelector(".name").textContent = name;
-    cardElement.querySelector(".icon").textContent = emoji;
-    cardElement.querySelector(".calories").textContent = `Calories: ${calories}`;
-    cardElement.querySelector(".cost").textContent = `Cost: ${cost}`;
-  });
-}
-
-async function postCustomFood() {
-  const foodName = document.querySelector(`textarea[name="foodName"]`).value.trim().toLowerCase();
-  if (foodName === "") return;
-  const res = await fetch("/api/food", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ foodName }),
-  });
-  const { success } = await res.json();
-  if (success) closeFootContainer();
-}
-
-// possible evolve action
-async function postCustomFood() {
-  const foodName = document.querySelector(`textarea[name="foodName"]`).value.trim().toLowerCase();
-  // if food name is empty or is purely number
-  if (foodName === "" || !isNaN(+foodName)) return;
-  const res = await fetch("/api/food", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ foodName }),
-  });
-  const { success } = await res.json();
-  if (success) closeFootContainer();
-}
 
 // pick the food to eat
 

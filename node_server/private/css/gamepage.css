@@ -23,31 +23,31 @@ body {
 }
 
 #popup {
+    display: none;
     position: fixed;
     top: 0;
-    left: -100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
     /* 初始位置在左侧屏幕外 */
-    width: 300px;
-    height: 200px;
-    background-color: #f1f1f1;
     transition: left 0.5s ease-in-out;
     z-index: 9999;
     /* 使用 0.5 秒的过渡效果，并添加缓动函数 */
 }
 
 @media (max-width:400px) {
-    #popup {
+    /* #popup {
         position: fixed;
         top: 0;
         left: -150%;
         /* 初始位置在左侧屏幕外 */
-        width: 300px;
-        height: 200px;
-        background-color: #f1f1f1;
-        transition: left 0.5s ease-in-out;
-        z-index: 9999;
-        /* 使用 0.5 秒的过渡效果，并添加缓动函数 */
-    }
+    /* width: 300px;
+    height: 200px;
+    background-color: #f1f1f1;
+    transition: left 0.5s ease-in-out;
+    z-index: 9999; */
+    /* 使用 0.5 秒的过渡效果，并添加缓动函数 */
+    /* } */
 
     .slimestable {
         position: absolute;
@@ -57,16 +57,51 @@ body {
         background-color: blueviolet;
         border: 5px solid #fafafa;
         border-radius: 5px;
+        box-shadow: 0 0 0.3em rgba(255, 255, 255, 0.5);
     }
 
-    .stable_container {
-        font-size: 0.65rem;
-    }
+}
+
+.stable_container {
+    padding-left: 20px;
+
+}
+
+.stable_container>div {
+    display: flex;
+    flex-direction: column;
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.stable_container>div>span {
+    font-size: 1.5rem;
+    letter-spacing: -1px;
 }
 
 #popup.show {
-    left: 0;
-    /* 弹出后的位置在左侧屏幕内 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation-name: fade-in-popup;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-out;
+}
+
+@keyframes fade-in-popup {
+    from {
+        transform: translateY(150px);
+        opacity: 0;
+        filter: blur(20px);
+    }
+
+    to {
+        transform: translateY(0px);
+        opacity: 1;
+        filter: blur(0px);
+    }
 }
 
 .dropdown,
@@ -101,10 +136,6 @@ body {
 #slimeStableIcon {
     width: 250px;
     margin-bottom: 100px;
-}
-
-.stable_container {
-    font-size: 3.2rem;
 }
 
 .nav-item {
@@ -218,6 +249,7 @@ body {
 
 .slime_character {
     position: relative;
+    cursor: po;
     top: 80%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -575,9 +607,6 @@ body {
     color: white;
 }
 
-
-
-
 @keyframes animate {
     0% {
         opacity: 0.3;
@@ -680,4 +709,9 @@ body {
 
 .nav-link b {
     font-size: 1.5rem;
+}
+
+.blur {
+    transition: all 1s ease;
+    filter: blur(10px);
 }
