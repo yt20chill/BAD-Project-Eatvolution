@@ -541,7 +541,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
     width: 100%;
     height: 100%;
     -webkit-backface-visibility: hidden;
@@ -622,6 +622,19 @@ body {
     align-items: unset;
     top: -2.5rem
 }
+
+.frontSide>p {
+    padding: 0;
+    margin: 0;
+
+}
+
+.frontSide>p>.title {
+    height: fit-content;
+    font-size: 120px;
+}
+
+
 
 
 @keyframes animate {
