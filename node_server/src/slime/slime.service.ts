@@ -5,6 +5,7 @@ import { EvolutionInfo, ExportSlime, SlimeDetails } from "../../models/models";
 import { SlimeServiceHelper } from "../../models/serviceModels";
 import SlimeCollectionService from "../collection/slimeCollection/slimeCollection.service";
 import FoodService from "../food/food.service";
+import { io } from "../socket";
 import DbUtils from "../utils/dbUtils";
 import { BadRequestError, ForbiddenError, InternalServerError } from "../utils/error";
 import GameConfig from "../utils/gameConfig";
@@ -167,6 +168,7 @@ export default class SlimeService implements SlimeServiceHelper {
     DbUtils.checkNaN(updatedSlime);
     // unlock slime_type collection
     if (updatedSlime.slime_type_id && updatedSlime.slime_type_id !== slimeDetails.slime_type_id) {
+      io.to(`${userId}`).emit("evolving");
       const slimeCollectionService = new SlimeCollectionService(this.knex);
       await slimeCollectionService.unlockSlimeCollection(userId, updatedSlime.slime_type_id);
     }
@@ -218,7 +220,6 @@ export default class SlimeService implements SlimeServiceHelper {
     await this.knex("slime").update(updatedSlime).where("slime.id", slimeId);
     return;
   };
-  //TODO: fix the put /api/food route
   getExportSlime = async (userId: number, slimeId?: number): Promise<ExportSlime> => {
     slimeId = await this.getValidSlimeId(userId, slimeId);
     await this.reduceCalories(slimeId);
