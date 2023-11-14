@@ -1,3 +1,68 @@
+let money;
+let earningRate;
+let slimeType;
+let isEvolving = false;
+let foodShopCoinIntervalId;
+function displayFood(result) {
+  if (foodShopCoinIntervalId) clearInterval(foodShopCoinIntervalId);
+  foodShopCoinIntervalId = setInterval(() => document.querySelector("#shop-coin").textContent = `${money}`, 1000);
+  result.forEach((item, index) => {
+    const { name, calories, cost, emoji, id: foodId } = item;
+    const cardElement = document.getElementById(`card${index + 2}`);
+    cardElement.setAttribute("onclick", `purchaseFood(${foodId},"${emoji}", ${cost})`);
+    cardElement.querySelector(".name").textContent = name;
+    cardElement.querySelector(".icon").textContent = emoji;
+    cardElement.querySelector(".calories").textContent = `Calories: ${calories}`;
+    cardElement.querySelector(".cost").textContent = `$ ${cost}`;
+  });
+}
+
+function eatAnimation(emoji) {
+  const emojiElement = document.createElement("div");
+  const gameContainer = document.getElementById("gamecontainer");
+  emojiElement.classList.add("emoji");
+  emojiElement.innerText = emoji;
+  gameContainer.appendChild(emojiElement);
+
+  const gameContainerRect = gameContainer.getBoundingClientRect();
+  // const cardRect = card.getBoundingClientRect();
+  const emojiWidth = emojiElement.offsetWidth;
+  const emojiHeight = emojiElement.offsetHeight;
+  const leftOffset = gameContainerRect.left + gameContainerRect.width / 2 - emojiWidth / 2;
+  //const topOffset = gameContainerRect.top - emojiHeight;
+
+  emojiElement.classList.add("emoji");
+  emojiElement.style.left = leftOffset + "px";
+  emojiElement.style.top = 0;
+  setTimeout(function () {
+    emojiElement.style.transition = "top 3s";
+    emojiElement.style.left = gameContainerRect.width / 2 - emojiWidth / 2 + "px";
+    emojiElement.style.top = gameContainerRect.height - emojiHeight - 80 + "px";
+  }, 10);
+  setTimeout(function () {
+    const slimeCharacter = document.getElementById("slime_character");
+    slimeCharacter.src = `./img/${slimeType}/eat.gif`;
+
+    setTimeout(function () {
+      gameContainer.removeChild(emojiElement);
+      slimeCharacter.src = `./img/${slimeType}/jump.gif`;
+      setTimeout(function () {
+        //slimeCharacter.src = './img/blue_run.gif';
+        slimeCharacter.src = `./img/${slimeType}/move.gif`;
+        if (isEvolving) evolveAnimation();
+      }, 1000); // 1秒後回到最初的圖片
+    }, 500);
+  }, 3000);
+}
+async function getShopItems() {
+  const res = await fetch("/api/shop");
+  const { success, result } = await res.json();
+  if (!success) return;
+  displayFood(result);
+}
+
+
+
 async function refreshShop() {
   const res = await fetch("/api/shop", {
     method: "PUT",
@@ -7,21 +72,9 @@ async function refreshShop() {
   });
   const { success, result } = await res.json();
   if (!success) return alert(result);
-
-  // 更新每个卡片的 HTML 内容
-  result.forEach((item, index) => {
-    const { name, calories, cost, emoji, id: foodId } = item;
-    const cardElement = document.getElementById(`card${index + 2}`);
-    cardElement.setAttribute("food-id", foodId);
-    cardElement.querySelector(".name").textContent = name;
-    cardElement.querySelector(".icon").textContent = emoji;
-    cardElement.querySelector(".calories").textContent = `Calories: ${calories}`;
-    cardElement.querySelector(".cost").textContent = `Cost: ${cost}`;
-  });
+  displayFood(result);
 }
 
-
-// possible evolve action
 async function postCustomFood() {
   const foodName = document.querySelector(`textarea[name="foodName"]`).value.trim().toLowerCase();
   // if food name is empty or is purely number
@@ -34,5 +87,32 @@ async function postCustomFood() {
     body: JSON.stringify({ foodName }),
   });
   const { success } = await res.json();
-  if (success) closeFootContainer();
+  if (!success) return;
+  closeFootContainer();
+  eatAnimation(emoji);
+}
+
+const purchaseFood = async (foodId, emoji, cost) => {
+  if (money - cost < 0) return alert("Not enough money");
+  money -= cost;
+  const res = await fetch("/api/food", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ foodId }),
+  });
+  if (!res.ok) return;
+  const { success, result } = await res.json();
+  if (!success) return;
+  if (result.slime_type !== slimeType) isEvolving = true;
+  closeFootContainer();
+  eatAnimation(emoji);
+}
+
+
+// implement evolve animation
+function evolveAnimation() {
+  isEvolving = false;
+  console.log("evolve");
 }
