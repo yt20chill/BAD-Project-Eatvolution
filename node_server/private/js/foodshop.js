@@ -107,6 +107,7 @@ async function postCustomFood() {
   const foodName = document.querySelector(`textarea[name="foodName"]`).value.trim().toLowerCase();
   // if food name is empty or is purely number
   if (foodName === "" || !isNaN(+foodName)) return;
+
   const res = await fetch("/api/food", {
     method: "POST",
     headers: {
@@ -116,13 +117,13 @@ async function postCustomFood() {
   });
   const { success } = await res.json();
   if (!success) return;
+  await getUserFinance();
   closeFootContainer();
   eatAnimation(emoji);
 }
 
 const purchaseFood = async (foodId, emoji, cost) => {
   if (user.money - cost < 0) return alert("Not enough money");
-  user.money -= cost;
   const res = await fetch("/api/food", {
     method: "PUT",
     headers: {
@@ -134,6 +135,7 @@ const purchaseFood = async (foodId, emoji, cost) => {
   const { success, result } = await res.json();
   if (!success) return;
   if (result.slime_type !== slime.type) slime.isEvolving = true;
+  await getUserFinance();
   closeFootContainer();
   eatAnimation(emoji);
 };
