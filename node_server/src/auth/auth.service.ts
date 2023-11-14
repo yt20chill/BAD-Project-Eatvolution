@@ -9,6 +9,7 @@ import { BadRequestError } from "../utils/error";
 import GameConfig from "../utils/gameConfig";
 import { logger } from "../utils/logger";
 
+// FIX duplicated username
 export default class AuthService implements AuthServiceHelper {
   private SALT_ROUNDS = 10;
   private readonly originalKnex: Knex;
