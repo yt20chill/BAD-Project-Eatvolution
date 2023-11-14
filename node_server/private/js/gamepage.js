@@ -81,65 +81,6 @@ function hidePopupMenu() {
   popup.style.display = "none";
 }
 
-function closeFootContainer() {
-  if (isFootContainerVisible) {
-    if (foodShopCoinIntervalId) clearInterval(foodShopCoinIntervalId);
-    footContainer.style.display = "none";
-    isFootContainerVisible = false;
-  }
-}
-
-var footContainer = document.getElementById("footcontainerID");
-var isFootContainerVisible = false;
-
-document.addEventListener("mouseup", function (event) {
-  var targetElement = event.target;
-  console.log(targetElement);
-  // 检查点击事件发生时的目标元素是否为footContainer或其内部元素
-  var isClickInsideFootContainer = footContainer.contains(targetElement);
-
-  if (!isClickInsideFootContainer && isFootContainerVisible) {
-    // 点击了footContainer以外的地方且footContainer可见
-    footContainer.style.display = "none";
-    isFootContainerVisible = false;
-  }
-});
-
-// 点击food shop按钮时显示footContainer
-document.getElementById("foodShopButton").addEventListener("click", async function () {
-  footContainer.style.display = "flex";
-  isFootContainerVisible = true;
-  await getShopItems();
-});
-
-// document.getElementById('foodShopButton').add.EventListener('click', async function () {
-//     var footContainer = document.getElementById('footContainer');
-
-//     if (footContainer.style.display === 'block') {
-//         footContainer.style.display = 'none';
-//         isFootContainerVisible = false;
-//     } else {
-//         footContainer.style.display = 'block';
-//         isFootContainerVisible = true;
-//         await getShopItems();
-//     }
-// });
-
-
-
-async function login(username, password) {
-  //for fetch method other than get (e.g. post)
-  const res = await fetch("/auth/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    // body: JSON.stringify({username: username, password:password}) equals below
-    body: JSON.stringify({ username, password }),
-  });
-  const { success, result } = await res.json();
-}
-
 // log out api
 
 async function getUserFinance() {
@@ -152,22 +93,13 @@ async function getUserFinance() {
     if (!success) {
       throw new Error("Failed to get user data");
     }
-
-    return result;
-    // console.log(result);
-
-    // 更新货币余额
+    if (result.money < 0 || result.earning_rate < 0) return;
+    money = result.money;
+    earningRate = result.earning_rate;
   } catch (error) {
     console.error(error);
     // alert("Failed to get user data");
   }
-}
-
-function updateCoins(result) {
-  let { money, earning_rate: earningRate } = result;
-  if (money < 0 || earningRate < 0) return;
-  money += earningRate;
-  document.querySelector(".card-text").textContent = `coin：${money}`;
 }
 
 async function getSlimeData() {
@@ -195,10 +127,6 @@ async function getSlimeData() {
     // alert("Failed to get slime data");
   }
 }
-
-
-
-
 
 function updateCoins() {
   money += earningRate;
@@ -290,22 +218,15 @@ function updateCoins() {
 //     });
 // }
 
-
 // const cardContainer = document.getElementById("food_card_containerID");
 // const gameContainer = document.getElementById("gamecontainer");
 // const cards = cardContainer.getElementsByClassName("card");
-
-
 
 // const socket = io.connect();
 
 document.addEventListener("DOMContentLoaded", async () => {
   // get coins
-  const finance = await getUserFinance();
-  if (finance.money >= 0 && finance.earning_rate >= 0) {
-    money = finance.money;
-    earningRate = finance.earning_rate;
-  }
+  await getUserFinance();
   setInterval(updateCoins, 1000);
   // socket.on("evolving", evolveAnimation);
   await getSlimeData();

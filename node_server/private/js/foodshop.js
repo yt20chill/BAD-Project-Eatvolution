@@ -3,9 +3,16 @@ let earningRate;
 let slimeType;
 let isEvolving = false;
 let foodShopCoinIntervalId;
-function displayFood(result) {
+let isFootContainerVisible = false;
+
+function updateShopCoins() {
   if (foodShopCoinIntervalId) clearInterval(foodShopCoinIntervalId);
-  foodShopCoinIntervalId = setInterval(() => document.querySelector("#shop-coin").textContent = `${money}`, 1000);
+  foodShopCoinIntervalId = setInterval(
+    () => (document.querySelector("#shop-coin").textContent = `${money}`),
+    1000
+  );
+}
+function displayFood(result) {
   result.forEach((item, index) => {
     const { name, calories, cost, emoji, id: foodId } = item;
     const cardElement = document.getElementById(`card${index + 2}`);
@@ -58,10 +65,9 @@ async function getShopItems() {
   const res = await fetch("/api/shop");
   const { success, result } = await res.json();
   if (!success) return;
+  updateShopCoins();
   displayFood(result);
 }
-
-
 
 async function refreshShop() {
   const res = await fetch("/api/shop", {
@@ -72,6 +78,7 @@ async function refreshShop() {
   });
   const { success, result } = await res.json();
   if (!success) return alert(result);
+  updateShopCoins();
   displayFood(result);
 }
 
@@ -108,11 +115,40 @@ const purchaseFood = async (foodId, emoji, cost) => {
   if (result.slime_type !== slimeType) isEvolving = true;
   closeFootContainer();
   eatAnimation(emoji);
-}
-
+};
 
 // implement evolve animation
 function evolveAnimation() {
   isEvolving = false;
   console.log("evolve");
 }
+
+function closeFootContainer() {
+  if (isFootContainerVisible) {
+    if (foodShopCoinIntervalId) clearInterval(foodShopCoinIntervalId);
+    document.getElementById("footcontainerID").style.display = "none";
+    isFootContainerVisible = false;
+  }
+}
+
+// close food shop if clicked elsewhere
+document.addEventListener("mouseup", function (event) {
+  var targetElement = event.target;
+  // 检查点击事件发生时的目标元素是否为footContainer或其内部元素
+  const isClickInsideFootContainer = document
+    .getElementById("footcontainerID")
+    .contains(targetElement);
+
+  if (!isClickInsideFootContainer && isFootContainerVisible) {
+    // 点击了footContainer以外的地方且footContainer可见
+    document.getElementById("footcontainerID").style.display = "none";
+    isFootContainerVisible = false;
+  }
+});
+
+// 点击food shop按钮时显示footContainer
+document.getElementById("foodShopButton").addEventListener("click", async function () {
+  document.getElementById("footcontainerID").style.display = "flex";
+  isFootContainerVisible = true;
+  await getShopItems();
+});
