@@ -7,14 +7,22 @@ import { RedisClientType } from "redis";
 import SlimeService from "../slime/slime.service";
 import { BadRequestError } from "../utils/error";
 import GameConfig from "../utils/gameConfig";
+import { logger } from "../utils/logger";
 
 export default class AuthService implements AuthServiceHelper {
   private SALT_ROUNDS = 10;
+  private readonly originalKnex: Knex;
   constructor(
     private readonly knex: Knex,
     private readonly redis: RedisClientType
-  ) {}
-
+  ) {
+    this.originalKnex = knex;
+  }
+  private createTransaction = async (): Promise<Knex.Transaction> => {
+    const trx = await this.knex.transaction();
+    this.knex.bind(trx);
+    return trx;
+  };
   private hashPassword = async (password: string): Promise<string> => {
     return await bcrypt.hash(password, this.SALT_ROUNDS);
   };
@@ -33,7 +41,6 @@ export default class AuthService implements AuthServiceHelper {
 
   signUp = async (username: string, password: string): Promise<number> => {
     if (!username || !password) throw new BadRequestError();
-
     const isUserExist = await this.isExisting(username);
     if (isUserExist > 0) {
       return -1;
@@ -44,10 +51,19 @@ export default class AuthService implements AuthServiceHelper {
         money: GameConfig.INITIAL_MONEY,
         total_money: GameConfig.INITIAL_MONEY,
       };
-      const { id } = (await this.knex("user").insert(newUser).returning("id"))[0];
-      const slimeService = new SlimeService(this.knex, this.redis);
-      await slimeService.create(id);
-      return id;
+      const trx = await this.createTransaction();
+      try {
+        const { id } = (await this.knex("user").insert(newUser).returning("id"))[0];
+        const slimeService = new SlimeService(this.knex, this.redis);
+        await slimeService.create(id);
+        await trx.commit();
+        return id;
+      } catch (error) {
+        logger.error(error);
+        await trx.rollback();
+      } finally {
+        this.knex.bind(this.originalKnex);
+      }
     }
   };
 
