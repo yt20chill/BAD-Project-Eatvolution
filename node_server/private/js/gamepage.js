@@ -81,7 +81,83 @@ function hidePopupMenu() {
   popup.style.display = "none";
 }
 
+<<<<<<< HEAD
 // log out api
+=======
+function closeFootContainer() {
+  if (isFootContainerVisible) {
+    footContainer.style.display = "none";
+    isFootContainerVisible = false;
+  }
+}
+
+var footContainer = document.getElementById("footcontainerID");
+var isFootContainerVisible = false;
+
+document.addEventListener("mouseup", function (event) {
+  var targetElement = event.target;
+  console.log(targetElement);
+  // 检查点击事件发生时的目标元素是否为footContainer或其内部元素
+  var isClickInsideFootContainer = footContainer.contains(targetElement);
+
+  if (!isClickInsideFootContainer && isFootContainerVisible) {
+    // 点击了footContainer以外的地方且footContainer可见
+    footContainer.style.display = "none";
+    isFootContainerVisible = false;
+  }
+});
+
+// 点击food shop按钮时显示footContainer
+document.getElementById("foodShopButton").addEventListener("click", async function () {
+  footContainer.style.display = "flex";
+  isFootContainerVisible = true;
+  await getShopItems();
+});
+
+// document.getElementById('foodShopButton').add.EventListener('click', async function () {
+//     var footContainer = document.getElementById('footContainer');
+
+//     if (footContainer.style.display === 'block') {
+//         footContainer.style.display = 'none';
+//         isFootContainerVisible = false;
+//     } else {
+//         footContainer.style.display = 'block';
+//         isFootContainerVisible = true;
+//         await getShopItems();
+//     }
+// });
+
+async function getShopItems() {
+  const res = await fetch("/api/shop");
+  const { success, result } = await res.json();
+  if (!success) return alert(result);
+
+  // 更新每个卡片的 HTML 内容
+  result.forEach((item, index) => {
+    const { name, calories, cost, emoji } = item;
+    const cardElement = document.getElementById(`card${index + 2}`);
+    cardElement.setAttribute("data-food", "foodId");
+    cardElement.querySelector(".name").textContent = name;
+    cardElement.querySelector(".icon").textContent = emoji;
+    cardElement.querySelector(".calories").textContent = `Calories: ${calories}`;
+    cardElement.querySelector(".cost").textContent = `Cost: ${cost}`;
+  });
+}
+
+async function login(username, password) {
+  //for fetch method other than get (e.g. post)
+  const res = await fetch("/auth/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // body: JSON.stringify({username: username, password:password}) equals below
+    body: JSON.stringify({ username, password }),
+  });
+  const { success, result } = await res.json();
+}
+
+>>>>>>> origin/main
 
 async function getUserFinance() {
   try {
