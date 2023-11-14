@@ -1,14 +1,12 @@
-let money;
-let earningRate;
-let slimeType;
-let isEvolving = false;
+const slime = { type: undefined, bmr: undefined, cal: undefined, maxCal: undefined, extraCal: undefined, isEvolving: false, updateIntervalId: undefined };
+const user = { money: undefined, earningRate: undefined };
 let foodShopCoinIntervalId;
 let isFootContainerVisible = false;
 
 function updateShopCoins() {
   if (foodShopCoinIntervalId) clearInterval(foodShopCoinIntervalId);
   foodShopCoinIntervalId = setInterval(
-    () => (document.querySelector("#shop-coin").textContent = `${money}`),
+    () => (document.querySelector("#shop-coin").textContent = `${user.money}`),
     1000
   );
 }
@@ -48,15 +46,15 @@ function eatAnimation(emoji) {
   }, 10);
   setTimeout(function () {
     const slimeCharacter = document.getElementById("slime_character");
-    slimeCharacter.src = `./img/${slimeType}/eat.gif`;
+    slimeCharacter.src = `./img/${slime.type}/eat.gif`;
 
     setTimeout(function () {
       gameContainer.removeChild(emojiElement);
-      slimeCharacter.src = `./img/${slimeType}/jump.gif`;
+      slimeCharacter.src = `./img/${slime.type}/jump.gif`;
       setTimeout(function () {
         //slimeCharacter.src = './img/blue_run.gif';
-        slimeCharacter.src = `./img/${slimeType}/move.gif`;
-        if (isEvolving) evolveAnimation();
+        slimeCharacter.src = `./img/${slime.type}/move.gif`;
+        if (slime.isEvolving) evolveAnimation();
       }, 1000); // 1秒後回到最初的圖片
     }, 500);
   }, 3000);
@@ -100,8 +98,8 @@ async function postCustomFood() {
 }
 
 const purchaseFood = async (foodId, emoji, cost) => {
-  if (money - cost < 0) return alert("Not enough money");
-  money -= cost;
+  if (user.money - cost < 0) return alert("Not enough money");
+  user.money -= cost;
   const res = await fetch("/api/food", {
     method: "PUT",
     headers: {
@@ -112,14 +110,14 @@ const purchaseFood = async (foodId, emoji, cost) => {
   if (!res.ok) return;
   const { success, result } = await res.json();
   if (!success) return;
-  if (result.slime_type !== slimeType) isEvolving = true;
+  if (result.slime_type !== slime.type) slime.isEvolving = true;
   closeFootContainer();
   eatAnimation(emoji);
 };
 
 // implement evolve animation
 function evolveAnimation() {
-  isEvolving = false;
+  slime.isEvolving = false;
   console.log("evolve");
 }
 

@@ -1,17 +1,18 @@
 var closeBtn = document.getElementById("closeBtn");
 var popup = document.getElementById("popup");
 
+
 closeBtn.addEventListener("click", function () {
   popup.classList.remove("show"); // 移除 show 类，使其回到初始位置
 });
 
-//TODO: refresh time
+// TODO: refresh time
+// TODO: reduce cal
 
 // 显示 popup 元素
 async function showPopup() {
   popup.classList.add("show"); // 添加 show 类，使其从左侧弹出
   document.querySelector("#gamecontainer").classList.add("blur");
-  await getSlimeData();
 }
 
 function hidePopup() {
@@ -96,8 +97,8 @@ async function getUserFinance() {
       throw new Error("Failed to get user data");
     }
     if (result.money < 0 || result.earning_rate < 0) return;
-    money = result.money;
-    earningRate = result.earning_rate;
+    user.money = result.money;
+    user.earningRate = result.earning_rate;
   } catch (error) {
     console.error(error);
     // alert("Failed to get user data");
@@ -111,28 +112,38 @@ async function getSlimeData() {
       throw new Error("Failed to get slime data");
     }
     const { result } = await res.json();
-    if (slimeType && slimeType !== result.slime_type.split(" ")[0]) isEvolving = true;
-    if (isEvolving) evolveAnimation();
-    slimeType = result.slime_type.split(" ")[0];
-    document.getElementById("slime_character").src = `./img/${slimeType}/move.gif`;
-    document.getElementById("slimeStableIcon").src = `./img/${slimeType}/die.gif`;
-
-    const slime_type = document.querySelector(".slime_type");
-    const current_calories = document.querySelector(".current_calories");
-    const extra_calories = document.querySelector(".max_calories");
-
-    slime_type.innerHTML = `<span>Type</span> <b>${result.slime_type}</b> `;
-    current_calories.innerHTML = `<span>Calories</span> <b>${result.current_calories}/${result.max_calories} </b>`;
-    extra_calories.innerHTML = `<span>Extra Calories</span> <b>${result.extra_calories ?? 0}</b>`;
+    slime.bmr = result.bmr_rate;
+    slime.cal = result.current_calories;
+    slime.maxCal = result.max_calories;
+    slime.extraCal = result.extra_calories;
+    if (slime.type && slime.type !== result.slime_type.split(" ")[0]) slime.isEvolving = true;
+    if (slime.isEvolving) evolveAnimation();
+    slime.type = result.slime_type.split(" ")[0];
+    displaySlimeData();
   } catch (error) {
     console.error(error);
     // alert("Failed to get slime data");
   }
 }
+function displaySlimeData() {
+  if (slime.calories < 0 || slime.bmr < 0) return;
+  document.getElementById("slime_character").src = `./img/${slime.type}/move.gif`;
+  document.getElementById("slimeStableIcon").src = `./img/${slime.type}/die.gif`;
+  const displayType = slime.type === "Skinny" ? "Skinny Fat" : slime.type;
+  document.querySelector(".slime_type").innerHTML = `<span>Type</span> <b>${displayType}</b>`;
+  document.querySelector(".current_calories").innerHTML = `<span> Calories </span> <b>${slime.cal}/${slime.maxCal} </b>`;
+  document.querySelector(".max_calories").innerHTML = `<span> Extra Calories</span> <b>${slime.extraCal ?? 0}</b>`;
+}
+function updateSlimeCal() {
+  if (slime.cal <= 0 || slime.bmr < 0) return;
+  slime.cal -= slime.bmr;
+  document.querySelector(".current_calories b").innerText = `${Math.round(slime.cal)} /${slime.maxCal}`;
+}
 
 function updateCoins() {
-  money += earningRate;
-  document.querySelector(".card-text").textContent = `coin：${money}`; // Update the coin balance
+  if (user.money < 0 || user.earningRate < 0) return;
+  user.money += user.earningRate;
+  document.querySelector(".card-text").textContent = `coin：${user.money} `; // Update the coin balance
 }
 // refresh shop bottom function
 
@@ -232,5 +243,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   setInterval(updateCoins, 1000);
   // socket.on("evolving", evolveAnimation);
   await getSlimeData();
+  slime.updateIntervalId = setInterval(updateSlimeCal, 1000);
   moveCharacter();
 });
