@@ -71,6 +71,7 @@ export default class AuthController implements AuthControllerHelper {
     if (req.session?.user) {
       if (req.session.user.id) deleteSocket(req.session.user.id);
       delete req.session.user;
+      delete req.session.grant;
     }
     return AppUtils.setServerResponse();
   };
