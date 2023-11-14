@@ -44,6 +44,7 @@ export const countFood = async (knex: Knex) =>
   +(await knex("food").count("id as count"))[0]["count"];
 
 //TODO: combine the testFood and expectTestFood in one object
+// FIXME: fibre and fiber
 export const testFood = Object.freeze({
   name: "test",
   calories: 0.1,
@@ -66,7 +67,7 @@ export const expectTestFood = Object.freeze({
   saturated_fat: "0.10",
   cholesterol: "0.10",
   carbohydrates: "0.10",
-  fibre: "0.10",
+  fiber: "0.10",
   sugar: "0.10",
   sodium: "0.10",
 });
