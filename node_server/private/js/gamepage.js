@@ -6,8 +6,6 @@ closeBtn.addEventListener("click", function () {
   popup.classList.remove("show"); // 移除 show 类，使其回到初始位置
 });
 
-// TODO: refresh time
-// TODO: reduce cal
 
 // 显示 popup 元素
 async function showPopup() {

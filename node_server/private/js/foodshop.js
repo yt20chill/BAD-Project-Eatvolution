@@ -1,14 +1,21 @@
 const slime = { type: undefined, bmr: undefined, cal: undefined, maxCal: undefined, extraCal: undefined, isEvolving: false, updateIntervalId: undefined };
 const user = { money: undefined, earningRate: undefined };
-let foodShopCoinIntervalId;
-let isFootContainerVisible = false;
+const foodShop = { isVisible: false, updateCoinIntervalId: undefined, remainingTime: undefined, remainingTimeIntervalId: undefined, scheduleUpdateHour: [8, 13, 19] }
 
 function updateShopCoins() {
-  if (foodShopCoinIntervalId) clearInterval(foodShopCoinIntervalId);
-  foodShopCoinIntervalId = setInterval(
+  if (foodShop.updateCoinIntervalId) clearInterval(foodShop.updateCoinIntervalId);
+  foodShop.updateCoinIntervalId = setInterval(
     () => (document.querySelector("#shop-coin").textContent = `${user.money}`),
     1000
   );
+}
+function updateRemainingTime() {
+  if (foodShop.remainingTime === undefined) foodShop.remainingTime = calculateRemainingTime(foodShop.scheduleUpdateHour);
+  if (foodShop.remainingTimeIntervalId) clearInterval(foodShop.remainingTimeIntervalId);
+  foodShop.remainingTimeIntervalId = setInterval(() => {
+    foodShop.remainingTime -= 1000;
+    document.querySelector("#remaining-time").innerText = `${formatTime(foodShop.remainingTime)}`;
+  }, 1000);
 }
 function displayFood(result) {
   result.forEach((item, index) => {
@@ -64,6 +71,7 @@ async function getShopItems() {
   const { success, result } = await res.json();
   if (!success) return;
   updateShopCoins();
+  updateRemainingTime();
   displayFood(result);
 }
 
@@ -122,10 +130,12 @@ function evolveAnimation() {
 }
 
 function closeFootContainer() {
-  if (isFootContainerVisible) {
-    if (foodShopCoinIntervalId) clearInterval(foodShopCoinIntervalId);
+  if (foodShop.isVisible) {
+    if (foodShop.updateCoinIntervalId) clearInterval(foodShop.updateCoinIntervalId);
+    if (foodShop.remainingTimeIntervalId) clearInterval(foodShop.remainingTimeIntervalId);
+    foodShop.remainingTime = undefined;
     document.getElementById("footcontainerID").style.display = "none";
-    isFootContainerVisible = false;
+    foodShop.isVisible = false;
   }
 }
 
@@ -137,16 +147,51 @@ document.addEventListener("mouseup", function (event) {
     .getElementById("footcontainerID")
     .contains(targetElement);
 
-  if (!isClickInsideFootContainer && isFootContainerVisible) {
+  if (!isClickInsideFootContainer && foodShop.isVisible) {
     // 点击了footContainer以外的地方且footContainer可见
-    document.getElementById("footcontainerID").style.display = "none";
-    isFootContainerVisible = false;
+    closeFootContainer();
   }
 });
 
 // 点击food shop按钮时显示footContainer
 document.getElementById("foodShopButton").addEventListener("click", async function () {
   document.getElementById("footcontainerID").style.display = "flex";
-  isFootContainerVisible = true;
+  foodShop.isVisible = true;
   await getShopItems();
 });
+
+function calculateRemainingTime(hours) {
+  const now = new Date();
+  const targetTime = new Date();
+  const resultTime = new Date();
+
+  targetTime.setMinutes(0);
+  targetTime.setSeconds(0);
+  targetTime.setMilliseconds(0);
+  for (const hour of hours) {
+    targetTime.setHours(hour);
+    const diff = targetTime.getTime() - now.getTime();
+    if (diff > 0) {
+      resultTime.setHours(Math.floor(diff / 1000 / 60 / 60));
+      resultTime.setMinutes(Math.floor((diff / 1000 / 60) % 60));
+      resultTime.setSeconds(Math.floor((diff / 1000) % 60));
+      return resultTime.getTime();
+    }
+  }
+  // advance the day by 1
+  targetTime.setDate(targetTime.getDate() + 1);
+  targetTime.setHours(hours[0]);
+  const diff = targetTime.getTime() - now.getTime();
+  resultTime.setHours(Math.floor(diff / 1000 / 60 / 60));
+  resultTime.setMinutes(Math.floor((diff / 1000 / 60) % 60));
+  resultTime.setSeconds(Math.floor((diff / 1000) % 60));
+  return resultTime.getTime();
+}
+
+function formatTime(date) {
+  const newDate = new Date(date);
+  const hours = newDate.getHours().toString().padStart(2, "0");
+  const minutes = newDate.getMinutes().toString().padStart(2, "0");
+  const seconds = newDate.getSeconds().toString().padStart(2, "0");
+  return `${hours}:${minutes}:${seconds}`;
+}
