@@ -118,6 +118,11 @@ async function postCustomFood() {
   const { success } = await res.json();
   if (!success) return;
   if (result.slime_type !== slime.type) slime.isEvolving = true;
+  const { current_calories, max_calories, extra_calories, bmr_rate } = result;
+  slime.cal = current_calories;
+  slime.maxCal = max_calories;
+  slime.extraCal = extra_calories;
+  slime.bmr = bmr_rate;
   if (slime.isEvolving) evolveAnimation();
   await getUserFinance();
   closeFootContainer();
@@ -154,7 +159,7 @@ function addCalories(calories) {
     slime.cal += calories;
     return;
   }
-  slime.extraCal = slime.cal + calories - slime.maxCal;
+  slime.extraCal += slime.cal + calories - slime.maxCal;
   slime.cal = slime.maxCal;
   return;
 }
