@@ -29,7 +29,7 @@ var character = document.querySelector(".slime_character");
 
 // 定义容器的宽度和主角图像的宽度
 var containerWidth = container.offsetWidth;
-var characterWidth = character.offsetWidth;
+var characterWidth = character.offsetWidth * 0.5;
 
 // 随机生成主角图像的左边距
 var randomLeft = Math.floor(Math.random() * (containerWidth - characterWidth));
@@ -146,7 +146,7 @@ async function updateSlimeCal() {
   if (slime.cal < 0 || slime.bmr < 0) return;
   if (slime.cal === 0 && slime.extraCal > 0) {
     slime.extraCal = Math.max(0, slime.extraCal - slime.bmr);
-    if (slime.extraCal < 2000) //TODO: evolve once
+    if (slime.extraCal < 2000) { }//TODO: evolve once
   };
   slime.cal = Math.max(0, slime.cal - slime.bmr);
   if (slime.cal === 0) {
