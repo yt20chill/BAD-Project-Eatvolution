@@ -15,12 +15,8 @@
         integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
 
 
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="css/gamepage.css" />
 </head>
@@ -107,6 +103,11 @@
                         </div>
                     </div>
 
+                </div>
+            </div>
+            <div class="carousel-item ">
+                <div class="card-container container slimeType">
+
                     <script>
                         function flipCard(card) {
                             card.classList.toggle('flipped');
@@ -117,20 +118,23 @@
                         <div class="myCard">
                             <div class="innerCard" onclick="flipCard(this)">
                                 <div class="frontSide">
-                                    <p class="title">FRONT SIDE</p>
-                                    <p>Click Me</p>
+                                    <div class="slimePhoto">
+                                        <img src="/user/img/blue_jump.gif" alt="Type Balance">
+                                    </div>
+                                    <div class="slimeTypeTxt">
+                                        <p class="title" style="font-size: 20px;">Balance</p>
+                                        <p class="Click">Click Me</p>
+                                    </div>
                                 </div>
-                                <div class="backSide">
-                                    <p class="title">BACK SIDE</p>
-                                    <p>Leave Me</p>
-                                </div>
+
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="carousel-item ">
-                <div class="card-container container slimeType">
+
+
+
+
+
                     <!-- <script>
                         function flipCard(card) {
                             card.classList.toggle('flipped');

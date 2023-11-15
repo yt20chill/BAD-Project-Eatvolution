@@ -53,17 +53,13 @@ async function getFoodCollection() {
   const foodCollectionListCustom = result.result.unlocked.custom;
   console.log(foodCollectionListLock);
   console.log(foodCollectionListUnlock);
-  console.log(`L7${foodCollectionListLock[7]}`);
-  // console.log(result.result.unlocked.universal[0].food_name
-  // )
-  // console.log(foodCollectionListUnlock[0].emoji)
+  console.log(result)
 
   const cardUniversal = document.querySelector(".universal");
   const cardCustom = document.querySelector(".custom");
 
-
   for (let x = 0; x < foodCollectionListCustom.length; x++) {
-    const cardTemplateCustom = ` <script>
+    const cardTemplateCustom = `  <script>
     function flipCard(card) {
         card.classList.toggle('flipped');
     }
@@ -73,27 +69,36 @@ async function getFoodCollection() {
     <div class="myCard">
         <div class="innerCard" onclick="flipCard(this)">
             <div class="frontSide">
-            <p class="nameFood" style="font-size: 20px; color: black;margin-bottom: 7px;">${foodCollectionListCustom[x].food_name}
+            <p class="nameFood" style="font-size: 20px; color: black;margin-bottom: 7px;">${(foodCollectionListCustom[x].food_name).toUpperCase()}
             </p>
                 <p class="title" style="font-size: 80px;">${foodCollectionListCustom[x].emoji}</p>
                 <p style="margin-top: 15px;">Click Me</p>
             </div>
             <div class="backSide">
                 <p class="list-title">${foodCollectionListCustom[x].category_name}</p>
+                <div class="groupList">
                 <p class="list">Calories : ${foodCollectionListCustom[x].calories}</p>
-                <p class="list">Protein : ${foodCollectionListCustom[x].protein}</p>
-                <p class="list">Fat : ${foodCollectionListCustom[x].fat}</p>
+                <p class="list">Protein : ${foodCollectionListCustom[x].protein}</p>  
+                <p class="list">Sodium : ${foodCollectionListCustom[x].sodium}</p>
                 <p class="list">Carbs : ${foodCollectionListCustom[x].carbohydrates}</p>
                 <p class="list">Fibre : ${foodCollectionListCustom[x].fibre}</p>
                 <p class="list">Sugar : ${foodCollectionListCustom[x].sugar}</p>
-                <p class="list">Sodium : ${foodCollectionListCustom[x].sodium}</p>
-                <p>Leave Me</p>
+                <p class="list">Fat : ${foodCollectionListCustom[x].fat}</p>
+                </div>
+               
             </div>
         </div>
     </div>
 </div>`;
+
     cardCustom.innerHTML += cardTemplateCustom;
   }
+
+
+  // const foodName = foodCollectionListUnlock[1].food_name
+  // console.log(foodCollectionListUnlock[1].food_name)
+
+  // console.log(foodName.toUpperCase(0, 1))
 
   for (let j = 0; j < foodCollectionListUnlock.length; j++) {
     const cardTemplateUnLock = `  <script>
@@ -106,7 +111,7 @@ async function getFoodCollection() {
     <div class="myCard">
         <div class="innerCard" onclick="flipCard(this)">
             <div class="frontSide">
-            <p class="nameFood" style="font-size: 20px; color: black;margin-bottom: 7px;">${foodCollectionListUnlock[j].food_name}
+            <p class="nameFood" style="font-size: 20px; color: black;margin-bottom: 7px;">${(foodCollectionListUnlock[j].food_name).toUpperCase()}
             </p>
                 <p class="title" style="font-size: 80px;">${foodCollectionListUnlock[j].emoji}</p>
                 <p style="margin-top: 15px;">Click Me</p>
@@ -115,12 +120,12 @@ async function getFoodCollection() {
                 <p class="list-title">${foodCollectionListUnlock[j].category_name}</p>
                 <div class="groupList">
                 <p class="list">Calories : ${foodCollectionListUnlock[j].calories}</p>
-                <p class="list">Protein : ${foodCollectionListUnlock[j].protein}</p>
-                <p class="list">Fat : ${foodCollectionListUnlock[j].fat}</p>
+                <p class="list">Protein : ${foodCollectionListUnlock[j].protein}</p>  
+                <p class="list">Sodium : ${foodCollectionListUnlock[j].sodium}</p>
                 <p class="list">Carbs : ${foodCollectionListUnlock[j].carbohydrates}</p>
                 <p class="list">Fibre : ${foodCollectionListUnlock[j].fibre}</p>
                 <p class="list">Sugar : ${foodCollectionListUnlock[j].sugar}</p>
-                <p class="list">Sodium : ${foodCollectionListUnlock[j].sodium}</p>
+                <p class="list">Fat : ${foodCollectionListUnlock[j].fat}</p>
                 </div>
                
             </div>
@@ -168,9 +173,14 @@ async function getSlimeTypeCollection() {
     <div class="myCard">
         <div class="innerCard" onclick="flipCard(this)">
             <div class="frontSide">
-                <p class="title" style="font-size: 20px;">${userSlimeType[i].name}</p>
-                <p style="margin-top: 15px;">Click Me</p>
+            <div class="slimePhoto">
+                <img src="/user/img/blue_jump.gif" alt="Type Balance">
             </div>
+            <div class="slimeTypeTxt">
+                <p class="title" style="font-size: 20px;">${userSlimeType[i].name}</p>
+                <p class="click">Click Me</p>
+            </div>
+        </div>
             <div class="backSide">
                 <p class="list-title">${userSlimeType[i].name}</p>
                 <p class="list">Description : ${userSlimeType[i].description}</p>

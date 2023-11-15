@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swacontainershowPopupMenup');
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+/* card */
+@import url('https://fonts.googleapis.com/css2?family=Marhey:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap');
 
 /* body * {} */
 
@@ -622,14 +625,16 @@ body {
 
 .list {
     margin: 0 !important;
-    font-family: 'Baloo 2', sans-serif !important;
+    font-family: 'Baloo 2', sans-serif;
     font-size: 17px;
+    margin-top: unset !important;
 }
 
 .list-title {
     font-size: 25px;
-    font-family: 'Zen Dots', sans-serif !important;
+    font-family: 'Marhey', sans-serif;
     margin-bottom: unset !important;
+
 
 }
 
@@ -640,6 +645,34 @@ body {
     height: fit-content;
     padding: 10px;
 
+}
+
+.slimePhoto>img {
+    scale: 0.6;
+}
+
+body .nameFood {
+    font-family: 'Marhey', sans-serif;
+}
+
+.slimePhoto {
+    padding-top: 10px;
+    height: 322px
+}
+
+.slimeTypeTxt {
+    position: relative;
+    top: -100px;
+}
+
+
+
+.backSide p {
+    margin-top: unset !important;
+}
+
+.click {
+    margin-top: 10px;
 }
 
 @keyframes animate {
