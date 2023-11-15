@@ -99,6 +99,7 @@ async function getUserFinance() {
     if (result.money < 0 || result.earning_rate < 0) return;
     user.money = result.money;
     user.earningRate = result.earning_rate;
+    document.querySelector("#coin_balance p").textContent = `${Math.floor(user.money)} `;
     document.querySelector("#earn_rate").textContent = `${user.earningRate}`;
   } catch (error) {
     console.error(error);
@@ -154,8 +155,8 @@ function updateSlimeCal() {
 
 function updateCoins() {
   if (user.money < 0 || user.earningRate <= 0) return;
-  user.money = Math.floor(user.money + user.earningRate);
-  document.querySelector("#coin_balance p").textContent = `${user.money} `; // Update the coin balance
+  user.money += user.earningRate;
+  document.querySelector("#coin_balance p").textContent = `${Math.floor(user.money)} `; // Update the coin balance
 }
 // refresh shop bottom function
 
@@ -252,6 +253,7 @@ function updateCoins() {
 document.addEventListener("DOMContentLoaded", async () => {
   // get coins
   await getUserFinance();
+  updateCoins();
   setInterval(updateCoins, 1000);
   // socket.on("evolving", evolveAnimation);
   await getSlimeData();
