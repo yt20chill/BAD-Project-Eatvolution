@@ -2,21 +2,19 @@ window.onload = async () => {
 
   await changePage();
   await getFoodCollection();
-  await getSlimeTypeCollection()
+  await getSlimeTypeCollection();
 
 }
 
 
-let clickCardSound = new Audio("./mp3/clickDex.mp3");
-async function clickCard_Sound() {
-  await clickCardSound.play();
-};
 
 
 
 function flipCard(card) {
   card.classList.toggle('flipped');
-  clickCard_Sound()
+  let clickCardSound = new Audio("./mp3/clickDex.mp3");
+  clickCardSound.play();
+  clickCardSound = null;
 }
 
 async function changePage() {
@@ -173,7 +171,6 @@ async function getFoodCollection() {
 async function getSlimeTypeCollection() {
   const res = await fetch("/api/collection/slime");
   const result = await res.json();
-  console.log({ result })
   const userSlimeType = result.result
   const cardSlimeType = document.querySelector('.slimeType')
   let totalType = 4 - userSlimeType.length
