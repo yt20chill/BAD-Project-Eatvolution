@@ -4,6 +4,7 @@ import { Knex } from "knex";
 import { User } from "models/dbModels";
 import { AuthServiceHelper } from "models/serviceModels";
 import { RedisClientType } from "redis";
+import SlimeCollectionService from "../collection/slimeCollection/slimeCollection.service";
 import SlimeService from "../slime/slime.service";
 import { BadRequestError, InternalServerError } from "../utils/error";
 import GameConfig from "../utils/gameConfig";
@@ -56,7 +57,12 @@ export default class AuthService implements AuthServiceHelper {
       try {
         const { id } = (await this.knex("user").insert(newUser).returning("id"))[0];
         const slimeService = new SlimeService(this.knex, this.redis);
+        const slimeCollectionService = new SlimeCollectionService(this.knex);
         await slimeService.create(id);
+        await slimeCollectionService.unlockSlimeCollection(
+          id,
+          "dd5ef4d7-af75-4a3a-a300-424061737ef5" // Balance slime type id
+        );
         await trx.commit();
         return id;
       } catch (error) {
