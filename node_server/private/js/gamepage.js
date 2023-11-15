@@ -1,7 +1,6 @@
 var closeBtn = document.getElementById("closeBtn");
 var popup = document.getElementById("popup");
-const audio = { bgm: new Audio("./mp3/bgm.mp3") }
-let playingBGM = false;
+
 
 closeBtn.addEventListener("click", function () {
   popup.classList.remove("show"); // 移除 show 类，使其回到初始位置
@@ -162,17 +161,27 @@ function updateCoins() {
 
 
 
-function toggleBackgroundMusic(elem) {
-  if (playingBGM) {
-    audio.bgm.pause();
-    elem.textContent = "music_off";
-    return playingBGM = false;
+function toggleMute(elem) {
+  if (audio.bgm.paused) {
+    audio.bgm.play();
+    audio.bgm.loop = true;
   }
-  audio.bgm.play();
-  elem.textContent = "music_note";
-  audio.bgm.loop = true;
-  playingBGM = true;
-}
+  if (audio.isMuted) {
+    audio.isMuted = false;
+    for (const key in audio) {
+      if (key === "isMuted") continue;
+      audio[key].volume = 1;
+      elem.textContent = "music_note";
+    }
+    return;
+  }
+  audio.isMuted = true;
+  for (const key in audio) {
+    if (key === "isMuted") continue;
+    audio[key].volume = 0;
+    elem.textContent = "music_off";
+  }
+};
 
 document.addEventListener("DOMContentLoaded", async () => {
 

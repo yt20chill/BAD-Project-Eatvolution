@@ -17,9 +17,7 @@ const foodShop = {
   customFoodCost: undefined,
   scheduleUpdateHour: [8, 13, 19],
 };
-const evoSound = new Audio("./mp3/eva.mp3");
-const pickfoodSound = new Audio("./mp3/select-food.mp3");
-
+const audio = { bgm: new Audio("./mp3/bgm.mp3"), evoSound: new Audio("./mp3/eva.mp3"), pickfoodSound: new Audio("./mp3/select-food.mp3"), isMuted: true };
 
 function updateShopCoins() {
   if (foodShop.updateCoinIntervalId) clearInterval(foodShop.updateCoinIntervalId);
@@ -51,7 +49,7 @@ function displayFood(result) {
 }
 
 function eatAnimation(emoji) {
-  pickfoodSound.play();
+  audio.pickfoodSound.play();
   const emojiElement = document.createElement("div");
   const gameContainer = document.getElementById("gamecontainer");
   emojiElement.classList.add("emoji");
@@ -192,7 +190,7 @@ function evolveAnimation(newType) {
   slime.isEvolving = false;
   slime.type = newType;
   // animation
-  evoSound.play();
+  audio.evoSound.play();
 
   const evolveText = document.createElement("div");
   evolveText.classList.add("evolve-text");
