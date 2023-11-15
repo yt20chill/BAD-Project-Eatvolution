@@ -3,6 +3,7 @@ import { RedisClientType } from "redis";
 import { Food } from "../../models/dbModels";
 import { BriefFood } from "../../models/models";
 import { ShopServiceHelper } from "../../models/serviceModels";
+import UserService from "../user/user.service";
 import DbUtils from "../utils/dbUtils";
 import { BadRequestError, InternalServerError } from "../utils/error";
 import gameConfig from "../utils/gameConfig";
@@ -10,10 +11,18 @@ import { logger } from "../utils/logger";
 import { AppUtils } from "../utils/utils";
 
 export default class ShopService implements ShopServiceHelper {
+  private readonly originalKnex: Knex;
   constructor(
     private readonly knex: Knex,
     private readonly redis: RedisClientType
-  ) {}
+  ) {
+    this.originalKnex = knex;
+  }
+  private createTransaction = async (): Promise<Knex.Transaction> => {
+    const trx = await this.knex.transaction();
+    this.knex.bind(trx);
+    return trx;
+  };
   /**
    *
    * @returns an array of food ids sorted by cost
@@ -114,38 +123,51 @@ export default class ShopService implements ShopServiceHelper {
       return acc;
     }, []);
     await this.redis.del("foodShop");
-    const trx = await this.knex.transaction();
+    const trx = await this.createTransaction();
     try {
-      await trx("user_shop").del();
-      await trx("shop").del();
-      await trx("shop").insert(foodArr);
+      await this.knex("user_shop").del();
+      await this.knex("shop").del();
+      await this.knex("shop").insert(foodArr);
       await trx.commit();
       return true;
     } catch (error) {
       logger.error(error);
       await trx.rollback();
       return false;
+    } finally {
+      this.knex.bind(this.originalKnex);
     }
   };
   updateUserShop = async (userId: number): Promise<boolean> => {
+    const trx = await this.createTransaction();
+    const userService = new UserService(this.knex, this.redis);
+    const { money } = await userService.getUserLatestFinancialStatus(userId);
+    const moneyAfterPurchase = +money - gameConfig.REFRESH_PRICE;
+    console.log("here", money, moneyAfterPurchase);
+    if (moneyAfterPurchase < 0) throw new BadRequestError("Insufficient money");
     const foodIds = await this.drawRandomFood();
     const foodArr = foodIds.reduce((acc, food_id) => {
       acc.push({ food_id, user_id: userId });
       return acc;
     }, []);
     const foodShop = JSON.parse(await this.redis.get("foodShop"));
-    const trx = await this.knex.transaction();
     try {
       delete foodShop[userId];
+      await this.redis.del(`${userId}`);
+      await this.knex("user")
+        .update({ money: moneyAfterPurchase, updated_at: this.knex.fn.now() })
+        .where("id", userId);
       await this.redis.set("foodShop", JSON.stringify(foodShop));
-      await trx("user_shop").del().where({ user_id: userId });
-      await trx("user_shop").insert(foodArr);
+      await this.knex("user_shop").del().where({ user_id: userId });
+      await this.knex("user_shop").insert(foodArr);
       await trx.commit();
       return true;
     } catch (error) {
       logger.error(error);
       await trx.rollback();
       return false;
+    } finally {
+      this.knex.bind(this.originalKnex);
     }
   };
 
