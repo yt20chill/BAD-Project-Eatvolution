@@ -4,16 +4,14 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Slime Game</title>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+	<title>Eatvolution</title>
+
 	<meta name="description" content="A gooey cursor background effect with SVG filters and CSS blend modes." />
 	<meta name="keywords"
 		content="gooey effect, cursor, svg filter, css blend mode, css grid, background effect, frontend" />
-	<meta name="author" content="Codrops" />
 	<link rel="shortcut icon" href="favicon.ico">
 	<link rel="stylesheet" href="https://use.typekit.net/ftj8drh.css">
 	<link rel="stylesheet" type="text/css" href="css/index.css" />
-	<script>document.documentElement.className = "js"; var supportsCssVars = function () { var e, t = document.createElement("style"); return t.innerHTML = "root: { --tmp-var: bold; }", document.head.appendChild(t), e = !!(window.CSS && window.CSS.supports && window.CSS.supports("font-weight", "var(--tmp-var)")), t.parentNode.removeChild(t), e }; supportsCssVars() || alert("Please view this demo in a modern browser that supports CSS Variables.");</script>
 </head>
 
 <body class="demo-1">
@@ -31,7 +29,7 @@
 			<div class="form-body">
 				<div class="gif-container">
 					<img src="smallslime.gif" alt="GIF">
-					<h2 class="title">LOGIN </h2>
+					<h2 class="title">LOGIN</h2>
 				</div>
 
 				<div class="social-login">
@@ -42,7 +40,7 @@
 
 				<div class="_or">or</div>
 
-				<form action="" method="" class="the-form" id="login_form" onsubmit="(e)=>login(e)">
+				<form class="the-form" id="login_form">
 
 					<label for="email">User Name</label>
 					<input type="text" name="email" id="email" placeholder="Enter your User Name">
@@ -79,9 +77,11 @@
 			</defs>
 		</svg>
 	</div>
-
-	<script src="js/gsap.min.js"></script>
-	<script type="module" src="js/index.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+	<script>document.documentElement.className = "js"; var supportsCssVars = function () { var e, t = document.createElement("style"); return t.innerHTML = "root: { --tmp-var: bold; }", document.head.appendChild(t), e = !!(window.CSS && window.CSS.supports && window.CSS.supports("font-weight", "var(--tmp-var)")), t.parentNode.removeChild(t), e }; supportsCssVars() || alert("Please view this demo in a modern browser that supports CSS Variables.");</script>
+	<!-- <script src="js/gsap.min.js"></script> -->
+	<script src="/js/auth.js"></script>
+	<script type="module" src="/js/index.js"></script>
 
 </body>
 

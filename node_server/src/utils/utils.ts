@@ -36,11 +36,9 @@ export class AppUtils {
     <T>(controller: Controller<T>) =>
     async (req: Request, res: Response) => {
       try {
-        const { success, result } = await controller(req);
-        if (req.session.user) res.redirect("/user");
-        // result to be handled by client
-        else res.json({ success, result });
-        return;
+        const { success } = await controller(req);
+        if (req.session.user) return res.redirect("/user");
+        if (!success) return res.redirect("/");
       } catch (error) {
         logger.error(error);
         res.redirect("/");

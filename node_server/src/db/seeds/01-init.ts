@@ -1,6 +1,6 @@
 import { Knex } from "knex";
-import { Food, Item, SlimeType } from "models/dbModels";
 import path from "path";
+import { Food, Item, SlimeType } from "../../../models/dbModels";
 import { GeneralOmitFields } from "../../../models/models";
 import DbUtils from "../../utils/dbUtils";
 import gameConfig from "../../utils/gameConfig";
@@ -51,7 +51,7 @@ export async function seed(knex: Knex): Promise<void> {
       await DbUtils.csvToObjectPromise<Omit<Item, GeneralOmitFields>>(ITEM_PATH)
     );
     await trx.commit();
-    logger.debug("category, slime_type, food, items successfully inserted");
+    // logger.debug("category, slime_type, food, items successfully inserted");
   } catch (error) {
     logger.error(error.message);
     await trx.rollback();
