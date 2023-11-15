@@ -120,10 +120,10 @@ async function getSlimeData() {
     slime.cal = result.current_calories;
     slime.maxCal = result.max_calories;
     slime.extraCal = result.extra_calories;
-    slime.type = result.slime_type.split(" ")[0];
     const newType = result.slime_type.split(" ")[0];
     if (!slime.type) slime.type = newType;
     if (slime.type && slime.type !== newType) slime.isEvolving = true;
+    if (slime.isEvolving) evolveAnimation(newType);
     displaySlimeData();
   } catch (error) {
     console.error(error);
@@ -146,8 +146,12 @@ async function updateSlimeCal() {
   if (slime.cal < 0 || slime.bmr < 0) return;
   if (slime.cal === 0 && slime.extraCal > 0) {
     slime.extraCal = Math.max(0, slime.extraCal - slime.bmr);
-    if (slime.extraCal < 2000) { }//TODO: evolve once
-  };
+    if (slime.extraCal <= 2000 && slime.type === "Obese") {
+      slime.isEvolving = true;
+      // update slime type
+      await getSlimeData();
+    }
+  }
   slime.cal = Math.max(0, slime.cal - slime.bmr);
   if (slime.cal === 0) {
     user.earningRate = 0;

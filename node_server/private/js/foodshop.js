@@ -79,7 +79,7 @@ function eatAnimation(emoji) {
       setTimeout(function () {
         //slimeCharacter.src = './img/blue_run.gif';
         slimeCharacter.src = `./img/${slime.type.split(" ")[0]}/move.gif`;
-        if (slime.isEvolving) evolveAnimation();
+        if (slime.isEvolving) evolveAnimation(slime.type);
       }, 1000); // 1秒後回到最初的圖片
     }, 500);
   }, 3000);
@@ -178,10 +178,9 @@ const purchaseFood = async (foodId, emoji, cost, calories) => {
 };
 
 // implement evolve animation
-async function evolveAnimation(newType) {
+function evolveAnimation(newType) {
   slime.isEvolving = false;
   slime.type = newType;
-
   // animation
   const evolveText = document.createElement("div");
   evolveText.classList.add("evolve-text");
@@ -216,6 +215,10 @@ function addCalories(calories) {
     return;
   }
   slime.extraCal += slime.cal + calories - slime.maxCal;
+  if (slime.extraCal > 2000 && slime.type !== "Obese") {
+    slime.type = "Obese";
+    evolveAnimation(slime.type);
+  }
   slime.cal = slime.maxCal;
   return;
 }
