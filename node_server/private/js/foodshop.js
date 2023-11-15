@@ -20,9 +20,10 @@ const foodShop = {
 const audio = { bgm: new Audio("./mp3/bgm.mp3"), evoSound: new Audio("./mp3/eva.mp3"), pickfoodSound: new Audio("./mp3/select-food.mp3"), isMuted: true };
 
 function updateShopCoins() {
+  document.querySelector("#shop-coin").textContent = `${displayCoinFormat(user.money)}`;
   if (foodShop.updateCoinIntervalId) clearInterval(foodShop.updateCoinIntervalId);
   foodShop.updateCoinIntervalId = setInterval(
-    () => (document.querySelector("#shop-coin").textContent = `${Math.round(user.money)}`),
+    () => (document.querySelector("#shop-coin").textContent = `${displayCoinFormat(user.money)} `),
     1000
   );
 }
@@ -32,19 +33,19 @@ function updateRemainingTime() {
   if (foodShop.remainingTimeIntervalId) clearInterval(foodShop.remainingTimeIntervalId);
   foodShop.remainingTimeIntervalId = setInterval(() => {
     foodShop.remainingTime -= 1000;
-    document.querySelector("#remaining-time").innerText = `${formatTime(foodShop.remainingTime)}`;
+    document.querySelector("#remaining-time").innerText = `${formatTime(foodShop.remainingTime)} `;
   }, 1000);
 }
 function displayFood(result) {
-  document.querySelector("#custom-food-cost").textContent = `$ ${foodShop.customFoodCost}`;
+  document.querySelector("#custom-food-cost").textContent = `$ ${foodShop.customFoodCost} `;
   result.forEach((item, index) => {
     const { name, calories, cost, emoji, id: foodId } = item;
     const cardElement = document.getElementById(`card${index + 2}`);
-    cardElement.setAttribute("onclick", `purchaseFood(${foodId},"${emoji}", ${cost}, ${calories})`);
+    cardElement.setAttribute("onclick", `purchaseFood(${foodId}, "${emoji}", ${cost}, ${calories})`);
     cardElement.querySelector(".name").textContent = name;
     cardElement.querySelector(".icon").textContent = emoji;
-    cardElement.querySelector(".calories").textContent = `Calories: ${calories}`;
-    cardElement.querySelector(".cost").textContent = `$ ${cost}`;
+    cardElement.querySelector(".calories").textContent = `Calories: ${calories} `;
+    cardElement.querySelector(".cost").textContent = `$ ${cost} `;
   });
 }
 
@@ -73,7 +74,7 @@ function eatAnimation(emoji) {
   }, 10);
   setTimeout(function () {
     const slimeCharacter = document.getElementById("slime_character");
-    slimeCharacter.src = `./img/${slime.type.split(" ")[0]}/eat.gif`;
+    slimeCharacter.src = `./ img / ${slime.type.split(" ")[0]} /eat.gif`;
 
     setTimeout(function () {
       gameContainer.removeChild(emojiElement);
@@ -123,7 +124,7 @@ async function refreshShop() {
   const { success, result } = await res.json();
   if (!success) return alert(result);
   user.money -= foodShop.refreshCost;
-  document.querySelector("#shop-coin").textContent = `${user.money}`;
+  document.querySelector("#shop-coin").textContent = `${displayCoinFormat(user.money)}`;
   updateShopCoins();
   displayFood(result);
 }
@@ -210,7 +211,6 @@ function evolveAnimation(newType) {
     onComplete: function () {
       // 動畫完成時的回調函式
       // 在這裡可以執行其他操作或觸發其他事件
-      console.log("Animation complete!");
       evolveText.remove();
     },
   });

@@ -85,12 +85,19 @@ async function getUserFinance() {
     if (result.money < 0 || result.earning_rate < 0) return;
     user.money = result.money;
     user.earningRate = result.earning_rate;
-    document.querySelector("#coin_balance p").textContent = `${Math.floor(user.money)} `;
-    document.querySelector("#earn_rate").textContent = `${user.earningRate}`;
+    document.querySelector("#coin_balance p").textContent = `${displayCoinFormat(user.money)} `;
+    document.querySelector("#earn_rate").textContent = `${displayCoinFormat(user.earningRate)}`;
   } catch (error) {
     console.error(error);
     // alert("Failed to get user data");
   }
+}
+
+function displayCoinFormat(coin) {
+  if (coin < 100_000) return coin.toFixed(1);
+  if (coin < 1_000_000) return `${(coin / 1000).toFixed(1)}k`;
+  if (coin < 1_000_000_000) return `${(coin / 1_000_000).toFixed(1)}M`;
+  return `${(coin / 1_000_000_000).toFixed(1)}B`;
 }
 
 async function getSlimeData() {
@@ -151,7 +158,7 @@ async function updateSlimeCal() {
 function updateCoins() {
   if (user.money < 0 || user.earningRate <= 0) return;
   user.money += user.earningRate;
-  document.querySelector("#coin_balance p").textContent = `${Math.floor(user.money)} `; // Update the coin balance
+  document.querySelector("#coin_balance p").textContent = `${displayCoinFormat(user.money)} `; // Update the coin balance
 }
 
 
