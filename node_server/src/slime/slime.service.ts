@@ -134,7 +134,6 @@ export default class SlimeService implements SlimeServiceHelper {
     });
     return;
   };
-  // TODO: redis
   feed = async (userId: number, foodId: number, slimeId?: number): Promise<ExportSlime> => {
     slimeId = await this.getValidSlimeId(userId, slimeId);
     const foodService = new FoodService(this.knex, this.redis);

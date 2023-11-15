@@ -137,10 +137,12 @@ export default class FoodService implements FoodServiceHelper {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { name, cost, category_id, ...rest } = food;
     try {
+      logger.info("calling python food classifier");
+      logger.info(`Fetching Python API: ${env.PY_URL}:${env.PY_PORT}`);
       const res = await fetch(`${env.PY_URL}:${env.PY_PORT}/foodClassifier`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(rest),
+        body: JSON.stringify({ food: rest }),
       });
       if (!res.ok) return [];
       const result = await res.json();
