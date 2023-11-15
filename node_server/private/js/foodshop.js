@@ -17,6 +17,9 @@ const foodShop = {
   customFoodCost: undefined,
   scheduleUpdateHour: [8, 13, 19],
 };
+const evoSound = new Audio("./mp3/eva.mp3");
+const pickfoodSound = new Audio("./mp3/select-food.mp3");
+
 
 function updateShopCoins() {
   if (foodShop.updateCoinIntervalId) clearInterval(foodShop.updateCoinIntervalId);
@@ -48,7 +51,7 @@ function displayFood(result) {
 }
 
 function eatAnimation(emoji) {
-  PickfoodSound.play();
+  pickfoodSound.play();
   const emojiElement = document.createElement("div");
   const gameContainer = document.getElementById("gamecontainer");
   emojiElement.classList.add("emoji");
@@ -80,10 +83,6 @@ function eatAnimation(emoji) {
       setTimeout(async function () {
         //slimeCharacter.src = './img/blue_run.gif';
         slimeCharacter.src = `./img/${slime.type.split(" ")[0]}/move.gif`;
-        if (slime.isEvolving) {
-          evolveAnimation(slime.type);
-          // await evoSound.play();
-        }
       }, 1000); // 1秒後回到最初的圖片
     }, 500);
   }, 3000);
@@ -161,20 +160,10 @@ async function postCustomFood() {
   slime.maxCal = max_calories;
   slime.extraCal = extra_calories;
   slime.bmr = bmr_rate;
-
-  if (slime.isEvolving) {
-    await evolveAnimation(result.slime_type);
-    // await evoSound.play();
-    await getUserFinance();
-    await getSlimeData();
-    closeFootContainer();
-    eatAnimation("✨");
-  } else {
-    await getUserFinance();
-    await getSlimeData();
-    closeFootContainer();
-    eatAnimation("✨");
-  }
+  eatAnimation("✨");
+  await getUserFinance();
+  await getSlimeData();
+  closeFootContainer();
 }
 
 const purchaseFood = async (foodId, emoji, cost, calories) => {
@@ -190,18 +179,21 @@ const purchaseFood = async (foodId, emoji, cost, calories) => {
   if (!res.ok) return;
   const { success } = await res.json();
   if (!success) return alert("Failed to feed your slime");
+  eatAnimation(emoji);
   addCalories(calories);
   await getUserFinance();
   await getSlimeData();
   closeFootContainer();
-  eatAnimation(emoji);
 };
 
 // implement evolve animation
 function evolveAnimation(newType) {
+  if (!slime.isEvolving) return;
   slime.isEvolving = false;
   slime.type = newType;
   // animation
+  evoSound.play();
+
   const evolveText = document.createElement("div");
   evolveText.classList.add("evolve-text");
   evolveText.style.opacity = "0";
@@ -236,6 +228,7 @@ function addCalories(calories) {
   slime.extraCal += slime.cal + calories - slime.maxCal;
   if (slime.extraCal > 2000 && slime.type !== "Obese") {
     slime.type = "Obese";
+    slime.isEvolving = true;
     evolveAnimation(slime.type);
   }
   slime.cal = slime.maxCal;
@@ -309,18 +302,3 @@ function formatTime(date) {
   const seconds = newDate.getSeconds().toString().padStart(2, "0");
   return `${hours}:${minutes}:${seconds}`;
 }
-
-// let evoSound = new Audio("./mp3/eva.mp3");
-
-// async function playEvaSound() {
-//   try {
-//     await evoSound.play();
-//   } catch (error) {
-//     console.error("音頻播放失敗:", error);
-//   }
-// }
-
-let PickfoodSound = new Audio("./mp3/select-food.mp3");
-function PickfoodSound_Sound() {
-  PickfoodSound.play();
-};
