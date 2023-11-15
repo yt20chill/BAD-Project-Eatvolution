@@ -5,7 +5,7 @@ import { User } from "models/dbModels";
 import { AuthServiceHelper } from "models/serviceModels";
 import { RedisClientType } from "redis";
 import SlimeService from "../slime/slime.service";
-import { BadRequestError } from "../utils/error";
+import { BadRequestError, InternalServerError } from "../utils/error";
 import GameConfig from "../utils/gameConfig";
 import { logger } from "../utils/logger";
 
@@ -62,6 +62,7 @@ export default class AuthService implements AuthServiceHelper {
       } catch (error) {
         logger.error(error);
         await trx.rollback();
+        throw new InternalServerError("fail to create user");
       } finally {
         this.knex.bind(this.originalKnex);
       }
