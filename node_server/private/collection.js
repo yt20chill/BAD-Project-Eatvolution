@@ -79,14 +79,14 @@ async function getFoodCollection() {
                 <p style="margin-top: 15px;">Click Me</p>
             </div>
             <div class="backSide">
-                <p class="list">${foodCollectionListCustom[x].category_name}</p>
-                <p class="list">Calories:${foodCollectionListCustom[x].calories}</p>
-                <p class="list">Protein:${foodCollectionListCustom[x].protein}</p>
-                <p class="list">Fat:${foodCollectionListCustom[x].fat}</p>
-                <p class="list">Carbohydrates:${foodCollectionListCustom[x].carbohydrates}</p>
-                <p class="list">Fibre:${foodCollectionListCustom[x].fibre}</p>
-                <p class="list">Sugar:${foodCollectionListCustom[x].sugar}</p>
-                <p class="list">Sodium:${foodCollectionListCustom[x].sodium}</p>
+                <p class="list-title">${foodCollectionListCustom[x].category_name}</p>
+                <p class="list">Calories : ${foodCollectionListCustom[x].calories}</p>
+                <p class="list">Protein : ${foodCollectionListCustom[x].protein}</p>
+                <p class="list">Fat : ${foodCollectionListCustom[x].fat}</p>
+                <p class="list">Carbs : ${foodCollectionListCustom[x].carbohydrates}</p>
+                <p class="list">Fibre : ${foodCollectionListCustom[x].fibre}</p>
+                <p class="list">Sugar : ${foodCollectionListCustom[x].sugar}</p>
+                <p class="list">Sodium : ${foodCollectionListCustom[x].sodium}</p>
                 <p>Leave Me</p>
             </div>
         </div>
@@ -113,13 +113,15 @@ async function getFoodCollection() {
             </div>
             <div class="backSide">
                 <p class="list-title">${foodCollectionListUnlock[j].category_name}</p>
-                <p class="list">Calories:${foodCollectionListUnlock[j].calories}</p>
-                <p class="list">Protein:${foodCollectionListUnlock[j].protein}</p>
-                <p class="list">Fat:${foodCollectionListUnlock[j].fat}</p>
-                <p class="list">Carbohydrates:${foodCollectionListUnlock[j].carbohydrates}</p>
-                <p class="list">Fibre:${foodCollectionListUnlock[j].fibre}</p>
-                <p class="list">Sugar:${foodCollectionListUnlock[j].sugar}</p>
-                <p class="list">Sodium:${foodCollectionListUnlock[j].sodium}</p>
+                <div class="groupList">
+                <p class="list">Calories : ${foodCollectionListUnlock[j].calories}</p>
+                <p class="list">Protein : ${foodCollectionListUnlock[j].protein}</p>
+                <p class="list">Fat : ${foodCollectionListUnlock[j].fat}</p>
+                <p class="list">Carbs : ${foodCollectionListUnlock[j].carbohydrates}</p>
+                <p class="list">Fibre : ${foodCollectionListUnlock[j].fibre}</p>
+                <p class="list">Sugar : ${foodCollectionListUnlock[j].sugar}</p>
+                <p class="list">Sodium : ${foodCollectionListUnlock[j].sodium}</p>
+                </div>
                
             </div>
         </div>
@@ -171,10 +173,10 @@ async function getSlimeTypeCollection() {
             </div>
             <div class="backSide">
                 <p class="list-title">${userSlimeType[i].name}</p>
-                <p class="list">Description: ${userSlimeType[i].description}</p>
-                <p class="list">Calories(Max): ${userSlimeType[i].max_calories}</p>
-                <p class="list">BMR: ${userSlimeType[i].bmr_multiplier}</p>
-                <p class="list">Earn Rate: ${userSlimeType[i].earn_rate_multiplier}</p>
+                <p class="list">Description : ${userSlimeType[i].description}</p>
+                <p class="list">Calories(Max) : ${userSlimeType[i].max_calories}</p>
+                <p class="list">BMR : ${userSlimeType[i].bmr_multiplier}</p>
+                <p class="list">Earn Rate : ${userSlimeType[i].earn_rate_multiplier}</p>
                
             </div>
         </div>

@@ -2,14 +2,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swacontainershowPopupMenup');
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-body * {
-    /* font-family: 'Pixelify Sans', sans-serif; */
-    font-family: 'Press Start 2P', sans-serif;
-}
+/* body * {} */
 
 body {
     background-image: url(../img/background.svg);
     font-size: 14px;
+    font-family: 'Press Start 2P', sans-serif;
 }
 
 .navbar {
@@ -640,12 +638,24 @@ body {
 
 .list {
     margin: 0 !important;
+    font-family: 'Baloo 2', sans-serif !important;
+    font-size: 17px;
 }
 
 .list-title {
-    padding: 0px 25px 20px;
     font-size: 25px;
-    font-family: 'Pixelify Sans', sans-serif;
+    font-family: 'Zen Dots', sans-serif !important;
+    margin-bottom: unset !important;
+
+}
+
+.groupList {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: fit-content;
+    padding: 10px;
+
 }
 
 @keyframes animate {
