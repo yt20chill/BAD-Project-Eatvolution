@@ -15,6 +15,9 @@ async function changePage() {
   const next = document.querySelector("#next");
   const prev = document.querySelector("#prev");
   const title = document.querySelector('#title');
+  const slideFirst = document.querySelector('.slideFirst')
+  const slideSecond = document.querySelector('.slideSecond')
+  const slideThird = document.querySelector('.slideThird')
 
   let page = 0;
   next.addEventListener("click", async (e) => {
@@ -45,6 +48,23 @@ async function changePage() {
     }
     console.log({ page });
   });
+
+  slideFirst.addEventListener("click", async (e) => {
+    const firstBtn = document.getElementById(`collection-0`)
+    title.textContent = firstBtn.dataset.title
+  })
+
+  slideSecond.addEventListener("click", async (e) => {
+    const secondBtn = document.getElementById(`collection-1`)
+    title.textContent = secondBtn.dataset.title
+  })
+
+  slideThird.addEventListener("click", async (e) => {
+    const thirdBtn = document.getElementById(`collection-2`)
+    title.textContent = thirdBtn.dataset.title
+  })
+
+
 }
 
 
