@@ -98,21 +98,6 @@
                 </div>
                 <div class="row">
                     <div class="food_card_container" id="food_card_containerID">
-                        <!-- card for custom food -->
-                        <div class="card" id="custom-card">
-                            <div class="content card-button" type="button">
-                                <div class="top">
-                                    <p class="name">Custom Food</p>
-                                    <div class="color"></div>
-                                </div>
-                                <textarea name="foodName" class="middle" placeholder="Milkshakes">
-                                </textarea>
-                                <div class="bottom">
-                                    <button id="custom-food-btn" onclick="postCustomFood()">Submit</button>
-
-                                </div>
-                            </div>
-                        </div>
                         <div class="card" id="card2">
                             <div class="content card-button" type="button">
                                 <div class="top">
@@ -275,6 +260,21 @@
                                 <div class="bottom">
                                     <div class="calories"></div>
                                     <div class="cost"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card for custom food -->
+                        <div class="card" id="custom-card">
+                            <div class="content card-button" type="button">
+                                <div class="top">
+                                    <p class="name">custom food</p>
+                                    <div class="color"></div>
+                                </div>
+                                <input type="text" name="foodName" class="middle" placeholder="Milkshakes">
+                                </input>
+                                <div class="bottom">
+                                    <button id="custom-food-btn" onclick="postCustomFood()">Feed</button>
+                                    <div class="cost" id="custom-food-cost"></div>
                                 </div>
                             </div>
                         </div>
