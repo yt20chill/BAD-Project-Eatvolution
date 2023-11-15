@@ -190,16 +190,13 @@ function evolveAnimation(newType) {
   const slimeCharacter = document.getElementById("gamecontainer");
   slimeCharacter.appendChild(evolveText);
 
-  // change character to slime type
-  slimeCharacter.src = `./img/${slime.type.split(" ")[0]}/move.gif`;
-
   // 使用 GSAP 庫創建動畫
   gsap.to(evolveText, {
     duration: 5, // 動畫持續時間（秒）
     opacity: 1, // 目標透明度
     y: -50, // 在 y 軸上的移動距離
     ease: "power2.out", // 動畫緩動函式
-    delay: 3, // 延遲 3 秒後開始動畫
+    delay: 0, // 延遲 3 秒後開始動畫
     onComplete: function () {
       // 動畫完成時的回調函式
       // 在這裡可以執行其他操作或觸發其他事件
@@ -207,6 +204,8 @@ function evolveAnimation(newType) {
       evolveText.remove();
     },
   });
+  // change character to slime type
+  slimeCharacter.src = `./img/${slime.type.split(" ")[0]}/move.gif`;
 }
 
 function addCalories(calories) {
