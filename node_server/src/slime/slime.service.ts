@@ -73,6 +73,7 @@ export default class SlimeService implements SlimeServiceHelper {
           "food_count" | "extra_calories" | "total_protein" | "total_fat" | "total_carbs"
         >
       >(
+        "slime.owner_id as owner_id",
         "user.username as owner",
         "slime_type.id as slime_type_id",
         "slime_type.name as slime_type",
@@ -191,6 +192,7 @@ export default class SlimeService implements SlimeServiceHelper {
     const now = new Date().toISOString();
     const slimeDetails = await this.getDetails(slimeId);
     const {
+      owner_id,
       calories,
       extra_calories,
       bmr_rate,
@@ -208,6 +210,7 @@ export default class SlimeService implements SlimeServiceHelper {
     if (updatedSlime.calories < 0) {
       const caloriesDeficit = -updatedSlime.calories; // = caloriesToReduce - calories
       updatedSlime.calories = 0;
+      if (this.redis.get(`${owner_id}`)) this.redis.del(`${owner_id}`); // force update user's earning rate
       updatedSlime.extra_calories = Math.max(extra_calories - caloriesDeficit, 0); // min extra calories = 0
     }
     // if slime was obese and is no longer obese, update slime_type

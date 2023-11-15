@@ -161,6 +161,7 @@ export interface ExportSlime {
 }
 
 export interface SlimeDetails extends Omit<ExportSlime, "id" | "current_calories"> {
+  owner_id: number;
   slime_id: number;
   slime_type_id: string;
   calories: number;
