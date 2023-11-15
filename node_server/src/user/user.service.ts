@@ -13,7 +13,6 @@ export default class UserService implements UserServiceHelper {
     private readonly redis: RedisClientType
   ) {}
   private getRedisUser = async (userId: number): Promise<RedisUser> => {
-    // return {} as RedisUser;
     return JSON.parse(await this.redis.get(`${userId}`)) ?? ({} as RedisUser);
   };
   private validateRedisUser = (user: RedisUser): boolean => {

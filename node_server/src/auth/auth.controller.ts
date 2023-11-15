@@ -28,7 +28,7 @@ export default class AuthController implements AuthControllerHelper {
 
     const id = await this.authService.signUp(username, password);
 
-    if (id === -1) return AppUtils.setServerResponse("duplicated username", false);
+    if (id === -1) return AppUtils.setServerResponse("Duplicated username", false);
 
     req.session.user = { id, username };
 
