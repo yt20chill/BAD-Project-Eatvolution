@@ -68,14 +68,14 @@ function eatAnimation(emoji) {
   }, 10);
   setTimeout(function () {
     const slimeCharacter = document.getElementById("slime_character");
-    slimeCharacter.src = `./img/${(slime.type.split(' '))[0]}/eat.gif`;
+    slimeCharacter.src = `./img/${slime.type.split(" ")[0]}/eat.gif`;
 
     setTimeout(function () {
       gameContainer.removeChild(emojiElement);
-      slimeCharacter.src = `./img/${(slime.type.split(' '))[0]}/jump.gif`;
+      slimeCharacter.src = `./img/${slime.type.split(" ")[0]}/jump.gif`;
       setTimeout(function () {
         //slimeCharacter.src = './img/blue_run.gif';
-        slimeCharacter.src = `./img/${(slime.type.split(' '))[0]}/move.gif`;
+        slimeCharacter.src = `./img/${slime.type.split(" ")[0]}/move.gif`;
         if (slime.isEvolving) evolveAnimation();
       }, 1000); // 1秒後回到最初的圖片
     }, 500);
@@ -173,9 +173,7 @@ async function evolveAnimation(newType) {
   slimeCharacter.appendChild(evolveText);
 
   // change character to slime type
-  slimeCharacter.src = `./img/${slime.type.split(' ')[0]}/move.gif`;
-
-  console.log("evolve");
+  slimeCharacter.src = `./img/${slime.type.split(" ")[0]}/move.gif`;
 
   // 使用 GSAP 庫創建動畫
   gsap.to(evolveText, {
@@ -189,10 +187,9 @@ async function evolveAnimation(newType) {
       // 在這裡可以執行其他操作或觸發其他事件
       console.log("Animation complete!");
       evolveText.remove();
-    }
+    },
   });
 }
-
 
 function addCalories(calories) {
   if (slime.cal + calories <= slime.maxCal) {
@@ -208,7 +205,9 @@ function closeFootContainer() {
     if (foodShop.updateCoinIntervalId) clearInterval(foodShop.updateCoinIntervalId);
     if (foodShop.remainingTimeIntervalId) clearInterval(foodShop.remainingTimeIntervalId);
     foodShop.remainingTime = undefined;
-    document.getElementById("footcontainerID").style.display = "none";
+    //document.getElementById("footcontainerID").style.display = "none";
+    document.querySelector(":root").removeAttribute("SHOP");
+    document.querySelector("main").classList.remove("blur");
     foodShop.isVisible = false;
   }
 }
