@@ -77,11 +77,6 @@
         <!------------------------------------------------ game box -------------------------------------------------->
         <div class="game_container" id="gamecontainer"
             style="background-image: url('./img/gameBackground.jpg');background-size:cover">
-
-            <button class="bottom" id="BGM_button" onclick="toggleBackgroundMusic()">
-                <i class="fa-solid fa-music"></i>
-            </button>
-
             <img src="/user/img/Balance/move.gif" class="slime_character" id="slime_character" alt="Game Character"
                 onclick="showPopup()">
         </div>
@@ -292,16 +287,21 @@
     </div>
     <!-- ID:popup is Slime Status Window -->
     <div id="popup" class="hidden" onclick="hidePopup()" alt="Slime-Status">
-        <div class="slimestable">
-            <!-- <img id="slimeStableIcon" src="./img/blue_die (1).gif" alt="Logo"> -->
+        <div class="slimestable container-fluid">
             <img id="slimeStableIcon" src="" alt="Logo">
-            <div class="stable_container">
-                <div class="slime_type"></div>
-                <div class="current_calories"></div>
-                <div class="max_calories"></div>
-                <div onclick="logout()"><span class="material-symbols-outlined">
+            <div class="stable_container row">
+                <div class="slime_type col-12"></div>
+                <div class="current_calories col-12"></div>
+                <div class="max_calories col-12"></div>
+                <div class="col-4">
+                    <b class="material-symbols-outlined" onclick="toggleBackgroundMusic(this)">
+                        music_off
+                    </b>
+                </div>
+                <div class="col-4 d-flex align-items-center" onclick="logout()"><b class="material-symbols-outlined">
                         logout
-                    </span></div>
+                    </b></div>
+
             </div>
             <i class="fas fa-times" id="closeBtn"></i>
         </div>

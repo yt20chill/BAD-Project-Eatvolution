@@ -850,6 +850,10 @@ body .nameFood {
     }
 }
 
+b.material-symbols-outlined {
+    font-size: 2.5rem;
+}
+
 [SHOP] #popupMenu {
     display: flex;
     animation: fade-in-shop 0.3s ease-in-out;

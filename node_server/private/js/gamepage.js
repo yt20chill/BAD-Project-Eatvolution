@@ -274,10 +274,12 @@ function pauseBackgroundMusic() {
   playingBGM = false;
 }
 
-function toggleBackgroundMusic() {
+function toggleBackgroundMusic(elem) {
   if (playingBGM) {
+    elem.textContent = "music_off";
     pauseBackgroundMusic();
   } else {
+    elem.textContent = "music_note";
     playBackgroundMusic();
   }
 }
