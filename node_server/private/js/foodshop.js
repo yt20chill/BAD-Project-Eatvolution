@@ -74,7 +74,7 @@ function eatAnimation(emoji) {
   }, 10);
   setTimeout(function () {
     const slimeCharacter = document.getElementById("slime_character");
-    slimeCharacter.src = `./ img / ${slime.type.split(" ")[0]} /eat.gif`;
+    slimeCharacter.src = `./img/${slime.type.split(" ")[0]}/eat.gif`;
 
     setTimeout(function () {
       gameContainer.removeChild(emojiElement);

@@ -14,14 +14,17 @@ export async function seed(knex: Knex): Promise<void> {
   try {
     // Deletes ALL existing entries
     await trx("shop").del();
+    await trx("user_custom_food").del();
+    await trx("user_food_collection").del();
+    await trx("user_slime_type_collection").del();
     await trx("user_shop").del();
     await trx("slime_food").del();
-    await trx("user_food_collection").del();
     await trx("food").del();
     await trx("item").del();
     await trx("category").del();
     await trx("slime").del();
     await trx("slime_type").del();
+    await trx("user").del();
     await trx.raw("ALTER SEQUENCE food_id_seq RESTART WITH 1");
     await trx.raw("ALTER SEQUENCE item_id_seq RESTART WITH 1");
     await trx.raw("ALTER SEQUENCE category_id_seq RESTART WITH 1");
@@ -48,7 +51,7 @@ export async function seed(knex: Knex): Promise<void> {
       await DbUtils.csvToObjectPromise<Omit<Item, GeneralOmitFields>>(ITEM_PATH)
     );
     await trx.commit();
-    // logger.debug("category, slime_type, food, items successfully inserted");
+    logger.debug("category, slime_type, food, items successfully inserted");
   } catch (error) {
     logger.error(error.message);
     await trx.rollback();
