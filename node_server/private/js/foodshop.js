@@ -21,7 +21,7 @@ const foodShop = {
 function updateShopCoins() {
   if (foodShop.updateCoinIntervalId) clearInterval(foodShop.updateCoinIntervalId);
   foodShop.updateCoinIntervalId = setInterval(
-    () => (document.querySelector("#shop-coin").textContent = `${user.money}`),
+    () => (document.querySelector("#shop-coin").textContent = `${Math.round(user.money)}`),
     1000
   );
 }
