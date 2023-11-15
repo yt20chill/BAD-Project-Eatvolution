@@ -255,6 +255,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await getUserFinance();
   updateCoins();
   setInterval(updateCoins, 1000);
+  await getItemCost();
   // socket.on("evolving", evolveAnimation);
   await getSlimeData();
   slime.updateIntervalId = setInterval(updateSlimeCal, 1000);

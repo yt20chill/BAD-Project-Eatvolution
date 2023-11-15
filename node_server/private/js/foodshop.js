@@ -13,6 +13,8 @@ const foodShop = {
   updateCoinIntervalId: undefined,
   remainingTime: undefined,
   remainingTimeIntervalId: undefined,
+  refreshCost: undefined,
+  customFoodCost: undefined,
   scheduleUpdateHour: [8, 13, 19],
 };
 
@@ -85,38 +87,48 @@ async function getShopItems() {
   const res = await fetch("/api/shop");
   const { success, result } = await res.json();
   if (!success) return;
+  await getItemCost();
   updateShopCoins();
   updateRemainingTime();
   displayFood(result);
 }
 
-async function refreshShop() {
-  // 彈出確認提示
-  const confirmed = confirm("Do you want to spend money to refresh?");
+async function getItemCost() {
+  const res = await fetch("/api/shop/items");
+  const { success, result } = await res.json();
+  if (!success) return;
+  foodShop.refreshCost = result.refreshCost;
+  foodShop.customFoodCost = result.customFoodCost;
+  return;
+}
 
+async function refreshShop() {
+  if (foodShop.refreshCost < 0) alert("something went wrong");
+  // 彈出確認提示
+  const confirmed = confirm(`Refresh shop costs $${foodShop.refreshCost}, continue?`);
+  if (user.money - foodShop.refreshCost < 0) return alert("Not enough money");
   // 根據使用者的確認狀態執行相應的操作
-  if (confirmed) {
-    const res = await fetch("/api/shop", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const { success, result } = await res.json();
-    if (!success) return alert(result);
-    updateShopCoins();
-    displayFood(result);
-  } else {
-    // 使用者取消，不執行任何操作
-    // 可以根據需要進行其他處理
-  }
+  if (!confirmed) return;
+  const res = await fetch("/api/shop", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const { success, result } = await res.json();
+  if (!success) return alert(result);
+  user.money -= foodShop.refreshCost;
+  document.querySelector("#shop-coin").textContent = `${user.money}`;
+  updateShopCoins();
+  displayFood(result);
 }
 
 async function postCustomFood() {
   const foodName = document.querySelector(`textarea[name="foodName"]`).value.trim().toLowerCase();
   // if food name is empty or is purely number
   if (foodName === "" || !isNaN(+foodName)) return;
-
+  const confirmed = confirm(`Want to feed your slime with ${foodName}?`);
+  if (!confirmed) return;
   const res = await fetch("/api/food", {
     method: "POST",
     headers: {
@@ -125,7 +137,7 @@ async function postCustomFood() {
     body: JSON.stringify({ foodName }),
   });
   const { success } = await res.json();
-  if (!success) return;
+  if (!success) return alert(`Failed to feed your slime with ${foodName}`);
   if (result.slime_type !== slime.type) slime.isEvolving = true;
   const { current_calories, max_calories, extra_calories, bmr_rate } = result;
   slime.cal = current_calories;
@@ -135,7 +147,7 @@ async function postCustomFood() {
   if (slime.isEvolving) evolveAnimation(result.slime_type);
   await getUserFinance();
   closeFootContainer();
-  eatAnimation(emoji);
+  eatAnimation("✨");
 }
 
 const purchaseFood = async (foodId, emoji, cost, calories) => {

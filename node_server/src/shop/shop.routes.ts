@@ -6,3 +6,4 @@ export const shopRoutes = Router();
 //fetch url: /api/shop
 shopRoutes.get("/", AppUtils.exceptionWrapper(shopController.getFoodShop));
 shopRoutes.put("/", AppUtils.exceptionWrapper(shopController.refreshShop));
+shopRoutes.get("/items", AppUtils.exceptionWrapper(shopController.getItemCost));
