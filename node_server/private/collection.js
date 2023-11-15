@@ -54,12 +54,11 @@ async function getFoodCollection() {
   const foodCollectionListLock = result.result.locked.universal;
   const foodCollectionListUnlock = result.result.unlocked.universal;
   const foodCollectionListCustom = result.result.unlocked.custom;
-  console.log(foodCollectionListLock);
-  console.log(foodCollectionListUnlock);
-  console.log(result)
+
 
   const cardUniversal = document.querySelector(".universal");
   const cardCustom = document.querySelector(".custom");
+
 
   for (let x = 0; x < foodCollectionListCustom.length; x++) {
     const cardTemplateCustom = `  
@@ -93,11 +92,6 @@ async function getFoodCollection() {
     cardCustom.innerHTML += cardTemplateCustom;
   }
 
-
-  // const foodName = foodCollectionListUnlock[1].food_name
-  // console.log(foodCollectionListUnlock[1].food_name)
-
-  // console.log(foodName.toUpperCase(0, 1))
 
   for (let j = 0; j < foodCollectionListUnlock.length; j++) {
     const cardTemplateUnLock = `  
