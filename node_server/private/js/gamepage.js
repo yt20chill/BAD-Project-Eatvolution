@@ -89,6 +89,7 @@ function showPopupMenu() {
 async function getUserFinance() {
   try {
     const res = await fetch("/api/user/finance");
+    if (res.status === 401) window.location = "/";
     if (!res.ok) {
       throw new Error("Failed to get user data");
     }
@@ -110,6 +111,7 @@ async function getUserFinance() {
 async function getSlimeData() {
   try {
     const res = await fetch("/api/slime");
+    if (res.status === 401) window.location = "/";
     if (!res.ok) {
       throw new Error("Failed to get slime data");
     }
@@ -118,10 +120,10 @@ async function getSlimeData() {
     slime.cal = result.current_calories;
     slime.maxCal = result.max_calories;
     slime.extraCal = result.extra_calories;
+    slime.type = result.slime_type.split(" ")[0];
     const newType = result.slime_type.split(" ")[0];
     if (!slime.type) slime.type = newType;
     if (slime.type && slime.type !== newType) slime.isEvolving = true;
-    if (slime.isEvolving) evolveAnimation(newType);
     displaySlimeData();
   } catch (error) {
     console.error(error);
@@ -140,9 +142,12 @@ function displaySlimeData() {
   document.querySelector(".max_calories").innerHTML = `<span> Extra Calories</span> <b>${slime.extraCal ?? 0
     }</b>`;
 }
-function updateSlimeCal() {
+async function updateSlimeCal() {
   if (slime.cal < 0 || slime.bmr < 0) return;
-  if (slime.cal === 0 && slime.extraCal > 0) slime.extraCal = Math.max(0, slime.extraCal - slime.bmr);
+  if (slime.cal === 0 && slime.extraCal > 0) {
+    slime.extraCal = Math.max(0, slime.extraCal - slime.bmr);
+    if (slime.extraCal < 2000) //TODO: evolve once
+  };
   slime.cal = Math.max(0, slime.cal - slime.bmr);
   if (slime.cal === 0) {
     user.earningRate = 0;
@@ -255,7 +260,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   await getUserFinance();
   updateCoins();
   setInterval(updateCoins, 1000);
-  await getItemCost();
   // socket.on("evolving", evolveAnimation);
   await getSlimeData();
   slime.updateIntervalId = setInterval(updateSlimeCal, 1000);

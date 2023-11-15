@@ -35,6 +35,7 @@ function updateRemainingTime() {
   }, 1000);
 }
 function displayFood(result) {
+  document.querySelector("#custom-food-cost").textContent = `$ ${foodShop.customFoodCost}`;
   result.forEach((item, index) => {
     const { name, calories, cost, emoji, id: foodId } = item;
     const cardElement = document.getElementById(`card${index + 2}`);
@@ -85,6 +86,7 @@ function eatAnimation(emoji) {
 }
 async function getShopItems() {
   const res = await fetch("/api/shop");
+  if (res.status === 401) window.location = "/";
   const { success, result } = await res.json();
   if (!success) return;
   await getItemCost();
@@ -95,6 +97,7 @@ async function getShopItems() {
 
 async function getItemCost() {
   const res = await fetch("/api/shop/items");
+  if (res.status === 401) window.location = "/";
   const { success, result } = await res.json();
   if (!success) return;
   foodShop.refreshCost = result.refreshCost;
@@ -115,6 +118,7 @@ async function refreshShop() {
       "Content-Type": "application/json",
     },
   });
+  if (res.status === 401) window.location = "/";
   const { success, result } = await res.json();
   if (!success) return alert(result);
   user.money -= foodShop.refreshCost;
@@ -124,7 +128,8 @@ async function refreshShop() {
 }
 
 async function postCustomFood() {
-  const foodName = document.querySelector(`textarea[name="foodName"]`).value.trim().toLowerCase();
+  if (user.money - foodShop.customFoodCost < 0) return alert("Not enough money");
+  const foodName = document.querySelector(`input[name="foodName"]`).value.trim().toLowerCase();
   // if food name is empty or is purely number
   if (foodName === "" || !isNaN(+foodName)) return;
   const confirmed = confirm(`Want to feed your slime with ${foodName}?`);
@@ -136,7 +141,8 @@ async function postCustomFood() {
     },
     body: JSON.stringify({ foodName }),
   });
-  const { success } = await res.json();
+  if (res.status === 401) window.location = "/";
+  const { success, result } = await res.json();
   if (!success) return alert(`Failed to feed your slime with ${foodName}`);
   if (result.slime_type !== slime.type) slime.isEvolving = true;
   const { current_calories, max_calories, extra_calories, bmr_rate } = result;
@@ -146,6 +152,7 @@ async function postCustomFood() {
   slime.bmr = bmr_rate;
   if (slime.isEvolving) evolveAnimation(result.slime_type);
   await getUserFinance();
+  await getSlimeData();
   closeFootContainer();
   eatAnimation("✨");
 }
@@ -159,13 +166,13 @@ const purchaseFood = async (foodId, emoji, cost, calories) => {
     },
     body: JSON.stringify({ foodId }),
   });
+  if (res.status === 401) window.location = "/";
   if (!res.ok) return;
-  const { success, result } = await res.json();
-  if (!success) return;
-  if (result.slime_type !== slime.type) slime.isEvolving = true;
+  const { success } = await res.json();
+  if (!success) return alert("Failed to feed your slime");
   addCalories(calories);
-  if (slime.isEvolving) evolveAnimation(result.slime_type);
   await getUserFinance();
+  await getSlimeData();
   closeFootContainer();
   eatAnimation(emoji);
 };
@@ -179,7 +186,7 @@ async function evolveAnimation(newType) {
   const evolveText = document.createElement("div");
   evolveText.classList.add("evolve-text");
   evolveText.style.opacity = "0";
-  evolveText.innerText = "EVOLVEANIMATION!!";
+  evolveText.innerText = "EVOLVE ANIMATION!!";
 
   const slimeCharacter = document.getElementById("gamecontainer");
   slimeCharacter.appendChild(evolveText);
