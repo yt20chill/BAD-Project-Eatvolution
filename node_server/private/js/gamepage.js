@@ -143,15 +143,17 @@ function updateSlimeCal() {
   if (slime.cal < 0 || slime.bmr < 0) return;
   if (slime.cal === 0 && slime.extraCal > 0) slime.extraCal -= slime.bmr;
   slime.cal = Math.max(0, slime.cal - slime.bmr);
-  if (slime.cal === 0) user.earningRate = 0;
-  document.querySelector("#earn_rate").textContent = 0;
+  if (slime.cal === 0) {
+    user.earningRate = 0;
+    document.querySelector("#earn_rate").textContent = 0;
+  }
   document.querySelector(".current_calories b").innerText = `${Math.round(slime.cal)}/${slime.maxCal
     }`;
   document.querySelector(".max_calories b").innerText = `${Math.round(slime.extraCal) ?? 0}`;
 }
 
 function updateCoins() {
-  if (user.money < 0 || user.earningRate < 0) return;
+  if (user.money < 0 || user.earningRate <= 0) return;
   user.money = Math.floor(user.money + user.earningRate);
   document.querySelector("#coin_balance p").textContent = `${user.money} `; // Update the coin balance
 }
