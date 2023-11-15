@@ -112,9 +112,10 @@ async function getSlimeData() {
         slime.cal = result.current_calories;
         slime.maxCal = result.max_calories;
         slime.extraCal = result.extra_calories;
-        if (slime.type && slime.type !== result.slime_type.split(" ")[0]) slime.isEvolving = true;
-        if (slime.isEvolving) evolveAnimation();
-        slime.type = result.slime_type.split(" ")[0];
+        const newType = result.slime_type.split(" ")[0]
+        if (!slime.type) slime.type = newType;
+        if (slime.type && slime.type !== newType) slime.isEvolving = true;
+        if (slime.isEvolving) evolveAnimation(newType);
         displaySlimeData();
     } catch (error) {
         console.error(error);
@@ -122,51 +123,30 @@ async function getSlimeData() {
     }
 }
 function displaySlimeData() {
-<<<<<<< Updated upstream
-  if (slime.calories < 0 || slime.bmr < 0) return;
-  document.getElementById("slime_character").src = `./img/${slime.type}/move.gif`;
-  document.getElementById("slimeStableIcon").src = `./img/${slime.type}/die.gif`;
-  const displayType = slime.type === "Skinny" ? "Skinny Fat" : slime.type;
-  document.querySelector(".slime_type").innerHTML = `<span>Type</span> <b>${displayType}</b>`;
-  document.querySelector(
-    ".current_calories"
-  ).innerHTML = `<span> Calories </span> <b>${slime.cal}/${slime.maxCal} </b>`;
-  document.querySelector(".max_calories").innerHTML = `<span> Extra Calories</span> <b>${slime.extraCal ?? 0
-    }</b>`;
-}
-function updateSlimeCal() {
-  if (slime.cal < 0 || slime.bmr < 0) return;
-  if (slime.cal === 0 && slime.extraCal > 0) slime.extraCal -= slime.bmr;
-  slime.cal = Math.max(0, slime.cal - slime.bmr);
-  if (slime.cal === 0) user.earningRate = 0;
-  document.querySelector(".current_calories b").innerText = `${Math.round(slime.cal)}/${slime.maxCal}`;
-  document.querySelector(".max_calories b").innerText = `${Math.round(slime.extraCal) ?? 0}`;
-}
-
-function updateCoins() {
-  if (user.money < 0 || user.earningRate < 0) return;
-  user.money = Math.floor(user.money + user.earningRate);
-  document.querySelector(".card-text").textContent = `coin：${user.money} `; // Update the coin balance
-=======
     if (slime.calories < 0 || slime.bmr < 0) return;
     document.getElementById("slime_character").src = `./img/${slime.type}/move.gif`;
     document.getElementById("slimeStableIcon").src = `./img/${slime.type}/die.gif`;
     const displayType = slime.type === "Skinny" ? "Skinny Fat" : slime.type;
     document.querySelector(".slime_type").innerHTML = `<span>Type</span> <b>${displayType}</b>`;
-    document.querySelector(".current_calories").innerHTML = `<span> Calories </span> <b>${slime.cal}/${slime.maxCal} </b>`;
-    document.querySelector(".max_calories").innerHTML = `<span> Extra Calories</span> <b>${slime.extraCal ?? 0}</b>`;
+    document.querySelector(
+        ".current_calories"
+    ).innerHTML = `<span> Calories </span> <b>${slime.cal}/${slime.maxCal} </b>`;
+    document.querySelector(".max_calories").innerHTML = `<span> Extra Calories</span> <b>${slime.extraCal ?? 0
+        }</b>`;
 }
 function updateSlimeCal() {
-    if (slime.cal <= 0 || slime.bmr < 0) return;
-    slime.cal -= slime.bmr;
-    document.querySelector(".current_calories b").innerText = `${Math.round(slime.cal)} /${slime.maxCal}`;
+    if (slime.cal < 0 || slime.bmr < 0) return;
+    if (slime.cal === 0 && slime.extraCal > 0) slime.extraCal -= slime.bmr;
+    slime.cal = Math.max(0, slime.cal - slime.bmr);
+    if (slime.cal === 0) user.earningRate = 0;
+    document.querySelector(".current_calories b").innerText = `${Math.round(slime.cal)}/${slime.maxCal}`;
+    document.querySelector(".max_calories b").innerText = `${Math.round(slime.extraCal) ?? 0}`;
 }
 
 function updateCoins() {
     if (user.money < 0 || user.earningRate < 0) return;
-    user.money += user.earningRate;
-    document.querySelector(".card-text").textContent = `coin：${user.money} `; // Update the coin balance
->>>>>>> Stashed changes
+    user.money = Math.floor(user.money + user.earningRate);
+    document.querySelector(".card-text").textContent = `${user.money} `; // Update the coin balance
 }
 // refresh shop bottom function
 

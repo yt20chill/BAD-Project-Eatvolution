@@ -135,7 +135,7 @@ body {
 
 #slimeStableIcon {
     width: 250px;
-    margin-bottom: 100px;
+    margin-bottom: 20px;
 }
 
 .nav-item {
@@ -755,4 +755,40 @@ body {
 .blur {
     transition: all 1s ease;
     filter: blur(10px);
+}
+
+.evolve-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 60px;
+    color: red;
+}
+
+@media screen and (max-width: 1033px) {
+    .evolve-text {
+        font-size: 40px;
+        top: 40%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+@media screen and (max-width: 660px) {
+    .evolve-text {
+        font-size: 30px;
+        top: 30%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .evolve-text {
+        font-size: 20px;
+        top: 30%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }
