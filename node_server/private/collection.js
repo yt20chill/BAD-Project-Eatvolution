@@ -162,6 +162,12 @@ async function getSlimeTypeCollection() {
   const cardSlimeType = document.querySelector('.slimeType')
   let totalType = 4 - userSlimeType.length
 
+  const slimeTypePhoto = new Map()
+  slimeTypePhoto.set('Balance', '/user/img/Balance/jump.gif')
+  slimeTypePhoto.set('Keto', '/user/img/Keto/jump.gif')
+  slimeTypePhoto.set('Obese', '/user/img/Obese/jump.gif')
+  slimeTypePhoto.set('Skinny Fat', '/user/img/Skinny/jump.gif')
+
   for (let i = 0; i < userSlimeType.length; i++) {
     const cardTemplateSlimeType = `  <script>
     function flipCard(card) {
@@ -174,7 +180,7 @@ async function getSlimeTypeCollection() {
         <div class="innerCard" onclick="flipCard(this)">
             <div class="frontSide">
             <div class="slimePhoto">
-                <img src="/user/img/blue_jump.gif" alt="Type Balance">
+                <img src="${slimeTypePhoto.get(userSlimeType[i].name)}" alt="Type Balance">
             </div>
             <div class="slimeTypeTxt">
                 <p class="title" style="font-size: 20px;">${userSlimeType[i].name}</p>
@@ -182,12 +188,13 @@ async function getSlimeTypeCollection() {
             </div>
         </div>
             <div class="backSide">
+            <div class="groupList">
                 <p class="list-title">${userSlimeType[i].name}</p>
-                <p class="list">Description : ${userSlimeType[i].description}</p>
+                <p class="list" style="text-align: start;">Description :<br>${userSlimeType[i].description}</p>
                 <p class="list">Calories(Max) : ${userSlimeType[i].max_calories}</p>
                 <p class="list">BMR : ${userSlimeType[i].bmr_multiplier}</p>
                 <p class="list">Earn Rate : ${userSlimeType[i].earn_rate_multiplier}</p>
-               
+               </div>
             </div>
         </div>
     </div>
