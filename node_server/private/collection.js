@@ -7,6 +7,10 @@ window.onload = async () => {
 }
 
 
+function flipCard(card) {
+  card.classList.toggle('flipped');
+}
+
 async function changePage() {
   const next = document.querySelector("#next");
   const prev = document.querySelector("#prev");
@@ -44,7 +48,6 @@ async function changePage() {
 }
 
 
-
 async function getFoodCollection() {
   const res = await fetch("/api/collection/food");
   const result = await res.json();
@@ -53,60 +56,56 @@ async function getFoodCollection() {
   const foodCollectionListCustom = result.result.unlocked.custom;
   console.log(foodCollectionListLock);
   console.log(foodCollectionListUnlock);
-  console.log(`L7${foodCollectionListLock[7]}`);
-  // console.log(result.result.unlocked.universal[0].food_name
-  // )
-  // console.log(foodCollectionListUnlock[0].emoji)
+  console.log(result)
 
   const cardUniversal = document.querySelector(".universal");
   const cardCustom = document.querySelector(".custom");
 
-
   for (let x = 0; x < foodCollectionListCustom.length; x++) {
-    const cardTemplateCustom = ` <script>
-    function flipCard(card) {
-        card.classList.toggle('flipped');
-    }
-</script>
+    const cardTemplateCustom = `  
 
 <div class="setup_card_container">
     <div class="myCard">
         <div class="innerCard" onclick="flipCard(this)">
             <div class="frontSide">
-            <p class="nameFood" style="font-size: 20px; color: black;margin-bottom: 7px;">${foodCollectionListCustom[x].food_name}
+            <p class="nameFood" style="font-size: 20px; color: black;margin-bottom: 7px;">${(foodCollectionListCustom[x].food_name).toUpperCase()}
             </p>
                 <p class="title" style="font-size: 80px;">${foodCollectionListCustom[x].emoji}</p>
                 <p style="margin-top: 15px;">Click Me</p>
             </div>
             <div class="backSide">
                 <p class="list-title">${foodCollectionListCustom[x].category_name}</p>
+                <div class="groupList">
                 <p class="list">Calories : ${foodCollectionListCustom[x].calories}</p>
-                <p class="list">Protein : ${foodCollectionListCustom[x].protein}</p>
-                <p class="list">Fat : ${foodCollectionListCustom[x].fat}</p>
+                <p class="list">Protein : ${foodCollectionListCustom[x].protein}</p>  
+                <p class="list">Sodium : ${foodCollectionListCustom[x].sodium}</p>
                 <p class="list">Carbs : ${foodCollectionListCustom[x].carbohydrates}</p>
                 <p class="list">Fibre : ${foodCollectionListCustom[x].fibre}</p>
                 <p class="list">Sugar : ${foodCollectionListCustom[x].sugar}</p>
-                <p class="list">Sodium : ${foodCollectionListCustom[x].sodium}</p>
-                <p>Leave Me</p>
+                <p class="list">Fat : ${foodCollectionListCustom[x].fat}</p>
+                </div>
+               
             </div>
         </div>
     </div>
 </div>`;
+
     cardCustom.innerHTML += cardTemplateCustom;
   }
 
-  for (let j = 0; j < foodCollectionListUnlock.length; j++) {
-    const cardTemplateUnLock = `  <script>
-    function flipCard(card) {
-        card.classList.toggle('flipped');
-    }
-</script>
 
+  // const foodName = foodCollectionListUnlock[1].food_name
+  // console.log(foodCollectionListUnlock[1].food_name)
+
+  // console.log(foodName.toUpperCase(0, 1))
+
+  for (let j = 0; j < foodCollectionListUnlock.length; j++) {
+    const cardTemplateUnLock = `  
 <div class="setup_card_container">
     <div class="myCard">
         <div class="innerCard" onclick="flipCard(this)">
             <div class="frontSide">
-            <p class="nameFood" style="font-size: 20px; color: black;margin-bottom: 7px;">${foodCollectionListUnlock[j].food_name}
+            <p class="nameFood" style="font-size: 20px; color: black;margin-bottom: 7px;">${(foodCollectionListUnlock[j].food_name).toUpperCase()}
             </p>
                 <p class="title" style="font-size: 80px;">${foodCollectionListUnlock[j].emoji}</p>
                 <p style="margin-top: 15px;">Click Me</p>
@@ -115,12 +114,12 @@ async function getFoodCollection() {
                 <p class="list-title">${foodCollectionListUnlock[j].category_name}</p>
                 <div class="groupList">
                 <p class="list">Calories : ${foodCollectionListUnlock[j].calories}</p>
-                <p class="list">Protein : ${foodCollectionListUnlock[j].protein}</p>
-                <p class="list">Fat : ${foodCollectionListUnlock[j].fat}</p>
+                <p class="list">Protein : ${foodCollectionListUnlock[j].protein}</p>  
+                <p class="list">Sodium : ${foodCollectionListUnlock[j].sodium}</p>
                 <p class="list">Carbs : ${foodCollectionListUnlock[j].carbohydrates}</p>
                 <p class="list">Fibre : ${foodCollectionListUnlock[j].fibre}</p>
                 <p class="list">Sugar : ${foodCollectionListUnlock[j].sugar}</p>
-                <p class="list">Sodium : ${foodCollectionListUnlock[j].sodium}</p>
+                <p class="list">Fat : ${foodCollectionListUnlock[j].fat}</p>
                 </div>
                
             </div>
@@ -157,27 +156,34 @@ async function getSlimeTypeCollection() {
   const cardSlimeType = document.querySelector('.slimeType')
   let totalType = 4 - userSlimeType.length
 
-  for (let i = 0; i < userSlimeType.length; i++) {
-    const cardTemplateSlimeType = `  <script>
-    function flipCard(card) {
-        card.classList.toggle('flipped');
-    }
-</script>
+  const slimeTypePhoto = new Map()
+  slimeTypePhoto.set('Balance', '/user/img/Balance/jump.gif')
+  slimeTypePhoto.set('Keto', '/user/img/Keto/jump.gif')
+  slimeTypePhoto.set('Obese', '/user/img/Obese/jump.gif')
+  slimeTypePhoto.set('Skinny Fat', '/user/img/Skinny/jump.gif')
 
+  for (let i = 0; i < userSlimeType.length; i++) {
+    const cardTemplateSlimeType = ` 
 <div class="setup_card_container">
     <div class="myCard">
         <div class="innerCard" onclick="flipCard(this)">
             <div class="frontSide">
-                <p class="title" style="font-size: 20px;">${userSlimeType[i].name}</p>
-                <p style="margin-top: 15px;">Click Me</p>
+            <div class="slimePhoto">
+                <img src="${slimeTypePhoto.get(userSlimeType[i].name)}" alt="Type Balance">
             </div>
+            <div class="slimeTypeTxt">
+                <p class="title" style="font-size: 20px;">${userSlimeType[i].name}</p>
+                <p class="click">Click Me</p>
+            </div>
+        </div>
             <div class="backSide">
+            <div class="groupList">
                 <p class="list-title">${userSlimeType[i].name}</p>
-                <p class="list">Description : ${userSlimeType[i].description}</p>
+                <p class="list" style="text-align: start;">Description :<br>${userSlimeType[i].description}</p>
                 <p class="list">Calories(Max) : ${userSlimeType[i].max_calories}</p>
                 <p class="list">BMR : ${userSlimeType[i].bmr_multiplier}</p>
                 <p class="list">Earn Rate : ${userSlimeType[i].earn_rate_multiplier}</p>
-               
+               </div>
             </div>
         </div>
     </div>
