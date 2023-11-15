@@ -1,5 +1,7 @@
 var closeBtn = document.getElementById("closeBtn");
 var popup = document.getElementById("popup");
+const audio = { bgm: new Audio("./mp3/bgm.mp3") }
+let playingBGM = false;
 
 closeBtn.addEventListener("click", function () {
   popup.classList.remove("show"); // 移除 show 类，使其回到初始位置
@@ -66,20 +68,9 @@ function moveCharacter() {
 }
 
 function showPopupMenu() {
-  var popup = document.getElementById("popupMenu");
   document.querySelector(":root").setAttribute("SHOP", "true");
   document.querySelector("main").classList.add("blur");
-  //popup.style.display = "block";
 }
-
-// function hidePopupMenu() {
-//     var popup = document.getElementById("popupMenu");
-//     document.querySelector(":root").removeAttribute("SHOP")
-//     document.querySelector("main").classList.remove("blur");
-//     //popup.style.display = "none";
-// }
-
-// log out api
 
 async function getUserFinance() {
   try {
@@ -163,125 +154,24 @@ function updateCoins() {
   user.money += user.earningRate;
   document.querySelector("#coin_balance p").textContent = `${Math.floor(user.money)} `; // Update the coin balance
 }
-// refresh shop bottom function
 
-// pick the food to eat
 
-// 獲取卡片容器元素
-// const cardContainer = document.getElementById('food_card_containerID');
 
-// // 獲取遊戲容器元素
-// const gameContainer = document.getElementById('gamecontainer');
-
-// // 獲取所有卡片元素
-// const cards = cardContainer.getElementsByClassName('card');
-
-// // 迭代每個卡片元素，添加點擊事件處理程序
-// for (let i = 0; i < cards.length; i++) {
-//     const card = cards[i];
-//     const icon = card.querySelector('.icon');
-
-//     card.addEventListener('click', function () {
-//         console.log(123)
-//         console.log(icon)
-//         // 克隆 ICON 元素
-//         const clonedIcon = icon.cloneNode(true);
-
-//         // 設置 ICON 的位置和顯示
-//         clonedIcon.style.display = 'block';
-//         clonedIcon.style.top = '0';
-//         clonedIcon.style.left = '50%';
-//         clonedIcon.style.transform = 'translateX(-50%)';
-
-//         // 將 ICON 添加到遊戲容器中
-//         gameContainer.appendChild(clonedIcon);
-
-//         // 計算 ICON 掉落到 slime_character 位置的距離
-//         const characterRect = gameContainer.querySelector('.slime_character').getBoundingClientRect();
-//         const iconRect = clonedIcon.getBoundingClientRect();
-//         const distance = characterRect.top - iconRect.bottom;
-
-//         // 使用 CSS 動畫使 ICON 掉落
-//         clonedIcon.style.transition = 'top 1s';
-//         clonedIcon.style.top = distance + 'px';
-
-//         // 監聽動畫結束事件，當 ICON 掉落完成後從遊戲容器中移除
-//         clonedIcon.addEventListener('transitionend', function () {
-//             gameContainer.removeChild(clonedIcon);
-//         });
-//     });
-// }
-
-// const cardContainer = document.getElementById('food_card_containerID');
-// const gameContainer = document.getElementById('gamecontainer');
-// const cards = cardContainer.getElementsByClassName('card');
-
-// for (let i = 0; i < cards.length; i++) {
-//     const card = cards[i];
-
-//     card.addEventListener('click', function () {
-//         const emoji = card.querySelector('.icon').innerText;
-
-//         const emojiElement = document.createElement('div');
-//         emojiElement.classList.add('emoji');
-//         emojiElement.innerText = emoji;
-
-//         gameContainer.appendChild(emojiElement);
-
-//         const gameContainerRect = gameContainer.getBoundingClientRect();
-//         const cardRect = card.getBoundingClientRect();
-//         const emojiWidth = emojiElement.offsetWidth;
-//         const emojiHeight = emojiElement.offsetHeight;
-//         const leftOffset = cardRect.left + cardRect.width / 2 - emojiWidth / 2;
-//         const topOffset = gameContainerRect.top - emojiHeight;
-
-//         emojiElement.style.left = leftOffset + 'px';
-//         emojiElement.style.top = topOffset + 'px';
-
-//         setTimeout(function () {
-//             emojiElement.style.transition = 'top 1s';
-//             emojiElement.style.top = gameContainerRect.bottom - emojiHeight + 'px';
-//         }, 0);
-
-//         // emojiElement.addEventListener('transitionend', function () {
-//         //     gameContainer.removeChild(emojiElement);
-//         // });
-//     });
-// }
-
-// const cardContainer = document.getElementById("food_card_containerID");
-// const gameContainer = document.getElementById("gamecontainer");
-// const cards = cardContainer.getElementsByClassName("card");
 
 // const socket = io.connect();
 
-// 創建一個 Audio 物件並設置音檔路徑
 
-
-
-
-let backgroundMusic = new Audio("./mp3/bgm.mp3");
-let playingBGM = false;
-
-function playBackgroundMusic() {
-  backgroundMusic.play();
-  backgroundMusic.loop = true;
-  playingBGM = true;
-}
-
-function pauseBackgroundMusic() {
-  backgroundMusic.pause();
-  playingBGM = false;
-}
 
 function toggleBackgroundMusic(elem) {
   if (playingBGM) {
+    audio.bgm.pause();
     elem.textContent = "music_off";
-    pauseBackgroundMusic();
-  } else {
-    elem.textContent = "music_note";
-    playBackgroundMusic();
+    return playingBGM = false;
   }
+  audio.bgm.play();
+  elem.textContent = "music_note";
+  audio.bgm.loop = true;
+  playingBGM = true;
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
