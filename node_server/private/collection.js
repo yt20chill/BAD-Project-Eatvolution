@@ -63,7 +63,7 @@ async function getFoodCollection() {
 
 
   for (let x = 0; x < foodCollectionListCustom.length; x++) {
-    const cardTemplateCustom = `  <script>
+    const cardTemplateCustom = ` <script>
     function flipCard(card) {
         card.classList.toggle('flipped');
     }
@@ -145,9 +145,6 @@ async function getFoodCollection() {
 </div>`;
     cardUniversal.innerHTML += cardTemplateLock;
   }
-
-  // const foodCollectionData = foodCollectionList.result
-  // console.log(foodCollectionData)
 }
 
 async function getSlimeTypeCollection() {

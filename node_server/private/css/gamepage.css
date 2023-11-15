@@ -622,10 +622,15 @@ body {
     font-size: 120px;
 }
 
-.backSide::before>p>.list {
-    margin: 0 0 5px 0;
+.list {
+    margin: 0 !important;
 }
 
+.list-title {
+    padding: 0px 25px 20px;
+    font-size: 25px;
+    font-family: 'Pixelify Sans', sans-serif;
+}
 
 @keyframes animate {
     0% {
