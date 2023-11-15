@@ -123,7 +123,7 @@ async function getSlimeData() {
     const newType = result.slime_type.split(" ")[0];
     if (!slime.type) slime.type = newType;
     if (slime.type && slime.type !== newType) slime.isEvolving = true;
-    if (slime.isEvolving) evolveAnimation(newType);
+    evolveAnimation(newType);
     displaySlimeData();
   } catch (error) {
     console.error(error);
