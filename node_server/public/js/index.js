@@ -27,7 +27,8 @@ try {
       alert("wrong username or password");
       return;
     } else {
-      window.location = "/user";
+      await loginSound.play();
+      setTimeout(() => window.location = "/user", 500);
     }
   });
 } catch (error) {
@@ -58,7 +59,8 @@ try {
       alert(data.result);
       return;
     } else {
-      window.location = "/user/index.html";
+      await loginSound.play();
+      setTimeout(() => window.location = "/user", 500);
     }
   });
 } catch (error) {
@@ -146,3 +148,9 @@ gsap.delayedCall(1, () => {
     // { x: -300, duration: 5, ease: 'power4.out' }
   );
 });
+
+let loginSound = new Audio("./mp3/login.mp3")
+
+function playSound() {
+  loginSound.play();
+}

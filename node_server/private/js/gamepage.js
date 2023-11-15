@@ -255,10 +255,39 @@ function updateCoins() {
 
 // const socket = io.connect();
 
+// 創建一個 Audio 物件並設置音檔路徑
+
+
+
+
+let backgroundMusic = new Audio("./mp3/bgm.mp3");
+let playingBGM = false;
+
+function playBackgroundMusic() {
+  backgroundMusic.play();
+  backgroundMusic.loop = true;
+  playingBGM = true;
+}
+
+function pauseBackgroundMusic() {
+  backgroundMusic.pause();
+  playingBGM = false;
+}
+
+function toggleBackgroundMusic() {
+  if (playingBGM) {
+    pauseBackgroundMusic();
+  } else {
+    playBackgroundMusic();
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
+
   // get coins
   await getUserFinance();
   updateCoins();
+
   setInterval(updateCoins, 1000);
   // socket.on("evolving", evolveAnimation);
   await getSlimeData();

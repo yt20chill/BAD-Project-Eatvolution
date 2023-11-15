@@ -7,8 +7,16 @@ window.onload = async () => {
 }
 
 
+let clickCardSound = new Audio("./mp3/clickDex.mp3");
+async function clickCard_Sound() {
+  await clickCardSound.play();
+};
+
+
+
 function flipCard(card) {
   card.classList.toggle('flipped');
+  clickCard_Sound()
 }
 
 async function changePage() {
@@ -225,5 +233,7 @@ async function getSlimeTypeCollection() {
     cardSlimeType.innerHTML += cardTemplateTypeLock
   }
 }
+
+
 
 

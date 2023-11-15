@@ -48,6 +48,7 @@ function displayFood(result) {
 }
 
 function eatAnimation(emoji) {
+  PickfoodSound.play();
   const emojiElement = document.createElement("div");
   const gameContainer = document.getElementById("gamecontainer");
   emojiElement.classList.add("emoji");
@@ -76,10 +77,13 @@ function eatAnimation(emoji) {
     setTimeout(function () {
       gameContainer.removeChild(emojiElement);
       slimeCharacter.src = `./img/${slime.type.split(" ")[0]}/jump.gif`;
-      setTimeout(function () {
+      setTimeout(async function () {
         //slimeCharacter.src = './img/blue_run.gif';
         slimeCharacter.src = `./img/${slime.type.split(" ")[0]}/move.gif`;
-        if (slime.isEvolving) evolveAnimation();
+        if (slime.isEvolving) {
+          evolveAnimation();
+          // await evoSound.play();
+        }
       }, 1000); // 1秒後回到最初的圖片
     }, 500);
   }, 3000);
@@ -129,11 +133,14 @@ async function refreshShop() {
 
 async function postCustomFood() {
   if (user.money - foodShop.customFoodCost < 0) return alert("Not enough money");
+
   const foodName = document.querySelector(`input[name="foodName"]`).value.trim().toLowerCase();
-  // if food name is empty or is purely number
+  // 如果食物名称为空或纯数字，则返回
   if (foodName === "" || !isNaN(+foodName)) return;
+
   const confirmed = confirm(`Want to feed your slime with ${foodName}?`);
   if (!confirmed) return;
+
   const res = await fetch("/api/food", {
     method: "POST",
     headers: {
@@ -141,20 +148,33 @@ async function postCustomFood() {
     },
     body: JSON.stringify({ foodName }),
   });
+
   if (res.status === 401) window.location = "/";
+
   const { success, result } = await res.json();
   if (!success) return alert(`Failed to feed your slime with ${foodName}`);
+
   if (result.slime_type !== slime.type) slime.isEvolving = true;
+
   const { current_calories, max_calories, extra_calories, bmr_rate } = result;
   slime.cal = current_calories;
   slime.maxCal = max_calories;
   slime.extraCal = extra_calories;
   slime.bmr = bmr_rate;
-  if (slime.isEvolving) evolveAnimation(result.slime_type);
-  await getUserFinance();
-  await getSlimeData();
-  closeFootContainer();
-  eatAnimation("✨");
+
+  if (slime.isEvolving) {
+    await evolveAnimation(result.slime_type);
+    // await evoSound.play();
+    await getUserFinance();
+    await getSlimeData();
+    closeFootContainer();
+    eatAnimation("✨");
+  } else {
+    await getUserFinance();
+    await getSlimeData();
+    closeFootContainer();
+    eatAnimation("✨");
+  }
 }
 
 const purchaseFood = async (foodId, emoji, cost, calories) => {
@@ -287,3 +307,18 @@ function formatTime(date) {
   const seconds = newDate.getSeconds().toString().padStart(2, "0");
   return `${hours}:${minutes}:${seconds}`;
 }
+
+// let evoSound = new Audio("./mp3/eva.mp3");
+
+// async function playEvaSound() {
+//   try {
+//     await evoSound.play();
+//   } catch (error) {
+//     console.error("音頻播放失敗:", error);
+//   }
+// }
+
+let PickfoodSound = new Audio("./mp3/select-food.mp3");
+function PickfoodSound_Sound() {
+  PickfoodSound.play();
+};
