@@ -81,7 +81,7 @@ function eatAnimation(emoji) {
         //slimeCharacter.src = './img/blue_run.gif';
         slimeCharacter.src = `./img/${slime.type.split(" ")[0]}/move.gif`;
         if (slime.isEvolving) {
-          evolveAnimation();
+          evolveAnimation(slime.type);
           // await evoSound.play();
         }
       }, 1000); // 1秒後回到最初的圖片
@@ -198,10 +198,9 @@ const purchaseFood = async (foodId, emoji, cost, calories) => {
 };
 
 // implement evolve animation
-async function evolveAnimation(newType) {
+function evolveAnimation(newType) {
   slime.isEvolving = false;
   slime.type = newType;
-
   // animation
   const evolveText = document.createElement("div");
   evolveText.classList.add("evolve-text");
@@ -211,16 +210,13 @@ async function evolveAnimation(newType) {
   const slimeCharacter = document.getElementById("gamecontainer");
   slimeCharacter.appendChild(evolveText);
 
-  // change character to slime type
-  slimeCharacter.src = `./img/${slime.type.split(" ")[0]}/move.gif`;
-
   // 使用 GSAP 庫創建動畫
   gsap.to(evolveText, {
     duration: 5, // 動畫持續時間（秒）
     opacity: 1, // 目標透明度
     y: -50, // 在 y 軸上的移動距離
     ease: "power2.out", // 動畫緩動函式
-    delay: 3, // 延遲 3 秒後開始動畫
+    delay: 0, // 延遲 3 秒後開始動畫
     onComplete: function () {
       // 動畫完成時的回調函式
       // 在這裡可以執行其他操作或觸發其他事件
@@ -228,6 +224,8 @@ async function evolveAnimation(newType) {
       evolveText.remove();
     },
   });
+  // change character to slime type
+  slimeCharacter.src = `./img/${slime.type.split(" ")[0]}/move.gif`;
 }
 
 function addCalories(calories) {
@@ -236,6 +234,10 @@ function addCalories(calories) {
     return;
   }
   slime.extraCal += slime.cal + calories - slime.maxCal;
+  if (slime.extraCal > 2000 && slime.type !== "Obese") {
+    slime.type = "Obese";
+    evolveAnimation(slime.type);
+  }
   slime.cal = slime.maxCal;
   return;
 }
