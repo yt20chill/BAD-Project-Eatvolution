@@ -9,7 +9,7 @@ body * {
 
 body {
     background-image: url(../img/background.svg);
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .navbar {
@@ -33,33 +33,6 @@ body {
     transition: left 0.5s ease-in-out;
     z-index: 9999;
     /* 使用 0.5 秒的过渡效果，并添加缓动函数 */
-}
-
-@media (max-width:400px) {
-    /* #popup {
-        position: fixed;
-        top: 0;
-        left: -150%;
-        /* 初始位置在左侧屏幕外 */
-    /* width: 300px;
-    height: 200px;
-    background-color: #f1f1f1;
-    transition: left 0.5s ease-in-out;
-    z-index: 9999; */
-    /* 使用 0.5 秒的过渡效果，并添加缓动函数 */
-    /* } */
-
-    .slimestable {
-        position: absolute;
-        font-size: large;
-        height: 600px;
-        width: 400px;
-        background-color: blueviolet;
-        border: 5px solid #fafafa;
-        border-radius: 5px;
-        box-shadow: 0 0 0.3em rgba(255, 255, 255, 0.5);
-    }
-
 }
 
 .stable_container {
@@ -117,6 +90,7 @@ body {
     background-color: blueviolet;
     border: 5px solid #fafafa;
     border-radius: 5px;
+    box-shadow: 0 0 0.3em rgba(255, 255, 255, 0.5);
 }
 
 .fas.fa-times {
@@ -196,6 +170,17 @@ body {
 
 .game_container {
     position: relative;
+    width: min(99vw, 800px);
+    height: min(calc(100vh - 300px), 800px);
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    border: 5px solid #fafafa;
+    border-radius: 10px;
+}
+
+/* .game_container {
+    position: relative;
     left: 50%;
     transform: translateX(-50%);
     height: 800px;
@@ -225,7 +210,11 @@ body {
         padding: 0px;
     }
 }
-
+@media (max-width: 480px) {
+    .game_container {
+        width: 98%;
+    }
+} */
 @media (min-width: 768px) {
     .container {
         max-width: 1000px !important
@@ -234,13 +223,7 @@ body {
 
 
 
-@media (max-width: 480px) {
-    .game_container {
-        width: 98%;
-    }
 
-
-}
 
 .game_map {
     width: 100%;
@@ -248,15 +231,16 @@ body {
 }
 
 .slime_character {
-    position: relative;
-    cursor: po;
-    top: 80%;
+    position: absolute;
+    cursor: pointer;
+    bottom: 0;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform-origin: center;
 }
 
 .face_left {
-    transform: translate(-50%, -50%) scaleX(-1);
+    transform: scaleX(-1);
+    transform-origin: center;
 }
 
 .popup-menu {
@@ -426,7 +410,7 @@ body {
 .content>.top {
     display: flex;
     justify-content: center;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     align-items: center;
     height: 20%;
     background-color: white;
@@ -687,6 +671,7 @@ body {
 
 #shop-util-bar {
     position: fixed;
+    font-size: 1.2rem;
     top: 5px;
     right: 0;
     left: 0;
@@ -711,7 +696,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2rem;
     color: white;
     font-weight: bold;
 }
@@ -721,7 +705,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2rem;
     color: white;
     font-weight: bold;
 }
@@ -785,5 +768,58 @@ body {
         top: 30%;
         left: 50%;
         transform: translateX(-50%);
+    }
+}
+
+@media screen and (max-width: 767.98px) {
+    #the-real-nav-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 2;
+    }
+
+    #nav-btn-list {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    #nav-btn-list .nav-link,
+    #nav-btn-list .nav-item {
+        margin-right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #nav-btn-list .material-symbols-outlined {
+        font-size: 4.5rem;
+    }
+}
+
+[SHOP] #popupMenu {
+    display: flex;
+    animation: fade-in-shop 0.3s ease-in-out;
+    animation-fill-mode: forwards;
+
+}
+
+#popupMenu {
+    display: none;
+}
+
+@keyframes fade-in-shop {
+    from {
+        opacity: 0;
+        filter: blur(20px);
+    }
+
+    to {
+        opacity: 1;
+        filter: blur(0px);
     }
 }
