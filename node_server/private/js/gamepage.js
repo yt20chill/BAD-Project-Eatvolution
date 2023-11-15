@@ -16,11 +16,6 @@ function hidePopup() {
   document.querySelector("main").classList.remove("blur");
 }
 
-// 移除初始的 hidden 类
-window.addEventListener("load", function () {
-  popup.classList.remove("hidden");
-});
-
 // 史來姆我行為 //
 
 // 获取游戏容器和主角图像元素
@@ -132,6 +127,7 @@ async function getSlimeData() {
 }
 function displaySlimeData() {
   if (slime.calories < 0 || slime.bmr < 0) return;
+  document.getElementById("slimeIcon").src = `./img/${slime.type}/move.gif`;
   document.getElementById("slime_character").src = `./img/${slime.type}/move.gif`;
   document.getElementById("slimeStableIcon").src = `./img/${slime.type}/die.gif`;
   const displayType = slime.type === "Skinny" ? "Skinny Fat" : slime.type;
