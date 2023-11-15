@@ -7,6 +7,10 @@ window.onload = async () => {
 }
 
 
+function flipCard(card) {
+  card.classList.toggle('flipped');
+}
+
 async function changePage() {
   const next = document.querySelector("#next");
   const prev = document.querySelector("#prev");
@@ -44,7 +48,6 @@ async function changePage() {
 }
 
 
-
 async function getFoodCollection() {
   const res = await fetch("/api/collection/food");
   const result = await res.json();
@@ -59,11 +62,7 @@ async function getFoodCollection() {
   const cardCustom = document.querySelector(".custom");
 
   for (let x = 0; x < foodCollectionListCustom.length; x++) {
-    const cardTemplateCustom = `  <script>
-    function flipCard(card) {
-        card.classList.toggle('flipped');
-    }
-</script>
+    const cardTemplateCustom = `  
 
 <div class="setup_card_container">
     <div class="myCard">
@@ -101,12 +100,7 @@ async function getFoodCollection() {
   // console.log(foodName.toUpperCase(0, 1))
 
   for (let j = 0; j < foodCollectionListUnlock.length; j++) {
-    const cardTemplateUnLock = `  <script>
-    function flipCard(card) {
-        card.classList.toggle('flipped');
-    }
-</script>
-
+    const cardTemplateUnLock = `  
 <div class="setup_card_container">
     <div class="myCard">
         <div class="innerCard" onclick="flipCard(this)">
@@ -169,12 +163,7 @@ async function getSlimeTypeCollection() {
   slimeTypePhoto.set('Skinny Fat', '/user/img/Skinny/jump.gif')
 
   for (let i = 0; i < userSlimeType.length; i++) {
-    const cardTemplateSlimeType = `  <script>
-    function flipCard(card) {
-        card.classList.toggle('flipped');
-    }
-</script>
-
+    const cardTemplateSlimeType = ` 
 <div class="setup_card_container">
     <div class="myCard">
         <div class="innerCard" onclick="flipCard(this)">
