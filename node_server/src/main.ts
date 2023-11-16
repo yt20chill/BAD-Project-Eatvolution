@@ -32,7 +32,7 @@ app.use("/api-test", apiRoutes);
 
 app.use(express.static(path.join(__dirname, "..", "public")));
 // Example for serving guarded folder
-app.use("/user", isLoggedInClient, express.static(path.join(__dirname, "..", "private")));
+app.use("/game", isLoggedInClient, express.static(path.join(__dirname, "..", "private")));
 
 app.use((_, res) => {
   res.sendFile(path.join(__dirname, "..", "public", "404.html"));

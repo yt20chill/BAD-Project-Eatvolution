@@ -39,6 +39,7 @@ def classify(request):
         # re-order df columns based on the order used in training
         predict_dataset = predict_dataset[food_train_columns]
         result = loaded_model.predict(predict_dataset).tolist()
+        print(f'fetch result: {result}')
         return json({"success": True, "result": result})
     except:
         return json(body={"success": False}, status=500)

@@ -3,18 +3,13 @@ window.onload = async () => {
   await changePage();
   await getFoodCollection();
   await getSlimeTypeCollection();
-
 }
-
-
-
 
 
 function flipCard(card) {
   card.classList.toggle('flipped');
-  let clickCardSound = new Audio("./mp3/clickDex.mp3");
+  const clickCardSound = new Audio("./mp3/clickDex.mp3");
   clickCardSound.play();
-  clickCardSound = null;
 }
 
 async function changePage() {
@@ -185,10 +180,10 @@ async function getSlimeTypeCollection() {
     let totalType = 4 - userSlimeType.length
 
     const slimeTypePhoto = new Map()
-    slimeTypePhoto.set('Balance', '/user/img/Balance/jump.gif')
-    slimeTypePhoto.set('Keto', '/user/img/Keto/jump.gif')
-    slimeTypePhoto.set('Obese', '/user/img/Obese/jump.gif')
-    slimeTypePhoto.set('Skinny Fat', '/user/img/Skinny/jump.gif')
+    slimeTypePhoto.set('Balance', '/game/img/Balance/jump.gif')
+    slimeTypePhoto.set('Keto', '/game/img/Keto/jump.gif')
+    slimeTypePhoto.set('Obese', '/game/img/Obese/jump.gif')
+    slimeTypePhoto.set('Skinny Fat', '/game/img/Skinny/jump.gif')
 
     for (let i = 0; i < userSlimeType.length; i++) {
       const cardTemplateSlimeType = ` 
