@@ -33,7 +33,6 @@ async function changePage() {
         title.textContent = nextBtn.dataset.title
         nextBtn.click();
       }
-      console.log({ page });
     });
 
     prev.addEventListener("click", async (e) => {
@@ -48,7 +47,6 @@ async function changePage() {
         title.textContent = prevBtn.dataset.title
         prevBtn.click();
       }
-      console.log({ page });
     });
 
     slideFirst.addEventListener("click", async (e) => {
@@ -174,7 +172,6 @@ async function getSlimeTypeCollection() {
   try {
     const res = await fetch("/api/collection/slime");
     const result = await res.json();
-    console.log({ result })
     const userSlimeType = result.result
     const cardSlimeType = document.querySelector('.slimeType')
     let totalType = 4 - userSlimeType.length

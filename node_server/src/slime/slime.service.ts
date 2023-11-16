@@ -141,7 +141,6 @@ export default class SlimeService implements SlimeServiceHelper {
     const slimeDetails = await this.getDetails(slimeId);
     if (!foodDetails || !slimeDetails) throw new BadRequestError("Invalid food or slime id");
     const { calories: foodCalories, carbohydrates: carbs, fat, protein } = foodDetails;
-    console.log(foodCalories);
     const {
       calories: slimeCalories,
       max_calories: slimeMaxCalories,
