@@ -2,6 +2,7 @@ import { Knex } from "knex";
 import path from "path";
 import { Food, Item, SlimeType } from "../../../models/dbModels";
 import { GeneralOmitFields } from "../../../models/models";
+import { redis } from "../../utils/container";
 import DbUtils from "../../utils/dbUtils";
 import gameConfig from "../../utils/gameConfig";
 import { logger } from "../../utils/logger";
@@ -11,6 +12,9 @@ const ITEM_PATH = path.join(__dirname, "..", "/item.csv");
 
 export async function seed(knex: Knex): Promise<void> {
   const trx = await knex.transaction();
+  await redis.connect();
+  await redis.flushAll();
+  await redis.disconnect();
   try {
     // Deletes ALL existing entries
     await trx("shop").del();

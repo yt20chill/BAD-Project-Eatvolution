@@ -67,7 +67,7 @@ export default class ShopService implements ShopServiceHelper {
     if (universalShop.length > 0) {
       universalShop = DbUtils.convertStringToNumber(universalShop);
       foodShop.universal = universalShop;
-      await this.redis.set("foodShop", JSON.stringify(foodShop));
+      await this.redis.setEx("foodShop", 60 * 60, JSON.stringify(foodShop));
       return universalShop;
     }
     await this.updateUniversalShop();
@@ -86,7 +86,7 @@ export default class ShopService implements ShopServiceHelper {
     if (userShop.length > 0) {
       userShop = DbUtils.convertStringToNumber(userShop);
       foodShop[userId] = userShop;
-      await this.redis.set("foodShop", JSON.stringify(foodShop));
+      await this.redis.setEx("foodShop", 60 * 60, JSON.stringify(foodShop));
     }
     return userShop;
   };
@@ -104,7 +104,7 @@ export default class ShopService implements ShopServiceHelper {
     const userShop = await this.getUserShop(userId);
     if (userShop.length > 0) {
       foodShop[userId] = userShop;
-      this.redis.set("foodShop", JSON.stringify(foodShop));
+      this.redis.setEx("foodShop", 60 * 60, JSON.stringify(foodShop));
       return userShop;
     }
     if (foodShop?.universal?.length > 0) {
@@ -112,7 +112,7 @@ export default class ShopService implements ShopServiceHelper {
     }
     const universalShop = await AppUtils.rejectTimeoutPromise(this.getUniversalShop(), 5000);
     foodShop.universal = universalShop;
-    this.redis.set("foodShop", JSON.stringify(foodShop));
+    this.redis.setEx("foodShop", 60 * 60, JSON.stringify(foodShop));
     return universalShop;
   };
   updateUniversalShop = async (): Promise<boolean> => {
@@ -156,7 +156,7 @@ export default class ShopService implements ShopServiceHelper {
       await this.knex("user")
         .update({ money: moneyAfterPurchase, updated_at: this.knex.fn.now() })
         .where("id", userId);
-      await this.redis.set("foodShop", JSON.stringify(foodShop));
+      await this.redis.setEx("foodShop", 60 * 60, JSON.stringify(foodShop));
       await this.knex("user_shop").del().where({ user_id: userId });
       await this.knex("user_shop").insert(foodArr);
       await trx.commit();
