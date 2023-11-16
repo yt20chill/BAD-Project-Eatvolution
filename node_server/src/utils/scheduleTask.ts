@@ -5,7 +5,7 @@ import gameConfig from "./gameConfig";
 import { logger } from "./logger";
 
 // TODO: test case
-export const scheduleUpdateShop = async () =>
+export const scheduleUpdateShop = () =>
   schedule.scheduleJob(gameConfig.SHOP_REFRESH_SCHEDULE, async () => {
     try {
       await shopService.updateUniversalShop();
@@ -15,7 +15,7 @@ export const scheduleUpdateShop = async () =>
     }
   });
 
-export const scheduleUpdateUsers = async () =>
+export const scheduleUpdateUsers = () =>
   schedule.scheduleJob(gameConfig.USER_UPDATE_SCHEDULE, async () => {
     try {
       await gameService.updateAllUsers();

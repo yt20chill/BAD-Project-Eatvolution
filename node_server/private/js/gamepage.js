@@ -1,6 +1,7 @@
 var closeBtn = document.getElementById("closeBtn");
 var popup = document.getElementById("popup");
 
+
 closeBtn.addEventListener("click", function () {
   popup.classList.remove("show"); // 移除 show 类，使其回到初始位置
 });
@@ -15,11 +16,6 @@ function hidePopup() {
   popup.classList.remove("show"); // 移除 show 类，使其回到初始位置
   document.querySelector("main").classList.remove("blur");
 }
-
-// 移除初始的 hidden 类
-window.addEventListener("load", function () {
-  popup.classList.remove("hidden");
-});
 
 // 史來姆我行為 //
 
@@ -71,20 +67,9 @@ function moveCharacter() {
 }
 
 function showPopupMenu() {
-  var popup = document.getElementById("popupMenu");
   document.querySelector(":root").setAttribute("SHOP", "true");
   document.querySelector("main").classList.add("blur");
-  //popup.style.display = "block";
 }
-
-// function hidePopupMenu() {
-//     var popup = document.getElementById("popupMenu");
-//     document.querySelector(":root").removeAttribute("SHOP")
-//     document.querySelector("main").classList.remove("blur");
-//     //popup.style.display = "none";
-// }
-
-// log out api
 
 async function getUserFinance() {
   try {
@@ -100,12 +85,19 @@ async function getUserFinance() {
     if (result.money < 0 || result.earning_rate < 0) return;
     user.money = result.money;
     user.earningRate = result.earning_rate;
-    document.querySelector("#coin_balance p").textContent = `${Math.floor(user.money)} `;
-    document.querySelector("#earn_rate").textContent = `${user.earningRate}`;
+    document.querySelector("#coin_balance p").textContent = `${displayCoinFormat(user.money)} `;
+    document.querySelector("#earn_rate").textContent = `${displayCoinFormat(user.earningRate)}`;
   } catch (error) {
     console.error(error);
     // alert("Failed to get user data");
   }
+}
+
+function displayCoinFormat(coin) {
+  if (coin < 100_000) return coin.toFixed(1);
+  if (coin < 1_000_000) return `${(coin / 1000).toFixed(1)}k`;
+  if (coin < 1_000_000_000) return `${(coin / 1_000_000).toFixed(1)}M`;
+  return `${(coin / 1_000_000_000).toFixed(1)}B`;
 }
 
 async function getSlimeData() {
@@ -120,10 +112,10 @@ async function getSlimeData() {
     slime.cal = result.current_calories;
     slime.maxCal = result.max_calories;
     slime.extraCal = result.extra_calories;
-    slime.type = result.slime_type.split(" ")[0];
     const newType = result.slime_type.split(" ")[0];
     if (!slime.type) slime.type = newType;
     if (slime.type && slime.type !== newType) slime.isEvolving = true;
+    evolveAnimation(newType);
     displaySlimeData();
   } catch (error) {
     console.error(error);
@@ -132,6 +124,7 @@ async function getSlimeData() {
 }
 function displaySlimeData() {
   if (slime.calories < 0 || slime.bmr < 0) return;
+  document.getElementById("slimeIcon").src = `./img/${slime.type}/move.gif`;
   document.getElementById("slime_character").src = `./img/${slime.type}/move.gif`;
   document.getElementById("slimeStableIcon").src = `./img/${slime.type}/die.gif`;
   const displayType = slime.type === "Skinny" ? "Skinny Fat" : slime.type;
@@ -146,8 +139,12 @@ async function updateSlimeCal() {
   if (slime.cal < 0 || slime.bmr < 0) return;
   if (slime.cal === 0 && slime.extraCal > 0) {
     slime.extraCal = Math.max(0, slime.extraCal - slime.bmr);
-    if (slime.extraCal < 2000) { }//TODO: evolve once
-  };
+    if (slime.extraCal <= 2000 && slime.type === "Obese") {
+      slime.isEvolving = true;
+      // update slime type
+      await getSlimeData();
+    }
+  }
   slime.cal = Math.max(0, slime.cal - slime.bmr);
   if (slime.cal === 0) {
     user.earningRate = 0;
@@ -161,104 +158,44 @@ async function updateSlimeCal() {
 function updateCoins() {
   if (user.money < 0 || user.earningRate <= 0) return;
   user.money += user.earningRate;
-  document.querySelector("#coin_balance p").textContent = `${Math.floor(user.money)} `; // Update the coin balance
+  document.querySelector("#coin_balance p").textContent = `${displayCoinFormat(user.money)} `; // Update the coin balance
 }
-// refresh shop bottom function
 
-// pick the food to eat
 
-// 獲取卡片容器元素
-// const cardContainer = document.getElementById('food_card_containerID');
 
-// // 獲取遊戲容器元素
-// const gameContainer = document.getElementById('gamecontainer');
-
-// // 獲取所有卡片元素
-// const cards = cardContainer.getElementsByClassName('card');
-
-// // 迭代每個卡片元素，添加點擊事件處理程序
-// for (let i = 0; i < cards.length; i++) {
-//     const card = cards[i];
-//     const icon = card.querySelector('.icon');
-
-//     card.addEventListener('click', function () {
-//         console.log(123)
-//         console.log(icon)
-//         // 克隆 ICON 元素
-//         const clonedIcon = icon.cloneNode(true);
-
-//         // 設置 ICON 的位置和顯示
-//         clonedIcon.style.display = 'block';
-//         clonedIcon.style.top = '0';
-//         clonedIcon.style.left = '50%';
-//         clonedIcon.style.transform = 'translateX(-50%)';
-
-//         // 將 ICON 添加到遊戲容器中
-//         gameContainer.appendChild(clonedIcon);
-
-//         // 計算 ICON 掉落到 slime_character 位置的距離
-//         const characterRect = gameContainer.querySelector('.slime_character').getBoundingClientRect();
-//         const iconRect = clonedIcon.getBoundingClientRect();
-//         const distance = characterRect.top - iconRect.bottom;
-
-//         // 使用 CSS 動畫使 ICON 掉落
-//         clonedIcon.style.transition = 'top 1s';
-//         clonedIcon.style.top = distance + 'px';
-
-//         // 監聽動畫結束事件，當 ICON 掉落完成後從遊戲容器中移除
-//         clonedIcon.addEventListener('transitionend', function () {
-//             gameContainer.removeChild(clonedIcon);
-//         });
-//     });
-// }
-
-// const cardContainer = document.getElementById('food_card_containerID');
-// const gameContainer = document.getElementById('gamecontainer');
-// const cards = cardContainer.getElementsByClassName('card');
-
-// for (let i = 0; i < cards.length; i++) {
-//     const card = cards[i];
-
-//     card.addEventListener('click', function () {
-//         const emoji = card.querySelector('.icon').innerText;
-
-//         const emojiElement = document.createElement('div');
-//         emojiElement.classList.add('emoji');
-//         emojiElement.innerText = emoji;
-
-//         gameContainer.appendChild(emojiElement);
-
-//         const gameContainerRect = gameContainer.getBoundingClientRect();
-//         const cardRect = card.getBoundingClientRect();
-//         const emojiWidth = emojiElement.offsetWidth;
-//         const emojiHeight = emojiElement.offsetHeight;
-//         const leftOffset = cardRect.left + cardRect.width / 2 - emojiWidth / 2;
-//         const topOffset = gameContainerRect.top - emojiHeight;
-
-//         emojiElement.style.left = leftOffset + 'px';
-//         emojiElement.style.top = topOffset + 'px';
-
-//         setTimeout(function () {
-//             emojiElement.style.transition = 'top 1s';
-//             emojiElement.style.top = gameContainerRect.bottom - emojiHeight + 'px';
-//         }, 0);
-
-//         // emojiElement.addEventListener('transitionend', function () {
-//         //     gameContainer.removeChild(emojiElement);
-//         // });
-//     });
-// }
-
-// const cardContainer = document.getElementById("food_card_containerID");
-// const gameContainer = document.getElementById("gamecontainer");
-// const cards = cardContainer.getElementsByClassName("card");
 
 // const socket = io.connect();
 
+
+
+function toggleMute(elem) {
+  if (audio.bgm.paused) {
+    audio.bgm.play();
+    audio.bgm.loop = true;
+  }
+  if (audio.isMuted) {
+    audio.isMuted = false;
+    for (const key in audio) {
+      if (key === "isMuted") continue;
+      audio[key].volume = 1;
+      elem.textContent = "music_note";
+    }
+    return;
+  }
+  audio.isMuted = true;
+  for (const key in audio) {
+    if (key === "isMuted") continue;
+    audio[key].volume = 0;
+    elem.textContent = "music_off";
+  }
+};
+
 document.addEventListener("DOMContentLoaded", async () => {
+
   // get coins
   await getUserFinance();
   updateCoins();
+
   setInterval(updateCoins, 1000);
   // socket.on("evolving", evolveAnimation);
   await getSlimeData();
