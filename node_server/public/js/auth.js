@@ -33,7 +33,7 @@ loginform?.addEventListener("submit", async (e) => {
     return;
   } else {
     loginSound.play();
-    setTimeout(() => window.location = "/user", 500);
+    setTimeout(() => window.location = "/game", 500);
   }
 });
 
@@ -60,6 +60,6 @@ signupForm?.addEventListener("submit", async (e) => {
     return;
   } else {
     loginSound.play();
-    setTimeout(() => window.location = "/user", 500);
+    setTimeout(() => window.location = "/game", 500);
   }
 });

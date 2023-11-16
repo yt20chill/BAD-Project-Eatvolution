@@ -37,7 +37,7 @@ function updateRemainingTime() {
   }, 1000);
 }
 function displayFood(result) {
-  document.querySelector("#custom-food-cost").innerHTML = `<img src="/user/img/01coin (1).gif" alt="Coin Icon"> ${displayCoinFormat(foodShop.customFoodCost)} `;
+  document.querySelector("#custom-food-cost").innerHTML = `<img src="/game/img/01coin (1).gif" alt="Coin Icon"> ${displayCoinFormat(foodShop.customFoodCost)} `;
   result.forEach((item, index) => {
     const { name, calories, cost, emoji, id: foodId } = item;
     const cardElement = document.getElementById(`card${index + 2}`);
@@ -45,7 +45,7 @@ function displayFood(result) {
     cardElement.querySelector(".name").textContent = name;
     cardElement.querySelector(".icon").textContent = emoji;
     cardElement.querySelector(".calories").textContent = `${calories} Cal`;
-    cardElement.querySelector(".cost").innerHTML = `<img src="/user/img/01coin (1).gif" alt="Coin Icon"> ${displayCoinFormat(cost)}`;
+    cardElement.querySelector(".cost").innerHTML = `<img src="/game/img/01coin (1).gif" alt="Coin Icon"> ${displayCoinFormat(cost)}`;
   });
 }
 

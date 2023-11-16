@@ -37,7 +37,7 @@ export class AppUtils {
     async (req: Request, res: Response) => {
       try {
         const { success } = await controller(req);
-        if (req.session.user) return res.redirect("/user");
+        if (req.session.user) return res.redirect("/game");
         if (!success) return res.redirect("/");
       } catch (error) {
         logger.error(error);
