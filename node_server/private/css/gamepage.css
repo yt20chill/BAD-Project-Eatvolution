@@ -943,6 +943,7 @@ body .nameFood {
 
 b.material-symbols-outlined {
     font-size: 2.5rem;
+    cursor: pointer;
 }
 
 [SHOP] #popupMenu {
