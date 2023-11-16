@@ -138,8 +138,8 @@ export default class FoodService implements FoodServiceHelper {
     const { name, cost, category_id, ...rest } = food;
     try {
       logger.info("calling python food classifier");
-      logger.info(`Fetching Python API: ${env.PY_URL}:${env.PY_PORT}`);
-      const res = await fetch(`${env.PY_URL}:${env.PY_PORT}/foodClassifier`, {
+      logger.info(`Fetching Python API: http://${env.PY_URL}:${env.PY_PORT}`);
+      const res = await fetch(`http://${env.PY_URL}:${env.PY_PORT}/foodClassifier`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ food: rest }),
