@@ -13,7 +13,8 @@ const ITEM_PATH = path.join(__dirname, "..", "/item.csv");
 export async function seed(knex: Knex): Promise<void> {
   const trx = await knex.transaction();
   await redis.connect();
-  await redis.flushAll();
+  await redis.select(0);
+  await redis.flushDb();
   await redis.disconnect();
   try {
     // Deletes ALL existing entries

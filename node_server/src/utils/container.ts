@@ -19,7 +19,7 @@ import UserController from "../user/user.controller";
 import UserService from "../user/user.service";
 import { env } from "./env";
 
-export const redis: RedisClientType = createClient();
+export const redis: RedisClientType = createClient({ database: 0 });
 export const knex = Knex(knexConfig[env.NODE_ENV]);
 
 export const authService = new AuthService(knex, redis);
