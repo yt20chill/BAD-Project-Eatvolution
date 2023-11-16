@@ -22,6 +22,8 @@ body {
     width: 100%;
     height: 10vh;
     overflow: hidden;
+    scale: 3.3;
+    padding: 0 0 10px 10px;
 }
 
 #popup {
@@ -156,9 +158,9 @@ body {
 
 @media (max-width: 768px) {
     #coin {
-        width: 100px;
+        /* width: 100px;
         height: 100%;
-        margin: 0px;
+        margin: 0px; */
         padding: 0px;
     }
 
@@ -834,6 +836,14 @@ body .nameFood {
     #mid_container {
         margin-top: 15px;
     }
+
+    #slimeIcon {
+        width: 100%;
+        height: 10vh;
+        overflow: hidden;
+        scale: 3.3;
+        padding: 0 0 10px 10px;
+    }
 }
 
 @media screen and (max-width: 767.98px) {
@@ -863,6 +873,41 @@ body .nameFood {
 
     #nav-btn-list .material-symbols-outlined {
         font-size: 4.5rem;
+    }
+
+    .card-body {
+        font-size: 1rem;
+    }
+
+
+}
+
+@media screen and (max-width: 375px) {
+    #slimeIcon {
+        width: 100%;
+        height: 10vh;
+        overflow: hidden;
+        scale: 4.6;
+        padding: 0 0 6px 10px;
+    }
+}
+
+@media screen and (max-width: 280px) {
+    #slimeIcon {
+        width: 100%;
+        height: 10vh;
+        overflow: hidden;
+        scale: 4.3;
+        padding: 0 0 6px 6px;
+    }
+
+    #coin {
+        max-width: 100%;
+        scale: 3;
+        margin-left: 5px;
+        padding-top: 10px;
+        padding-left: 0;
+
     }
 }
 
