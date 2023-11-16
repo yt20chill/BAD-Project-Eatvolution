@@ -821,6 +821,17 @@ body .nameFood {
     color: red;
 }
 
+#custom-food-btn {
+    color: black;
+    background-color: #ffc107;
+    border: black solid 1px;
+}
+
+#custom-food-btn:hover {
+    color: white;
+    background-color: #ffc107;
+}
+
 @media screen and (max-width: 1033px) {
     .evolve-text {
         font-size: 40px;
@@ -932,6 +943,7 @@ body .nameFood {
 
 b.material-symbols-outlined {
     font-size: 2.5rem;
+    cursor: pointer;
 }
 
 [SHOP] #popupMenu {

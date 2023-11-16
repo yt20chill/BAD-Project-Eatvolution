@@ -30,7 +30,7 @@
 
             <ul id="nav-btn-list" class="navbar-nav ms-auto flex-row">
                 <a class="navbar-brand" href="#">
-                    <img id="slimeIcon" src="./img/blue_show_done.gif.gif" alt="Logo" onclick="showPopup()">
+                    <img id="slimeIcon" src="" onclick="showPopup()">
                 </a>
                 <button class="nav-link nav-item" id="foodShopButton" onclick="showPopupMenu()">
                     <span class="material-symbols-outlined">
@@ -275,7 +275,8 @@
                                 <input type="text" name="foodName" class="middle" placeholder="Milkshakes">
                                 </input>
                                 <div class="bottom">
-                                    <button id="custom-food-btn" onclick="postCustomFood()">Feed</button>
+                                    <button id="custom-food-btn" type="button" class="btn btn-warning"
+                                        onclick="postCustomFood()">Feed</button>
                                     <div class="cost" id="custom-food-cost"></div>
                                 </div>
                             </div>
