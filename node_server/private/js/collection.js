@@ -202,10 +202,10 @@ async function getSlimeTypeCollection() {
               <div class="backSide">
               <div class="groupList">
                   <p class="list-title">${userSlimeType[i].name}</p>
-                  <p class="list" style="text-align: start;">Description :<br>${userSlimeType[i].description}</p>
-                  <p class="list">Calories(Max) : ${userSlimeType[i].max_calories}</p>
-                  <p class="list">BMR : ${userSlimeType[i].bmr_multiplier}</p>
-                  <p class="list">Earn Rate : ${userSlimeType[i].earn_rate_multiplier}</p>
+                  <p class="list" style="text-align: start;">Description :<br><span class="info"> ${userSlimeType[i].description}</span></p>
+                  <p class="list">Calories(Max) :<span class="info"> ${userSlimeType[i].max_calories}</span></p>
+                  <p class="list">BMR :<span class="info"> ${userSlimeType[i].bmr_multiplier}</span></p>
+                  <p class="list">Earn Rate :<span class="info"> ${userSlimeType[i].earn_rate_multiplier}</span></p>
                  </div>
               </div>
           </div>

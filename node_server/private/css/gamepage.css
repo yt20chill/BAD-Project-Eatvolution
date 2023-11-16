@@ -535,6 +535,10 @@ body {
     margin: 0;
 }
 
+.info {
+    color: black;
+}
+
 .innerCard {
     position: relative;
     width: 100%;
