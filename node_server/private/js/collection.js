@@ -3,18 +3,13 @@ window.onload = async () => {
   await changePage();
   await getFoodCollection();
   await getSlimeTypeCollection();
-
 }
-
-
-
 
 
 function flipCard(card) {
   card.classList.toggle('flipped');
-  let clickCardSound = new Audio("./mp3/clickDex.mp3");
+  const clickCardSound = new Audio("./mp3/clickDex.mp3");
   clickCardSound.play();
-  clickCardSound = null;
 }
 
 async function changePage() {
