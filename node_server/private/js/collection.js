@@ -176,7 +176,6 @@ async function getFoodCollection() {
 }
 
 async function getSlimeTypeCollection() {
-<<<<<<< HEAD:node_server/private/collection.js
   try {
     const res = await fetch("/api/collection/slime");
     const result = await res.json();
@@ -184,13 +183,6 @@ async function getSlimeTypeCollection() {
     const userSlimeType = result.result
     const cardSlimeType = document.querySelector('.slimeType')
     let totalType = 4 - userSlimeType.length
-=======
-  const res = await fetch("/api/collection/slime");
-  const result = await res.json();
-  const userSlimeType = result.result
-  const cardSlimeType = document.querySelector('.slimeType')
-  let totalType = 4 - userSlimeType.length
->>>>>>> b645dcd9a856b73ddb071c43197989c20435e9fa:node_server/private/js/collection.js
 
     const slimeTypePhoto = new Map()
     slimeTypePhoto.set('Balance', '/user/img/Balance/jump.gif')

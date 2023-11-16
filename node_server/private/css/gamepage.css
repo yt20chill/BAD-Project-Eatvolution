@@ -25,6 +25,14 @@ body {
     overflow: hidden;
 }
 
+/* for collection page icon */
+#slimeIcon-collection {
+    height: 20px;
+    transform-origin: 40% 55%;
+    transform: scale(3);
+    overflow: hidden;
+}
+
 #nav-btn-list {
     display: flex;
     width: 100%;
