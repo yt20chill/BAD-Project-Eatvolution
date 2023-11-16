@@ -8,7 +8,7 @@ export default class GameConfig {
   static readonly CHEAP_FOOD_NUM = 1; // min number of cheap food in shop
   static readonly CHEAP_FOOD_MAX_INDEX = Math.min(this.CHEAP_FOOD_NUM + 5, this.FOOD_NUM_ALLOWED); // first nth food (ordered by cost) to be randomly picked on each refresh
   static readonly GAME_STATUS_CODE = { refreshShop: "200", payDay: "201" };
-  static readonly REFRESH_PRICE = 100000;
+  static readonly REFRESH_PRICE = 100;
   static readonly CUSTOM_FOOD_PRICE = 100000;
   static readonly INITIAL_MONEY = 10000;
   static readonly INITIAL_CALORIES = 0;

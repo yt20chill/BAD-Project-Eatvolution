@@ -143,7 +143,6 @@ export default class ShopService implements ShopServiceHelper {
     const userService = new UserService(this.knex, this.redis);
     const { money } = await userService.getUserLatestFinancialStatus(userId);
     const moneyAfterPurchase = +money - gameConfig.REFRESH_PRICE;
-    console.log("here", money, moneyAfterPurchase);
     if (moneyAfterPurchase < 0) throw new BadRequestError("Insufficient money");
     const foodIds = await this.drawRandomFood();
     const foodArr = foodIds.reduce((acc, food_id) => {
