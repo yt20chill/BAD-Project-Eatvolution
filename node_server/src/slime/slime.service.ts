@@ -160,7 +160,7 @@ export default class SlimeService implements SlimeServiceHelper {
     updatedEvolutionInfo.total_carbs = slimeDetails.total_carbs + carbs;
     updatedEvolutionInfo.total_fat = slimeDetails.total_fat + fat;
     updatedEvolutionInfo.total_protein = slimeDetails.total_protein + protein;
-    updatedEvolutionInfo.extra_calories = updatedSlime.extra_calories;
+    updatedEvolutionInfo.extra_calories = updatedSlime.extra_calories ?? slimeExtraCalories;
     if (updatedEvolutionInfo.food_count >= GameConfig.MIN_FOOD_TO_EVOLVE) {
       updatedSlime.slime_type_id = await this.evolve(updatedEvolutionInfo);
     }

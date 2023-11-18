@@ -148,7 +148,6 @@ async function postCustomFood() {
   });
 
   if (res.status === 401) window.location = "/";
-
   const { success, result } = await res.json();
   if (!success) return alert(`Failed to feed your slime with ${foodName}`);
 
