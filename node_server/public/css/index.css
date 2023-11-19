@@ -399,7 +399,7 @@ button {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 100vh;
+	min-height: 100vh;
 	max-width: 900px;
 	margin: 0 auto;
 }
@@ -438,6 +438,11 @@ a:hover {
 @media only screen and (max-width: 455px) {
 	.form-body {
 		padding: 45px 30px;
+	}
+
+	.form-container {
+		max-width: 300px;
+		max-height: ;
 	}
 }
 
@@ -662,6 +667,12 @@ li.fb a::before {
 	overflow: hidden;
 	pointer-events: none;
 	z-index: 9999;
+}
+
+@media (max-width: 400px) {
+	.slime-container {
+		display: none;
+	}
 }
 
 .slime-wrapper-left {
