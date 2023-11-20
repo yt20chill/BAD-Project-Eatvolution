@@ -14,3 +14,7 @@ export default class GameConfig {
   static readonly INITIAL_CALORIES = 0;
   static readonly MIN_FOOD_TO_EVOLVE = 1;
 }
+export enum SlimeTypeScale {
+  SkinnyFat = 0.6,
+  Keto = 0.5,
+}

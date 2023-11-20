@@ -39,7 +39,9 @@ export default class FoodController implements FoodControllerHelper {
   purchaseFood = async (req: Request): Promise<ControllerResult<ExportSlime>> => {
     const userId = req.session.user.id;
     const foodId = req.foodId ?? req.body.foodId;
-    if (!foodId || foodId === -1) throw new BadRequestError();
+    // if (!foodId || foodId === -1) throw new BadRequestError();
+    if (foodId <= 0) throw new BadRequestError();
+
     const slime = await this.foodService.purchaseFood(userId, foodId);
     return AppUtils.setServerResponse(slime);
   };

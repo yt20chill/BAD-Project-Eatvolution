@@ -74,6 +74,7 @@ async function getFoodCollection() {
   try {
     const res = await fetch("/api/collection/food");
     const result = await res.json();
+
     const foodCollectionListLock = result.result.locked.universal;
     const foodCollectionListUnlock = result.result.unlocked.universal;
     const foodCollectionListCustom = result.result.unlocked.custom;

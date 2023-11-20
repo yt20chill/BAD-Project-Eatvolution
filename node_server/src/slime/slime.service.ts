@@ -8,7 +8,7 @@ import FoodService from "../food/food.service";
 import { io } from "../socket";
 import DbUtils from "../utils/dbUtils";
 import { BadRequestError, ForbiddenError, InternalServerError } from "../utils/error";
-import GameConfig from "../utils/gameConfig";
+import GameConfig, { SlimeTypeScale } from "../utils/gameConfig";
 import { logger } from "../utils/logger";
 
 export default class SlimeService implements SlimeServiceHelper {
@@ -100,8 +100,8 @@ export default class SlimeService implements SlimeServiceHelper {
     if (info.extra_calories > 2000) return slimeTypes.get("Obese")!;
     const { total_carbs, total_fat, total_protein } = info;
     const totalMacroNutrients = total_carbs + total_fat + total_protein;
-    if (totalMacroNutrients * 0.6 < total_carbs) return slimeTypes.get("Skinny Fat")!;
-    if (totalMacroNutrients * 0.5 < total_protein) return slimeTypes.get("Keto")!;
+    if (totalMacroNutrients * SlimeTypeScale.SkinnyFat < total_carbs) return slimeTypes.get("Skinny Fat")!;
+    if (totalMacroNutrients * SlimeTypeScale.Keto < total_protein) return slimeTypes.get("Keto")!;
     return slimeTypes.get("Balance")!;
   };
 

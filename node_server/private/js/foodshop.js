@@ -20,10 +20,10 @@ const foodShop = {
 const audio = { bgm: new Audio("./mp3/bgm.mp3"), evoSound: new Audio("./mp3/eva.mp3"), pickfoodSound: new Audio("./mp3/select-food.mp3"), isMuted: true };
 
 function updateShopCoins() {
-  document.querySelector("#shop-coin").textContent = `${displayCoinFormat(user.money)}`;
+  document.querySelector("#shop-coin").textContent = `${displayCoinFormat(user.money, 1)}`;
   if (foodShop.updateCoinIntervalId) clearInterval(foodShop.updateCoinIntervalId);
   foodShop.updateCoinIntervalId = setInterval(
-    () => (document.querySelector("#shop-coin").textContent = `${displayCoinFormat(user.money)} `),
+    () => (document.querySelector("#shop-coin").textContent = `${displayCoinFormat(user.money, 1)} `),
     1000
   );
 }
@@ -37,7 +37,7 @@ function updateRemainingTime() {
   }, 1000);
 }
 function displayFood(result) {
-  document.querySelector("#custom-food-cost").innerHTML = `<img src="/game/img/01coin (1).gif" alt="Coin Icon"> ${displayCoinFormat(foodShop.customFoodCost)} `;
+  document.querySelector("#custom-food-cost").innerHTML = `<img src="/game/img/01coin (1).gif" alt="Coin Icon"> ${displayCoinFormat(foodShop.customFoodCost, 1)} `;
   result.forEach((item, index) => {
     const { name, calories, cost, emoji, id: foodId } = item;
     const cardElement = document.getElementById(`card${index + 2}`);
@@ -45,7 +45,7 @@ function displayFood(result) {
     cardElement.querySelector(".name").textContent = name;
     cardElement.querySelector(".icon").textContent = emoji;
     cardElement.querySelector(".calories").textContent = `${calories} Cal`;
-    cardElement.querySelector(".cost").innerHTML = `<img src="/game/img/01coin (1).gif" alt="Coin Icon"> ${displayCoinFormat(cost)}`;
+    cardElement.querySelector(".cost").innerHTML = `<img src="/game/img/01coin (1).gif" alt="Coin Icon"> ${displayCoinFormat(cost, 0)}`;
   });
 }
 
@@ -124,7 +124,7 @@ async function refreshShop() {
   const { success, result } = await res.json();
   if (!success) return alert(result);
   user.money -= foodShop.refreshCost;
-  document.querySelector("#shop-coin").textContent = `${displayCoinFormat(user.money)}`;
+  document.querySelector("#shop-coin").textContent = `${displayCoinFormat(user.money, 1)}`;
   updateShopCoins();
   displayFood(result);
 }

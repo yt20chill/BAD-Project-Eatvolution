@@ -440,10 +440,13 @@ body {
 .content>.top {
     display: flex;
     justify-content: center;
-    font-size: 1.25rem;
+    font-size: 20px;
     align-items: center;
     height: 40%;
     background-color: white;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10%;
 
     p {
         font-weight: bold;
@@ -485,14 +488,25 @@ body {
 }
 
 .content>.bottom {
-    display: flex;
+    /* display: flex;
     letter-spacing: -1px;
     justify-content: space-evenly;
     align-items: center;
     font-size: 1rem;
     height: 40%;
     padding-left: 15px;
+    padding-right: 0px; */
+
+    display: flex;
+    letter-spacing: -1px;
+    justify-content: space-evenly;
+    font-size: 15px;
+    height: 40%;
+    padding-left: 5px;
     padding-right: 0px;
+    flex-direction: column;
+    align-items: center;
+
 
     div {
         display: flex;
@@ -729,7 +743,7 @@ body .nameFood {
 
 .icon {
     display: flex;
-    font-size: 3.8rem;
+    font-size: 5.6rem;
     width: 100%;
     justify-content: center;
     align-items: center;
@@ -978,8 +992,9 @@ b.material-symbols-outlined {
 }
 
 .card .cost img {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
+    margin-bottom: 4px;
 }
 
 .card .cost {
