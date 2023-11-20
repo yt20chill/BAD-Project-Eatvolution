@@ -29,7 +29,7 @@ export default class AuthService implements AuthServiceHelper {
     return await bcrypt.hash(password, this.SALT_ROUNDS);
   };
 
-  private checkPassword = async (plain: string, hash: string): Promise<number> => {
+  private checkPassword = async (plain: string, hash: string): Promise<boolean> => {
     return await bcrypt.compare(plain, hash);
   };
 
