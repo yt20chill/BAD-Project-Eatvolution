@@ -1,13 +1,11 @@
 window.onload = async () => {
-
   await changePage();
   await getFoodCollection();
   await getSlimeTypeCollection();
-}
-
+};
 
 function flipCard(card) {
-  card.classList.toggle('flipped');
+  card.classList.toggle("flipped");
   const clickCardSound = new Audio("./mp3/clickDex.mp3");
   clickCardSound.play();
 }
@@ -16,59 +14,56 @@ async function changePage() {
   try {
     const next = document.querySelector("#next");
     const prev = document.querySelector("#prev");
-    const title = document.querySelector('#title');
-    const slideFirst = document.querySelector('.slideFirst')
-    const slideSecond = document.querySelector('.slideSecond')
-    const slideThird = document.querySelector('.slideThird')
+    const title = document.querySelector("#title");
+    const slideFirst = document.querySelector(".slideFirst");
+    const slideSecond = document.querySelector(".slideSecond");
+    const slideThird = document.querySelector(".slideThird");
 
     let page = 0;
     next.addEventListener("click", async (e) => {
       if (page < 2) {
-        const nextBtn = document.getElementById(`collection-${++page}`)
-        title.textContent = nextBtn.dataset.title
+        const nextBtn = document.getElementById(`collection-${++page}`);
+        title.textContent = nextBtn.dataset.title;
         nextBtn.click();
       } else {
         page = 0;
-        const nextBtn = document.getElementById(`collection-${page}`)
-        title.textContent = nextBtn.dataset.title
+        const nextBtn = document.getElementById(`collection-${page}`);
+        title.textContent = nextBtn.dataset.title;
         nextBtn.click();
       }
     });
 
     prev.addEventListener("click", async (e) => {
-
       if (page > 0) {
-        const prevBtn = document.getElementById(`collection-${--page}`)
-        title.textContent = prevBtn.dataset.title
+        const prevBtn = document.getElementById(`collection-${--page}`);
+        title.textContent = prevBtn.dataset.title;
         prevBtn.click();
       } else {
         page = 2;
-        const prevBtn = document.getElementById(`collection-${page}`)
-        title.textContent = prevBtn.dataset.title
+        const prevBtn = document.getElementById(`collection-${page}`);
+        title.textContent = prevBtn.dataset.title;
         prevBtn.click();
       }
     });
 
     slideFirst.addEventListener("click", async (e) => {
-      const firstBtn = document.getElementById(`collection-0`)
-      title.textContent = firstBtn.dataset.title
-    })
+      const firstBtn = document.getElementById(`collection-0`);
+      title.textContent = firstBtn.dataset.title;
+    });
 
     slideSecond.addEventListener("click", async (e) => {
-      const secondBtn = document.getElementById(`collection-1`)
-      title.textContent = secondBtn.dataset.title
-    })
+      const secondBtn = document.getElementById(`collection-1`);
+      title.textContent = secondBtn.dataset.title;
+    });
 
     slideThird.addEventListener("click", async (e) => {
-      const thirdBtn = document.getElementById(`collection-2`)
-      title.textContent = thirdBtn.dataset.title
-    })
+      const thirdBtn = document.getElementById(`collection-2`);
+      title.textContent = thirdBtn.dataset.title;
+    });
   } catch (error) {
     console.error(error);
   }
-
 }
-
 
 async function getFoodCollection() {
   try {
@@ -93,7 +88,9 @@ async function getFoodCollection() {
     <div class="myCard">
         <div class="innerCard" onclick="flipCard(this)">
             <div class="frontSide">
-            <p class="nameFood" style="font-size: 20px; color: black;margin-bottom: 7px;">${(foodCollectionListCustom[x].food_name).toUpperCase()}
+            <p class="nameFood" style="font-size: 20px; color: black;margin-bottom: 7px;">${foodCollectionListCustom[
+              x
+            ].food_name.toUpperCase()}
             </p>
                 <p class="title" style="font-size: 80px;">${foodCollectionListCustom[x].emoji}</p>
                 <p style="margin-top: 15px;">Click Me</p>
@@ -117,14 +114,16 @@ async function getFoodCollection() {
 
       cardCustom.innerHTML += cardTemplateCustom;
     }
-    //Food Unlock 
+    //Food Unlock
     for (let j = 0; j < foodCollectionListUnlock.length; j++) {
       const cardTemplateUnLock = `  
 <div class="setup_card_container">
     <div class="myCard">
         <div class="innerCard" onclick="flipCard(this)">
             <div class="frontSide">
-            <p class="nameFood" style="font-size: 20px; color: black;margin-bottom: 7px;">${(foodCollectionListUnlock[j].food_name).toUpperCase()}
+            <p class="nameFood" style="font-size: 20px; color: black;margin-bottom: 7px;">${foodCollectionListUnlock[
+              j
+            ].food_name.toUpperCase()}
             </p>
                 <p class="title" style="font-size: 80px;">${foodCollectionListUnlock[j].emoji}</p>
                 <p style="margin-top: 15px;">Click Me</p>
@@ -149,7 +148,7 @@ async function getFoodCollection() {
       cardUniversal.innerHTML += cardTemplateUnLock;
     }
 
-    //Food Lock 
+    //Food Lock
     for (let i = 0; i < foodCollectionListLock.length; i++) {
       const cardTemplateLock = `   
 <div class="setup_card_container">
@@ -166,11 +165,9 @@ async function getFoodCollection() {
 </div>`;
       cardUniversal.innerHTML += cardTemplateLock;
     }
-
   } catch (error) {
     console.error(error);
   }
-
 }
 
 async function getSlimeTypeCollection() {
@@ -181,15 +178,15 @@ async function getSlimeTypeCollection() {
       throw new Error("Failed to get slime data");
     }
     const result = await res.json();
-    const userSlimeType = result.result
-    const cardSlimeType = document.querySelector('.slimeType')
-    let totalType = 4 - userSlimeType.length
+    const userSlimeType = result.result;
+    const cardSlimeType = document.querySelector(".slimeType");
+    let totalType = 4 - userSlimeType.length;
 
-    const slimeTypePhoto = new Map()
-    slimeTypePhoto.set('Balance', '/game/img/Balance/jump.gif')
-    slimeTypePhoto.set('Keto', '/game/img/Keto/jump.gif')
-    slimeTypePhoto.set('Obese', '/game/img/Obese/jump.gif')
-    slimeTypePhoto.set('Skinny Fat', '/game/img/Skinny/jump.gif')
+    const slimeTypePhoto = new Map();
+    slimeTypePhoto.set("Balance", "/game/img/Balance/jump.gif");
+    slimeTypePhoto.set("Keto", "/game/img/Keto/jump.gif");
+    slimeTypePhoto.set("Obese", "/game/img/Obese/jump.gif");
+    slimeTypePhoto.set("Skinny Fat", "/game/img/Skinny/jump.gif");
 
     for (let i = 0; i < userSlimeType.length; i++) {
       const cardTemplateSlimeType = ` 
@@ -208,21 +205,28 @@ async function getSlimeTypeCollection() {
               <div class="backSide">
               <div class="groupList">
                   <p class="list-title">${userSlimeType[i].name}</p>
-                  <p class="list" style="text-align: start;">Description :<br><span class="info"> ${userSlimeType[i].description}</span></p>
-                  <p class="list">Calories(Max) :<span class="info"> ${userSlimeType[i].max_calories}</span></p>
-                  <p class="list">BMR :<span class="info"> ${userSlimeType[i].bmr_multiplier}</span></p>
-                  <p class="list">Earn Rate :<span class="info"> ${userSlimeType[i].earn_rate_multiplier}</span></p>
+                  <p class="list" style="text-align: start;">Description :<br><span class="info"> ${
+                    userSlimeType[i].description
+                  }</span></p>
+                  <p class="list">Calories(Max) :<span class="info"> ${
+                    userSlimeType[i].max_calories
+                  }</span></p>
+                  <p class="list">BMR :<span class="info"> ${
+                    userSlimeType[i].bmr_multiplier
+                  }</span></p>
+                  <p class="list">Earn Rate :<span class="info"> ${
+                    userSlimeType[i].earn_rate_multiplier
+                  }</span></p>
                  </div>
               </div>
           </div>
       </div>
-  </div>`
+  </div>`;
 
-      cardSlimeType.innerHTML += cardTemplateSlimeType
+      cardSlimeType.innerHTML += cardTemplateSlimeType;
     }
 
     for (let j = 0; j < totalType; j++) {
-
       const cardTemplateTypeLock = `   
       <div class="setup_card_container">
           <div class="myCard">
@@ -235,15 +239,11 @@ async function getSlimeTypeCollection() {
                   </div>
               </div>
           </div>
-      </div>`
+      </div>`;
 
-      cardSlimeType.innerHTML += cardTemplateTypeLock
+      cardSlimeType.innerHTML += cardTemplateTypeLock;
     }
   } catch (error) {
     console.error(error);
   }
 }
-
-
-
-

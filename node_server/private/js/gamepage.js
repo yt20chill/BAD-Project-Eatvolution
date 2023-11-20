@@ -1,6 +1,11 @@
+document.addEventListener("DOMContentLoaded", async () => {
+  await init();
+  scheduleUpdate();
+  // socket.on("evolving", evolveAnimation);
+});
+
 var closeBtn = document.getElementById("closeBtn");
 var popup = document.getElementById("popup");
-
 
 closeBtn.addEventListener("click", function () {
   popup.classList.remove("show"); // 移除 show 类，使其回到初始位置
@@ -85,16 +90,15 @@ async function getUserFinance() {
     if (result.money < 0 || result.earning_rate < 0) return;
     user.money = result.money;
     user.earningRate = result.earning_rate;
-    document.querySelector("#coin_balance p").textContent = `${displayCoinFormat(user.money, 1)} `;
-    document.querySelector("#earn_rate").textContent = `${displayCoinFormat(user.earningRate, 1)}`;
+    document.querySelector("#coin_balance p").textContent = `${displayCoinFormat(user.money)} `;
+    document.querySelector("#earn_rate").textContent = `${displayCoinFormat(user.earningRate)}`;
   } catch (error) {
     console.error(error);
-    // alert("Failed to get user data");
   }
 }
 
-function displayCoinFormat(coin, decimal) {
-  if (coin < 100_000) return coin.toFixed(decimal);
+function displayCoinFormat(coin, decimal = 1) {
+  if (coin < 100_000) return coin.toFixed(0);
   if (coin < 1_000_000) return `${(coin / 1000).toFixed(decimal)}k`;
   if (coin < 1_000_000_000) return `${(coin / 1_000_000).toFixed(decimal)}M`;
   return `${(coin / 1_000_000_000).toFixed(decimal)}B`;
@@ -132,8 +136,9 @@ function displaySlimeData() {
   document.querySelector(
     ".current_calories"
   ).innerHTML = `<span> Calories </span> <b>${slime.cal}/${slime.maxCal} </b>`;
-  document.querySelector(".max_calories").innerHTML = `<span> Extra Calories</span> <b>${slime.extraCal ?? 0
-    }</b>`;
+  document.querySelector(".max_calories").innerHTML = `<span> Extra Calories</span> <b>${
+    slime.extraCal ?? 0
+  }</b>`;
 }
 async function updateSlimeCal() {
   if (slime.cal < 0 || slime.bmr < 0) return;
@@ -150,23 +155,17 @@ async function updateSlimeCal() {
     user.earningRate = 0;
     document.querySelector("#earn_rate").textContent = 0;
   }
-  document.querySelector(".current_calories b").innerText = `${Math.round(slime.cal)}/${slime.maxCal
-    }`;
+  document.querySelector(".current_calories b").innerText = `${Math.round(slime.cal)}/${
+    slime.maxCal
+  }`;
   document.querySelector(".max_calories b").innerText = `${Math.round(slime.extraCal) ?? 0}`;
 }
 
 function updateCoins() {
   if (user.money < 0 || user.earningRate <= 0) return;
   user.money += user.earningRate;
-  document.querySelector("#coin_balance p").textContent = `${displayCoinFormat(user.money, 1)} `; // Update the coin balance
+  document.querySelector("#coin_balance p").textContent = `${displayCoinFormat(user.money)} `; // Update the coin balance
 }
-
-
-
-
-// const socket = io.connect();
-
-
 
 function toggleMute(elem) {
   if (audio.bgm.paused) {
@@ -188,17 +187,16 @@ function toggleMute(elem) {
     audio[key].volume = 0;
     elem.textContent = "music_off";
   }
-};
+}
 
-document.addEventListener("DOMContentLoaded", async () => {
-
+async function init() {
   // get coins
   await getUserFinance();
   updateCoins();
-
-  setInterval(updateCoins, 1000);
-  // socket.on("evolving", evolveAnimation);
   await getSlimeData();
-  slime.updateIntervalId = setInterval(updateSlimeCal, 1000);
   moveCharacter();
-});
+}
+function scheduleUpdate() {
+  setInterval(updateCoins, 1000);
+  setInterval(updateSlimeCal, 1000);
+}
