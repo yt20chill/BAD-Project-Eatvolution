@@ -1,6 +1,6 @@
 import { Request } from "express";
-import { ControllerResult, UserControllerHelper } from "../../models/controllerModels";
-import { RedisUser } from "../../models/models";
+import { ControllerResult, UserControllerHelper } from "../models/controllerModels";
+import { RedisUser } from "../models/models";
 import { AppUtils } from "../utils/utils";
 import UserService from "./user.service";
 

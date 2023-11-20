@@ -1,15 +1,15 @@
 import { Knex } from "knex";
 import { RedisClientType } from "redis";
-import { Slime, SlimeType } from "../../models/dbModels";
-import { EvolutionInfo, ExportSlime, SlimeDetails } from "../../models/models";
-import { SlimeServiceHelper } from "../../models/serviceModels";
 import SlimeCollectionService from "../collection/slimeCollection/slimeCollection.service";
+import GameConfig, { EvolveCriteria } from "../config/gameConfig";
+import { logger } from "../config/logger";
 import FoodService from "../food/food.service";
+import { Slime, SlimeType } from "../models/dbModels";
+import { EvolutionInfo, ExportSlime, SlimeDetails } from "../models/models";
+import { SlimeServiceHelper } from "../models/serviceModels";
 import { io } from "../socket";
 import DbUtils from "../utils/dbUtils";
 import { BadRequestError, ForbiddenError, InternalServerError } from "../utils/error";
-import GameConfig, { SlimeTypeScale } from "../utils/gameConfig";
-import { logger } from "../utils/logger";
 
 export default class SlimeService implements SlimeServiceHelper {
   private readonly originalKnex: Knex;
@@ -100,8 +100,9 @@ export default class SlimeService implements SlimeServiceHelper {
     if (info.extra_calories > 2000) return slimeTypes.get("Obese")!;
     const { total_carbs, total_fat, total_protein } = info;
     const totalMacroNutrients = total_carbs + total_fat + total_protein;
-    if (totalMacroNutrients * SlimeTypeScale.SkinnyFat < total_carbs) return slimeTypes.get("Skinny Fat")!;
-    if (totalMacroNutrients * SlimeTypeScale.Keto < total_protein) return slimeTypes.get("Keto")!;
+    if (totalMacroNutrients * EvolveCriteria.SkinnyFat < total_carbs)
+      return slimeTypes.get("Skinny Fat")!;
+    if (totalMacroNutrients * EvolveCriteria.Keto < total_protein) return slimeTypes.get("Keto")!;
     return slimeTypes.get("Balance")!;
   };
 
@@ -165,14 +166,14 @@ export default class SlimeService implements SlimeServiceHelper {
       updatedSlime.slime_type_id = await this.evolve(updatedEvolutionInfo);
     }
     DbUtils.checkNaN(updatedSlime);
-    // unlock slime_type collection
-    if (updatedSlime.slime_type_id && updatedSlime.slime_type_id !== slimeDetails.slime_type_id) {
-      io.to(`${userId}`).emit("evolving");
-      const slimeCollectionService = new SlimeCollectionService(this.knex);
-      await slimeCollectionService.unlockSlimeCollection(userId, updatedSlime.slime_type_id);
-    }
     const trx = await this.createTransaction();
     try {
+      // unlock slime_type collection
+      if (updatedSlime.slime_type_id && updatedSlime.slime_type_id !== slimeDetails.slime_type_id) {
+        io.to(`${userId}`).emit("evolving");
+        const slimeCollectionService = new SlimeCollectionService(this.knex);
+        await slimeCollectionService.unlockSlimeCollection(userId, updatedSlime.slime_type_id);
+      }
       await this.knex("slime_food").insert({
         food_id: foodId,
         slime_id: slimeId,

@@ -1,7 +1,7 @@
 import { Request } from "express";
-import { ControllerResult, FoodCollectionControllerHelper } from "../../../models/controllerModels";
-import { ExportFoodCollection, FoodCollection } from "../../../models/models";
 import FoodService from "../../food/food.service";
+import { ControllerResult, FoodCollectionControllerHelper } from "../../models/controllerModels";
+import { ExportFoodCollection, FoodCollection } from "../../models/models";
 import { AppUtils } from "../../utils/utils";
 import FoodCollectionService from "./foodCollection.service";
 

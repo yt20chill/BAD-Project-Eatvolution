@@ -1,8 +1,8 @@
 import schedule from "node-schedule";
+import gameConfig from "../config/gameConfig";
+import { logger } from "../config/logger";
 import { io } from "../socket";
 import { gameService, shopService } from "./container";
-import gameConfig from "./gameConfig";
-import { logger } from "./logger";
 
 // TODO: test case
 export const scheduleUpdateShop = () =>

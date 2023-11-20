@@ -1,9 +1,6 @@
 import { Request } from "express";
-import {
-  ControllerResult,
-  SlimeCollectionControllerHelper,
-} from "../../../models/controllerModels";
-import { SlimeCollection } from "../../../models/models";
+import { ControllerResult, SlimeCollectionControllerHelper } from "../../models/controllerModels";
+import { SlimeCollection } from "../../models/models";
 import { AppUtils } from "../../utils/utils";
 import SlimeCollectionService from "./slimeCollection.service";
 

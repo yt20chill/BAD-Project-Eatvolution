@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { Controller } from "models/controllerModels";
+import { Controller } from "src/models/controllerModels";
+import { logger } from "../config/logger";
 import { ApplicationError, InternalServerError } from "./error";
-import { logger } from "./logger";
 
 export class AppUtils {
   static exceptionWrapper =

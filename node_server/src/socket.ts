@@ -2,7 +2,7 @@ import express from "express";
 import expressSession from "express-session";
 import http from "http";
 import SocketIO from "socket.io";
-import { env } from "./utils/env";
+import { env } from "./config/env";
 export const app = express();
 export const server = new http.Server(app);
 export const io = new SocketIO.Server(server);

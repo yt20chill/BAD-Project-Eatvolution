@@ -1,10 +1,10 @@
 import { Knex } from "knex";
 import { RedisClientType } from "redis";
-import { Slime, User } from "../../models/dbModels";
-import { GameServiceHelper } from "../../models/serviceModels";
+import { logger } from "../config/logger";
+import { Slime, User } from "../models/dbModels";
+import { GameServiceHelper } from "../models/serviceModels";
 import SlimeService from "../slime/slime.service";
 import UserService from "../user/user.service";
-import { logger } from "../utils/logger";
 
 export default class GameService implements GameServiceHelper {
   private readonly originalKnex: Knex;

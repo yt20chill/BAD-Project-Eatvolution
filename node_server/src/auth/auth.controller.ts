@@ -1,8 +1,8 @@
 import { Request } from "express";
-import { AuthControllerHelper } from "models/controllerModels";
+import { AuthControllerHelper } from "src/models/controllerModels";
+import { logger } from "../config/logger";
 import { deleteSocket } from "../socket";
 import { BadRequestError } from "../utils/error";
-import { logger } from "../utils/logger";
 import { AppUtils } from "../utils/utils";
 import AuthService from "./auth.service";
 

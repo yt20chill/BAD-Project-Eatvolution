@@ -1,5 +1,5 @@
 import grant from "grant";
-import { env } from "../utils/env";
+import { env } from "../config/env";
 
 export const grantExpress = grant.express({
   defaults: {

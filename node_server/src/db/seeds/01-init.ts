@@ -1,11 +1,11 @@
 import { Knex } from "knex";
 import path from "path";
-import { Food, Item, SlimeType } from "../../../models/dbModels";
-import { GeneralOmitFields } from "../../../models/models";
+import gameConfig from "../../config/gameConfig";
+import { logger } from "../../config/logger";
+import { Food, Item, SlimeType } from "../../models/dbModels";
+import { GeneralOmitFields } from "../../models/models";
 import { redis } from "../../utils/container";
 import DbUtils from "../../utils/dbUtils";
-import gameConfig from "../../utils/gameConfig";
-import { logger } from "../../utils/logger";
 const SLIME_TYPE_PATH = path.join(__dirname, "..", "/slime_type.csv");
 const LABELED_FOOD_PATH = path.join(__dirname, "..", "/labeled_food.csv");
 const ITEM_PATH = path.join(__dirname, "..", "/item.csv");

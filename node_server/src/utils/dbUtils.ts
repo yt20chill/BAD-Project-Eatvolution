@@ -1,7 +1,7 @@
 import csvParser from "csv-parser";
 import fs from "fs";
-import { Food } from "models/dbModels";
-import { CnItem, GeneralOmitFields, InsertFood } from "models/models";
+import { Food } from "src/models/dbModels";
+import { CnItem, GeneralOmitFields, InsertFood } from "src/models/models";
 import { InternalServerError } from "./error";
 
 //TODO: change all static methods to normal, and export util in container
