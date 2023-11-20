@@ -73,8 +73,12 @@ async function changePage() {
 async function getFoodCollection() {
   try {
     const res = await fetch("/api/collection/food");
-    const result = await res.json();
+    if (res.status === 401) window.location = "/";
+    if (!res.ok) {
+      throw new Error("Failed to get food data");
+    }
 
+    const result = await res.json();
     const foodCollectionListLock = result.result.locked.universal;
     const foodCollectionListUnlock = result.result.unlocked.universal;
     const foodCollectionListCustom = result.result.unlocked.custom;
@@ -172,6 +176,10 @@ async function getFoodCollection() {
 async function getSlimeTypeCollection() {
   try {
     const res = await fetch("/api/collection/slime");
+    if (res.status === 401) window.location = "/";
+    if (!res.ok) {
+      throw new Error("Failed to get slime data");
+    }
     const result = await res.json();
     const userSlimeType = result.result
     const cardSlimeType = document.querySelector('.slimeType')
