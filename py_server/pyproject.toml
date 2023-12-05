@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "py-server"
+name = "py_server"
 version = "0.1.0"
 description = ""
 authors = ["yt20chill <ytelainechiu@gmail.com>"]

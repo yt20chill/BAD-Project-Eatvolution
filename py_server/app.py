@@ -50,7 +50,7 @@ def updateModel(request):
     pass
 
 
-debug = True
+debug = False
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=debug, single_process=True)

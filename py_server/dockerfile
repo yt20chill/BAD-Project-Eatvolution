@@ -1,0 +1,13 @@
+FROM python:3.9
+WORKDIR /usr/src/app
+COPY . .
+EXPOSE 8000
+RUN apt-get update -y &&\
+    apt-get install -y python3-pip
+    # python -m pip install --user pipx &&\
+    # python -m pipx ensurepath &&\
+    # python -m pipx install virtualenv &&\
+    # python -m pipx install poetry
+RUN pip install -r requirements.txt
+
+CMD poetry install && python app.py 

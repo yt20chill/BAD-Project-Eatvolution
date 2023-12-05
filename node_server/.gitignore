@@ -52,6 +52,7 @@ yarn.lock
 .env.test.local
 .env.production.local
 .env.local
+.env.docker
 
 #redis
 dump.rdb

@@ -19,7 +19,7 @@ import SlimeService from "../slime/slime.service";
 import UserController from "../user/user.controller";
 import UserService from "../user/user.service";
 
-export const redis: RedisClientType = createClient({ database: 0 });
+export const redis: RedisClientType = createClient({ url: env.REDIS_URL });
 export const knex = Knex(knexConfig[env.NODE_ENV]);
 
 export const authService = new AuthService(knex, redis);

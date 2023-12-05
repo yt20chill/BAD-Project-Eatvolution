@@ -1,10 +1,10 @@
 import {
   BriefFood,
   ExportSlime,
-  ExportSlimeCollection,
   FoodCollection,
   FoodCollectionIds,
   InsertFood,
+  SlimeCollection,
   UserFinancialStatus,
 } from "./models";
 
@@ -43,7 +43,7 @@ export interface FoodCollectionServiceHelper {
 }
 
 export interface SlimeCollectionServiceHelper {
-  getSlimeCollection(userId: number): Promise<ExportSlimeCollection>;
+  getSlimeCollection(userId: number): Promise<SlimeCollection[]>;
   unlockSlimeCollection(userId: number, slime_type_id: string): Promise<void>;
 }
 

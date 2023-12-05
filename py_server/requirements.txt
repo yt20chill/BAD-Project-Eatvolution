@@ -1,0 +1,4 @@
+tensorflow
+sanic
+pandas
+pickle4

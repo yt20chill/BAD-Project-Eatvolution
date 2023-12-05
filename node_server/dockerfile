@@ -1,0 +1,6 @@
+FROM node:18
+WORKDIR /usr/src/app
+COPY . .
+RUN npm install && cp ./.env.docker ./.env
+EXPOSE 8080
+CMD npm start && npm run knex migrate:latest && npm run knex seed:run

@@ -12,7 +12,7 @@ export const env = {
   DB_PASSWORD: "",
   WEB_PORT: 8080,
   PY_PORT: 8000,
-  REDIS_PORT: 6379,
+  REDIS_URL: "redis://localhost:6379",
   CN_API_KEY: "",
   SESSION_SECRET: "",
   GOOGLE_CLIENT_ID: "",
