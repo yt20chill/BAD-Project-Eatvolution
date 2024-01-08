@@ -1,5 +1,7 @@
 # Eatvolution
 
+This project has been deployed on: [Eatvolution](https://eatvolution.yt20chill.me)
+
 Here are some notes that might be helpful during the development stage. The real documentation of this game is temporarily put inside the docs folder.
 
 ## Project init
