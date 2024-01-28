@@ -1,14 +1,13 @@
 async function logout() {
   await fetch("/auth/logout");
   window.location.href = "/";
-};
-
+}
 
 const signupForm = document.getElementById("signUP_form");
 
 const loginform = document.getElementById("login_form");
 
-let loginSound = new Audio("./mp3/login.mp3")
+let loginSound = new Audio("./mp3/login.mp3");
 
 loginform?.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -33,7 +32,7 @@ loginform?.addEventListener("submit", async (e) => {
     return;
   } else {
     loginSound.play();
-    setTimeout(() => window.location = "/game", 500);
+    setTimeout(() => (window.location = "/game"), 500);
   }
 });
 
@@ -60,6 +59,6 @@ signupForm?.addEventListener("submit", async (e) => {
     return;
   } else {
     loginSound.play();
-    setTimeout(() => window.location = "/game", 500);
+    setTimeout(() => (window.location = "/game"), 500);
   }
 });

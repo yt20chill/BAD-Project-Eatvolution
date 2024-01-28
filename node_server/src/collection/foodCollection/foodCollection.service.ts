@@ -1,6 +1,6 @@
 import { Knex } from "knex";
-import { FoodCollectionIds } from "../../../models/models";
-import { FoodCollectionServiceHelper } from "../../../models/serviceModels";
+import { FoodCollectionIds } from "../../models/models";
+import { FoodCollectionServiceHelper } from "../../models/serviceModels";
 
 export default class FoodCollectionService implements FoodCollectionServiceHelper {
   constructor(private readonly knex: Knex) {}

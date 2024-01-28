@@ -1,7 +1,7 @@
 import { Request } from "express";
-import { ControllerResult, ShopControllerHelper } from "../../models/controllerModels";
-import { BriefFood } from "../../models/models";
-import GameConfig from "../utils/gameConfig";
+import GameConfig from "../config/gameConfig";
+import { ControllerResult, ShopControllerHelper } from "../models/controllerModels";
+import { BriefFood } from "../models/models";
 import { AppUtils } from "../utils/utils";
 import ShopService from "./shop.service";
 

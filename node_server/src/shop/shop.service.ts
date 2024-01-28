@@ -1,13 +1,13 @@
 import { Knex } from "knex";
 import { RedisClientType } from "redis";
-import { Food } from "../../models/dbModels";
-import { BriefFood } from "../../models/models";
-import { ShopServiceHelper } from "../../models/serviceModels";
+import gameConfig from "../config/gameConfig";
+import { logger } from "../config/logger";
+import { Food } from "../models/dbModels";
+import { BriefFood } from "../models/models";
+import { ShopServiceHelper } from "../models/serviceModels";
 import UserService from "../user/user.service";
 import DbUtils from "../utils/dbUtils";
 import { BadRequestError, InternalServerError } from "../utils/error";
-import gameConfig from "../utils/gameConfig";
-import { logger } from "../utils/logger";
 import { AppUtils } from "../utils/utils";
 
 export default class ShopService implements ShopServiceHelper {

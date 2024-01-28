@@ -1,14 +1,14 @@
 import * as bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { Knex } from "knex";
-import { User } from "models/dbModels";
-import { AuthServiceHelper } from "models/serviceModels";
 import { RedisClientType } from "redis";
+import { User } from "src/models/dbModels";
+import { AuthServiceHelper } from "src/models/serviceModels";
 import SlimeCollectionService from "../collection/slimeCollection/slimeCollection.service";
+import GameConfig from "../config/gameConfig";
+import { logger } from "../config/logger";
 import SlimeService from "../slime/slime.service";
 import { BadRequestError, InternalServerError } from "../utils/error";
-import GameConfig from "../utils/gameConfig";
-import { logger } from "../utils/logger";
 
 // FIX duplicated username
 export default class AuthService implements AuthServiceHelper {

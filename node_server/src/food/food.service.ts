@@ -1,15 +1,15 @@
 import { Knex } from "knex";
-import { FoodServiceHelper } from "models/serviceModels";
 import { RedisClientType } from "redis";
-import { ExportSlime, FoodCollection, InsertFood } from "../../models/models";
+import { FoodServiceHelper } from "src/models/serviceModels";
 import { BadRequestError, InternalServerError } from "../../src/utils/error";
-import { logger } from "../../src/utils/logger";
 import FoodCollectionService from "../collection/foodCollection/foodCollection.service";
+import { env } from "../config/env";
+import { logger } from "../config/logger";
+import { ExportSlime, FoodCollection, InsertFood } from "../models/models";
 import ShopService from "../shop/shop.service";
 import SlimeService from "../slime/slime.service";
 import UserService from "../user/user.service";
 import DbUtils from "../utils/dbUtils";
-import { env } from "../utils/env";
 
 export default class FoodService implements FoodServiceHelper {
   private readonly originalKnex: Knex;

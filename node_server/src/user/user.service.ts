@@ -1,11 +1,11 @@
 import { Knex } from "knex";
 import { RedisClientType } from "redis";
-import { User } from "../../models/dbModels";
-import { RedisUser, UserFinancialStatus } from "../../models/models";
-import { UserServiceHelper } from "../../models/serviceModels";
+import GameConfig from "../config/gameConfig";
+import { User } from "../models/dbModels";
+import { RedisUser, UserFinancialStatus } from "../models/models";
+import { UserServiceHelper } from "../models/serviceModels";
 import DbUtils from "../utils/dbUtils";
 import { InternalServerError, UnauthorizedError } from "../utils/error";
-import GameConfig from "../utils/gameConfig";
 
 export default class UserService implements UserServiceHelper {
   constructor(

@@ -7,6 +7,7 @@ import FoodCollectionController from "../collection/foodCollection/foodCollectio
 import FoodCollectionService from "../collection/foodCollection/foodCollection.service";
 import SlimeCollectionController from "../collection/slimeCollection/slimeCollection.controller";
 import SlimeCollectionService from "../collection/slimeCollection/slimeCollection.service";
+import { env } from "../config/env";
 import knexConfig from "../db/knexfile";
 import FoodController from "../food/food.controller";
 import FoodService from "../food/food.service";
@@ -17,7 +18,6 @@ import SlimeController from "../slime/slime.controller";
 import SlimeService from "../slime/slime.service";
 import UserController from "../user/user.controller";
 import UserService from "../user/user.service";
-import { env } from "./env";
 
 export const redis: RedisClientType = createClient({ database: 0 });
 export const knex = Knex(knexConfig[env.NODE_ENV]);

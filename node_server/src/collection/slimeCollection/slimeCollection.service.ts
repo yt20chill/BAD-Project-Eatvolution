@@ -1,7 +1,7 @@
 import { Knex } from "knex";
-import { UserSlimeTypeCollection } from "../../../models/dbModels";
-import { SlimeCollection } from "../../../models/models";
-import { SlimeCollectionServiceHelper } from "../../../models/serviceModels";
+import { UserSlimeTypeCollection } from "../../models/dbModels";
+import { SlimeCollection } from "../../models/models";
+import { SlimeCollectionServiceHelper } from "../../models/serviceModels";
 import DbUtils from "../../utils/dbUtils";
 
 export default class SlimeCollectionService implements SlimeCollectionServiceHelper {
