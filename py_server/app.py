@@ -33,6 +33,7 @@ def classify(request):
         content = request.json
         # food can be an array
         food = content.get("food")
+        print(f'fetch food: {food}')
         if (food == None):
             return json({"success": False})
         predict_dataset = pd.json_normalize(food)
