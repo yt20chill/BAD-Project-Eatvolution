@@ -1,7 +1,43 @@
 # Eatvolution
 
-This project has been deployed on: [Eatvolution](https://eatvolution.yt20chill.me)
+~~This project had been deployed on: [Eatvolution](https://eatvolution.yt20chill.me) (removed)~~
 
+
+## Run project inside docker
+1. set up env
+copy `.env.example`, rename as `.env.docker`
+fill in the api keys, optionally change db name, username and password
+
+```bash (for linux/mac)
+cd node_server
+cp .env.example .env.docker
+```
+- Obtain calorie ninja api key: [CalorieNinjas](https://calorieninjas.com/) and put it under `CN_API_KEY`=
+
+- `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are for google login. Follow these steps to obtain the client id and client secret: [Google OAuth2](https://developers.google.com/identity/protocols/oauth2)
+
+Keep the rest unchanged unless you are certain about what you are doing.
+
+2. Build the docker container
+- change directory to where the docker-compose.yml locate (root of this project). If you are inside the node_server, it should be 1 parent dir above (cd ..).
+- Make sure you have docker cli installed [Docker](https://www.docker.com/)
+
+```bash
+cd {path/to/project/root}
+docker compose build
+```
+
+3. Run the container
+
+```bash
+docker compose up -d
+```
+
+4. Now the project can be reached at [http://localhost:8080](http://localhost:8080)
+
+&nbsp;
+
+---
 Here are some notes that might be helpful during the development stage. The real documentation of this game is temporarily put inside the docs folder.
 
 ## Project init
