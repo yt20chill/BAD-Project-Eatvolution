@@ -1,4 +1,3 @@
-import tensorflow as tf
 from sanic import Sanic
 from sanic.response import json
 import pickle

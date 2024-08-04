@@ -1,4 +1,4 @@
-tensorflow
 sanic
 pandas
 pickle4
+scikit-learn

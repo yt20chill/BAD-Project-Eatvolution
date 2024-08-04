@@ -1,6 +1,14 @@
 FROM node:18
 WORKDIR /usr/src/app
 COPY . .
-RUN npm install && cp ./.env.docker ./.env
+COPY .env.docker .env
+
+# Download wait-for-it.sh and make it executable
+RUN apt-get update && apt-get install -y curl \
+    && curl -o /usr/src/app/wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh \
+    && chmod +x /usr/src/app/wait-for-it.sh
+    
+RUN npm install
 EXPOSE 8080
-CMD npm start && npm run knex migrate:latest && npm run knex seed:run
+
+CMD ["./wait-for-it.sh", "postgres:5432", "--", "sh", "-c", "npm run knex migrate:latest && npm run knex seed:run && npm start"]

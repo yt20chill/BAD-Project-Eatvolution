@@ -1,13 +1,12 @@
-FROM python:3.9
+FROM python:3.9-slim
 WORKDIR /usr/src/app
 COPY . .
 EXPOSE 8000
-RUN apt-get update -y &&\
-    apt-get install -y python3-pip
-    # python -m pip install --user pipx &&\
-    # python -m pipx ensurepath &&\
-    # python -m pipx install virtualenv &&\
-    # python -m pipx install poetry
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libhdf5-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
 RUN pip install -r requirements.txt
 
-CMD poetry install && python app.py 
+CMD ["python", "app.py"]
