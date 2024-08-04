@@ -5,7 +5,7 @@
 
 ## Run project inside docker
 1. set up env
-copy `.env.example`, rename as `.env.docker`
+copy `.env.example`, rename as `.env.docker` (inside ./node_server)
 fill in the api keys, optionally change db name, username and password
 
 ```bash (for linux/mac)
@@ -14,7 +14,7 @@ cp .env.example .env.docker
 ```
 - Obtain calorie ninja api key: [CalorieNinjas](https://calorieninjas.com/) and put it under `CN_API_KEY`=
 
-- `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are for google login. Follow these steps to obtain the client id and client secret: [Google OAuth2](https://developers.google.com/identity/protocols/oauth2)
+- `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are for google login. Follow these steps to obtain the client id and client secret: [Google OAuth2](https://developers.google.com/identity/protocols/oauth2). You may not need those if you choose not to have google login feature. In this case provide set both to "foo" so that the server still runs.
 
 Keep the rest unchanged unless you are certain about what you are doing.
 
