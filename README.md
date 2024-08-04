@@ -1,8 +1,13 @@
 # Eatvolution
 
+This project has been deployed on: [Eatvolution](https://eatvolution.yt20chill.me)
+
 Here are some notes that might be helpful during the development stage. The real documentation of this game is temporarily put inside the docs folder.
 
 ## Project init
+
+### Prerequisite
+- Installed psql
 
 ```bash
 cp .env.example .env
@@ -21,7 +26,7 @@ this line will delete and recreate db named `eatvolution` and `eatvolution_test`
 
 **IMPORTANT** This action will delete all the data inside the db. Use with caution
 ```bash
-source {path_to_project_root_folder}/bin/rebuildDb.sh
+{path_to_project_root_folder}/bin/rebuildDb.sh
 ```
 
 &nbsp;
@@ -29,8 +34,8 @@ source {path_to_project_root_folder}/bin/rebuildDb.sh
 ## Start node server on Windows
 
 ```bash
-wsl
-. {path_to_project_root_folder}/bin/startRedis.sh
+wsl && \
+{path_to_project_root_folder}/bin/startRedis.sh
 ```
 open a new terminal
 ```bash
